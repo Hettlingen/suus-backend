@@ -6,7 +6,7 @@ export class ShopRoutes {
     public static routes(app: any): void {
 
         app.route('/shops/:uuidShop').get(async (request: Request, response: Response) => {
-            ShopService.getShop(request.params.uuidProduct)
+            ShopService.getShop(request.params.uuidShop)
                 .then(function(product: Product) {
                     response.status(200).send(product);
                 }).catch(function(error: any){
