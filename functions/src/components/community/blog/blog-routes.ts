@@ -5,32 +5,32 @@ import {Blog} from "./model/blog";
 export class BlogRoutes {
     public static routes(app: any): void {
         /* ------------------------------------------------ */
-        /* Blog                                             */
+        /* Product                                             */
         /* ------------------------------------------------ */
         // app.route('/blogs').post((request: Request, response: Response) => {
-        //     BlogService.createBlog(request.body.blog)
+        //     ShopService.createBlog(request.body.blog)
         //         .then(function(blog) {
         //             response.status(201).send(blog);
         //         }).catch(function(error: any){
-        //         response.status(404).send("Blog wasn't created: " + error)
+        //         response.status(404).send("Product wasn't created: " + error)
         //     });
         // })
 
         // app.route('/blogs/:uuidBlog').put((request: Request, response: Response) => {
-        //     BlogService.updateBlog(request.body.blog)
+        //     ShopService.updateBlog(request.body.blog)
         //         .then(function(blog) {
         //             response.status(201).send(blog);
         //         }).catch(function(error: any){
-        //         response.status(404).send("Blog wasn't updated: " + error)
+        //         response.status(404).send("Product wasn't updated: " + error)
         //     });
         // })
 
         // app.route('/blogs/:uuidBlog').delete((request: Request, response: Response) => {
-        //     BlogService.deleteBlog(request.params.uuidBlog)
+        //     ShopService.deleteBlog(request.params.uuidBlog)
         //         .then(function(blog) {
         //             response.status(200).send(blog);
         //         }).catch(function(error: any){
-        //         response.status(404).send("Blog wasn't deleted: " + error)
+        //         response.status(404).send("Product wasn't deleted: " + error)
         //     });
         // })
 
@@ -39,7 +39,7 @@ export class BlogRoutes {
                 .then(function(blog: Blog) {
                     response.status(200).send(blog);
                 }).catch(function(error: any){
-                response.status(404).send("Blog wasn't found: " + error)
+                response.status(404).send("Product wasn't found: " + error)
             });
         })
     }

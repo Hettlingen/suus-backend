@@ -1,7 +1,7 @@
 import {Blog} from "../model/blog";
 
 export const mapBlogsFromDbToBlogs = (blogsFromDb: any) => {
-    let blogs: Blog[] = [];
+    const blogs: Blog[] = [];
 
     blogsFromDb.forEach(
         (blog: any) => {
@@ -13,7 +13,7 @@ export const mapBlogsFromDbToBlogs = (blogsFromDb: any) => {
 }
 
 export const mapBlogFromDbToBlog = (blogFromDb: any) => {
-    let blog = new Blog();
+    const blog = new Blog();
     blog.setUuid(blogFromDb.data().uuid);
     blog.setTitle(blogFromDb.data().title);
     blog.setDescription(blogFromDb.data().description);

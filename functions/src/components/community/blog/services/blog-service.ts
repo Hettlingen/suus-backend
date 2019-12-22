@@ -1,5 +1,5 @@
 import {Blog} from "../model/blog";
-import {database} from "../../../../index";
+import {databaseFirestore} from "../../../../index";
 import {mapBlogFromDbToBlog, mapBlogsFromDbToBlogs} from "./blog-mapper";
 
 export class BlogService {
@@ -11,7 +11,7 @@ export class BlogService {
                 title: blogInput.getTitle(),
                 description: blogInput.getDescription()
             }
-            const blogRef = await database.collection('blog').add(data);
+            const blogRef = await databaseFirestore.collection('blog').add(data);
             const blogFromDb = await blogRef.get();
 
             return mapBlogFromDbToBlog(blogFromDb);
@@ -34,7 +34,7 @@ export class BlogService {
 
     static async getBlogs(): Promise<Blog[]> {
         try {
-            const blogsFromDb = await database.collection('blog').get();
+            const blogsFromDb = await databaseFirestore.collection('blog').get();
             return mapBlogsFromDbToBlogs(blogsFromDb);
         } catch(error){
             throw new Error('No blogs available')
@@ -43,17 +43,17 @@ export class BlogService {
 
     static async getBlog(uuidBlog: string): Promise<Blog> {
         try {
-            if (!uuidBlog) throw new Error('Blog ID is required');
+            if (!uuidBlog) throw new Error('Product ID is required');
 
-            const blogFromDb = await database.collection('blogs').doc(uuidBlog).get();
+            const blogFromDb = await databaseFirestore.collection('blogs').doc(uuidBlog).get();
 
             if (!blogFromDb.exists){
-                throw new Error('Blog doesnt exist.')
+                throw new Error('Product doesnt exist.')
             }
 
             return mapBlogFromDbToBlog(blogFromDb);
         } catch(error){
-            throw new Error('Blog doesnt exist.')
+            throw new Error('Product doesnt exist.')
         }
     }
 }
