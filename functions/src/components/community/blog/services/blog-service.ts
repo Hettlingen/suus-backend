@@ -43,17 +43,17 @@ export class BlogService {
 
     static async getBlog(uuidBlog: string): Promise<Blog> {
         try {
-            if (!uuidBlog) throw new Error('Product ID is required');
+            if (!uuidBlog) throw new Error('Blog-ID is required');
 
             const blogFromDb = await databaseFirestore.collection('blogs').doc(uuidBlog).get();
 
             if (!blogFromDb.exists){
-                throw new Error('Product doesnt exist.')
+                throw new Error('Blog doesnt exist.')
             }
 
             return mapBlogFromDbToBlog(blogFromDb);
         } catch(error){
-            throw new Error('Product doesnt exist.')
+            throw new Error('Blog doesnt exist.')
         }
     }
 }

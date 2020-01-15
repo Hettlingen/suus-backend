@@ -51,9 +51,10 @@ const createPool = async () => {
     databaseMySql = await mysql.createPool({
         user: 'root',
         password: 'scoop',
-        database: 'blogs',
+        database: 'shop',
         // If connecting via unix domain socket, specify the path
-        socketPath: `/cloudsql/scoop-backend-3000:europe-west1:scoop-database`,
+        socketPath: '/cloudsql/scoop-backend-3000:europe-west1:scoop-database',
+
         // If connecting via TCP, enter the IP and port instead
         // host: 'localhost',
         // port: 3306,
@@ -92,7 +93,7 @@ const createPool = async () => {
 };
 
 createPool()
-    .then((value) => {console.log('Pool erstellt')})
-    .catch((error) => {console.log('Fehler beim Erstellen des Pools')});
+    .then((value) => {console.log('[myFarmer] Database pool erstellt')})
+    .catch((error) => {console.log('[myFarmer] Fehler beim Erstellen des Pools')});
 
 // END Database GOOGLE CLOUD MYSQL ----------------------------------------

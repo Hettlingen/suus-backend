@@ -1,23 +1,30 @@
-import {mapShopFromDbToShop} from "./shop-mapper";
 import {Shop} from "../model/shop";
 import {databaseMySql} from "../../../index";
+import {mapShopFromDbToShop} from "./shop-mapper";
 
 export class ShopService {
 
     static async getShop(uuidShop: string): Promise<Shop> {
-        if (!uuidShop) throw new Error('Product ID is required');
-        let query = `SELECT * FROM shops WHERE uuid=${uuidShop}`;
+        if (!uuidShop) throw new Error('[myfarmer] Shop-ID is required');
+
+        let query = `SELECT * FROM shop WHERE uuid=${uuidShop}`;
 
         try {
-            try {
-                const shopFromDb = databaseMySql.query(query);
-                return mapShopFromDbToShop(shopFromDb);
-            }
-            catch (error) {
-                throw new Error('No products found');
-            }
+            console.log('[myfarmer] START Query');
+            const shopFromDb = databaseMySql.query(query);
+            console.log('[myfarmer] END Query');
+
+            databaseMySql.query(query)
+                .then(() => {
+                    return mapShopFromDbToShop(shopFromDb);
+                }).catch(function(error: any){
+                    throw new Error('[myFarmer] Shop doesnt exist on database.')
+            });
+
+            return shopFromDb;
         } catch(error){
-            throw new Error('Product doesnt exist.')
+            console.log('[myfarmer] ' + error);
+            throw new Error('[myfarmer] Error reading shop from database');
         }
     }
 }
