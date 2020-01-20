@@ -10,10 +10,6 @@ export class ShopService {
 
         try {
             const shopFromDb = await databaseShop.query(query);
-
-            console.log('query-result: ' + shopFromDb);
-            console.log('Index 1 of query-result: ' + shopFromDb[0]);
-
             return shopFromDb[0];
         } catch(error) {
             throw new Error('[myfarmer] Error reading shop from database: ' + error);
