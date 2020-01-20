@@ -1,5 +1,5 @@
 import {Shop} from "../model/shop";
-import {databaseMySql} from "../../../index";
+import {databaseShop} from "../../../index";
 import {mapShopFromDbToShop} from "./shop-mapper";
 
 export class ShopService {
@@ -11,16 +11,15 @@ export class ShopService {
 
         try {
             console.log('[myfarmer] START Query');
-            const shopFromDb = databaseMySql.query(query);
+            const shopFromDb = databaseShop.query(query);
             console.log('[myfarmer] END Query');
 
-            databaseMySql.query(query)
+            databaseShop.query(query)
                 .then(() => {
                     return mapShopFromDbToShop(shopFromDb);
                 }).catch(function(error: any){
                     throw new Error('[myFarmer] Shop doesnt exist on database.')
             });
-
             return shopFromDb;
         } catch(error){
             console.log('[myfarmer] ' + error);

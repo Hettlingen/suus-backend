@@ -1,8 +1,11 @@
-import * as fs from "fs";
+import * as fs from 'fs';
+import {UserAccount} from '../model/user-account';
+import * as uuidGenerator from 'uuid/v4';
+
 
 export class AuthenticationService {
 
-    RSA_PRIVATE_KEY = fs.readFileSync('./demos/private.key');
+    RSA_PRIVATE_KEY = fs.readFileSync('./src/util/authentication/private.key');
 
     // static login(userName: string, password: string): Promise<Object> {
     //     return AuthenticationServiceMysql.readUserAccountByUserNamePassword(userName, password)
@@ -34,14 +37,23 @@ export class AuthenticationService {
     //     return null;
     // }
 
-    // static register(person: Person): Promise<UserAccount> {
-    //     console.log('Register - Service');
-    //
-    //     return AuthenticationServiceMysql.createUserAccount(person)
-    //         .then(function(userAccount: UserAccount) {
-    //             return userAccount;
-    //         }).catch(function(error: any){
-    //             throw new Error('Error during login: ' + error);
-    //         });
-    // }
+    static async register(userAccount: UserAccount): Promise<UserAccount> {
+        userAccount.uuid = uuidGenerator();
+
+        // bcrypt.hash(userAccount.password, 10, function (error, hash) {
+        //     console.log('Der hash-Wert lautet: ' + hash);
+        //
+        //     const query = `INSERT INTO UserAccount(uuid, userName, password, email) VALUES (${userAccount.uuid}, ${userAccount.userName}, ${userAccount.password}, ${userAccount.email});`;
+        //
+        //     const uuid = databaseUserAccount.query(query)
+        //         .then()
+        //         .catch();
+        //
+        //     console.log('Die uuid lautet: ' + uuid);
+        //
+        //     if (!uuid) throw new Error('[myfarmer] Error inserting user-account from database.');
+        // });
+
+        return Promise.reject();
+    }
 }
