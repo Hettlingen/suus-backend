@@ -42,6 +42,7 @@ export class BlogService {
     }
 
     static async getBlog(uuidBlog: string): Promise<Blog> {
+        console.log('START: BlogService.getBlog: ' + uuidBlog);
         try {
             if (!uuidBlog) throw new Error('Blog-ID is required');
 

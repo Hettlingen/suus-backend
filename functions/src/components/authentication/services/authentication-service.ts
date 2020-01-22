@@ -40,6 +40,7 @@ export class AuthenticationService {
     }
 
     static async register(userAccount: UserAccount): Promise<UserAccount> {
+        console.log('START: AuthenticationService.getBlog: ' + JSON.stringify(userAccount));
         userAccount.uuid = uuidGenerator();
 
         const query = `INSERT INTO UserAccount(uuid, userName, password, email) VALUES (${userAccount.uuid}, ${userAccount.userName}, ${userAccount.password}, ${userAccount.email});`;

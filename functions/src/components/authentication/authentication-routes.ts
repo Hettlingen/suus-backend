@@ -13,12 +13,13 @@ import {UserAccount} from "./model/user-account";
 export class AuthenticationRoutes {
 
     public static routes(app: any): void {
+
         app.route('/user-account/login').post((request: Request, response: Response) => {
             AuthenticationService.login(request.body.userName, request.body.password)
                 .then(function(userAccount: UserAccount) {
-                response.status(200).send(userAccount);
-            }).catch(function(error: any){
-                response.status(404).send("Shop wasn't found: " + error)
+                    response.status(200).send(userAccount);
+                }).catch(function(error: any){
+                    response.status(404).send("Login wasn't successful: " + error)
             });
         })
 
@@ -27,7 +28,7 @@ export class AuthenticationRoutes {
                 .then(function(logoutSuccessful: boolean) {
                     response.status(200).send(logoutSuccessful);
                 }).catch(function(error: any){
-                    response.status(404).send("Shop wasn't found: " + error)
+                    response.status(404).send("Logout wasn't successful: " + error)
             });
         })
 
@@ -36,7 +37,7 @@ export class AuthenticationRoutes {
                 .then(function(userAccount: UserAccount) {
                     response.status(200).send(userAccount);
                 }).catch(function(error: any){
-                    response.status(404).send("Shop wasn't found: " + error)
+                    response.status(404).send("Registration wasn't successful: " + error)
             });
         })
 
