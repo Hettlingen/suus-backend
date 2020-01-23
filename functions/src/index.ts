@@ -3,7 +3,6 @@ import * as admin from 'firebase-admin';
 import * as express from 'express';
 import * as bodyParser from "body-parser";
 import * as mysql from 'promise-mysql';
-import * as cors from "cors";
 import {Routes} from "./routes";
 
 admin.initializeApp(functions.config().firebase);
@@ -16,30 +15,16 @@ main.use(bodyParser.json());
 
 export const webApi = functions.https.onRequest(main);
 
-app.get('/warmup', (request, response) => {
-    response.send('Hello SCOOP Backend');
-})
+// Initialize CORS ------------------------------------------------
+app.use(function (req, res, next) {
+    res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+    res.header('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+    res.header('Access-Control-Allow-Credentials', 'true');
+    res.header('Access-Control-Allow-Origin', 'https://myfarmer-3000.web.app');
+    next();
+});
 
-var router = express.Router();
-
-// START Initialize CORS ----------------------------------------------
-const options:cors.CorsOptions = {
-    allowedHeaders: ["Origin", "X-Requested-With", "Content-Type", "Accept", "X-Access-Token"],
-    credentials: true,
-    methods: 'GET,HEAD,OPTIONS,PUT,PATCH,POST,DELETE',
-    origin: 'https://myfarmer-3000.web.app',
-    preflightContinue: false
-};
-
-//use cors middleware
-router.use(cors(options));
-
-//add your routes
 Routes.routes(app);
-
-//enable pre-flight
-router.options("*", cors(options));
-// END Initialize CORS ------------------------------------------------
 
 // Initialize Database GOOGLE FIRESTORE ------------------------------------------
 export const databaseFirestore = admin.firestore();
