@@ -1,6 +1,7 @@
 import * as fs from 'fs';
 import {UserAccount} from '../model/user-account';
 import * as uuidGenerator from 'uuid/v4';
+import * as bcrypt from 'bcrypt';
 import {databaseUserAccount} from "../../../index";
 
 
@@ -36,41 +37,26 @@ export class AuthenticationService {
     //     });
     };
 
-    static logout(uuidUserAccount: string): Promise<boolean> {
-        return Promise.resolve(true);
-    }
-
     static async register(userAccount: UserAccount): Promise<UserAccount> {
-        console.log('START: AuthenticationService.register: ' + JSON.stringify(userAccount));
         userAccount.uuid = uuidGenerator();
 
-        const query = `INSERT INTO UserAccount(uuid, userName, password, email) VALUES ('${userAccount.uuid}', '${userAccount.userName}', '${userAccount.password}', '${userAccount.email}')`;
+        const hashedPassword = await bcrypt.hash(userAccount.password, 10);
+        const query = `INSERT INTO UserAccount(uuid, userName, password, email) VALUES ('${userAccount.uuid}', '${userAccount.userName}', '${hashedPassword}', '${userAccount.email}')`;
 
         try {
             const uuidFromDb = await databaseUserAccount.query(query);
 
-            console.log('UUID lautet: ' + uuidFromDb);
-
             if (!uuidFromDb) throw new Error('[myfarmer] Error inserting user-account from database.');
+
             return uuidFromDb[0];
         } catch(error) {
             throw new Error('[myfarmer] Error execute insert-query user-account: ' + error);
         }
 
-        // bcrypt.hash(userAccount.password, 10, function (error, hash) {
-        //     console.log('Der hash-Wert lautet: ' + hash);
-        //
-        //     const query = `INSERT INTO UserAccount(uuid, userName, password, email) VALUES (${userAccount.uuid}, ${userAccount.userName}, ${userAccount.password}, ${userAccount.email});`;
-        //
-        //     const uuid = databaseUserAccount.query(query)
-        //         .then()
-        //         .catch();
-        //
-        //     console.log('Die uuid lautet: ' + uuid);
-        //
-        //     if (!uuid) throw new Error('[myfarmer] Error inserting user-account from database.');
-        // });
-
         return Promise.reject();
+    }
+
+    static logout(uuidUserAccount: string): Promise<boolean> {
+        return Promise.resolve(true);
     }
 }
