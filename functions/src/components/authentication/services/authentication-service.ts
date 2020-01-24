@@ -2,14 +2,14 @@ import * as fs from 'fs';
 import {UserAccount} from '../model/user-account';
 import * as uuidGenerator from 'uuid/v4';
 import * as bcrypt from 'bcrypt';
-import {databaseUserAccount} from "../../../index";
+import {AuthenticationDatabseService} from "./database/authentication-databse-service";
 
 
 export class AuthenticationService {
 
     RSA_PRIVATE_KEY = fs.readFileSync('./src/util/authentication/private.key');
 
-    static login(userName: string, password: string): Promise<UserAccount> {
+    public static login(userName: string, password: string): Promise<UserAccount> {
         console.log('START: AuthenticationService.login: ' + JSON.stringify(userName));
         return Promise.resolve(new UserAccount('1', 'Martin', 'scoop', 'martinbraun@scoop.ch'));
     //     return AuthenticationServiceMysql.readUserAccountByUserNamePassword(userName, password)
@@ -37,26 +37,37 @@ export class AuthenticationService {
     //     });
     };
 
-    static async register(userAccount: UserAccount): Promise<UserAccount> {
-        userAccount.uuid = uuidGenerator();
-
+    public static async register(userAccount: UserAccount): Promise<UserAccount> {
         const hashedPassword = await bcrypt.hash(userAccount.password, 10);
-        const query = `INSERT INTO UserAccount(uuid, userName, password, email) VALUES ('${userAccount.uuid}', '${userAccount.userName}', '${hashedPassword}', '${userAccount.email}')`;
+
+        if (this.isUserAccountExisting(userAccount.userName)) {
+            throw new Error('[myfarmer] Cannot register the new user-account');
+        }
 
         try {
-            const uuidFromDb = await databaseUserAccount.query(query);
-
-            if (!uuidFromDb) throw new Error('[myfarmer] Error inserting user-account from database.');
-
-            return uuidFromDb[0];
-        } catch(error) {
-            throw new Error('[myfarmer] Error execute insert-query user-account: ' + error);
+            return AuthenticationDatabseService.createUserAccount(
+                uuidGenerator(),
+                userAccount.userName,
+                hashedPassword,
+                userAccount.email);
+        } catch (error) {
+            throw new Error('[myfarmer] Error create new user-account: ' + error);
         }
 
         return Promise.reject();
     }
 
-    static logout(uuidUserAccount: string): Promise<boolean> {
+    public static logout(uuidUserAccount: string): Promise<boolean> {
         return Promise.resolve(true);
+    }
+
+    private static isUserAccountExisting(userName: string): boolean {
+        AuthenticationDatabseService.readUserAccountByUserName(userName)
+            .then(userAccount => {
+                return userAccount ? true : false;
+            }).catch(error => {
+                return false;
+            });
+        return false;
     }
 }
