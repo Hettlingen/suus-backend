@@ -19,7 +19,7 @@ export class AuthenticationRoutes {
                 .then(function(userAccount: UserAccount) {
                     response.status(200).send(userAccount);
                 }).catch(function(error: any){
-                    response.status(404).send("Login wasn't successful: " + error)
+                    response.status(401).send("User isn't authorized: " + error)
             });
         })
 
