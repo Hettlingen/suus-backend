@@ -51,27 +51,6 @@ export class AuthenticationDatabseService {
         }
     }
 
-    static async readUserAccountByUserNamePassword(userName: string, passordHashed: string): Promise<UserAccount> {
-        if (!userName) throw new Error('[myfarmer] Wrong parameters');
-
-        const query = `SELECT * FROM UserAccount WHERE userName='${userName}' AND password='${passordHashed}'`;
-
-        try {
-            const userAccountFromDb = await databaseUserAccount.query(query);
-
-            if (!userAccountFromDb) {
-                console.log('ERROR: reading useraccount');
-                throw new Error('[myfarmer] Error sql user-account from database');
-            }
-
-            console.log('SUCCESSFUL: UserAccount found ' + userAccountFromDb[0]);
-            return userAccountFromDb[0];
-        } catch(error) {
-            console.log('ERROR: reading useraccount catch');
-            throw new Error('[myfarmer] Error reading user-account from database: ' + error);
-        }
-    }
-
     // static updateUserAccount(): UserAccount {
     //     return null;
     // }

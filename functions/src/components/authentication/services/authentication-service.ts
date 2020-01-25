@@ -16,29 +16,28 @@ export class AuthenticationService {
 
         // TODO use this methode validateEmailAndPassword
 
-        return AuthenticationDatabseService.readUserAccountByUserNamePassword(userName, password)
-            .then(function(userAccount) {
+        return AuthenticationDatabseService.readUserAccountByUserName(userName)
+            .then(async function(userAccount) {
                 if (userAccount != null && userName === userAccount.userName) {
-                    bcrypt.compare(password, userAccount.password, function(err, isMatch) {
-                        if (err || isMatch === false) {
-                            return err;
-                        }
+                    const match = await bcrypt.compare(password, userAccount.password);
 
-                        const jwtBearerToken = jwt.sign({}, RSA_PRIVATE_KEY, {
-                            algorithm: 'RS256',
-                            expiresIn: jwtExpiresIn,
-                            subject: userAccount.uuid
-                        });
+                    if (!match) {
+                        throw new Error('[AuthenticationService] Bad Username or Password');
+                    }
 
-                        userAccount.authenticationToken.token = jwtBearerToken;
-                        userAccount.authenticationToken.tokenExpiresIn = jwtExpiresIn;
-
-                        return userAccount;
+                    const jwtBearerToken = jwt.sign({}, RSA_PRIVATE_KEY, {
+                        algorithm: 'RS256',
+                        expiresIn: jwtExpiresIn,
+                        subject: userAccount.uuid
                     });
+
+                    userAccount.authenticationToken.token = jwtBearerToken;
+                    userAccount.authenticationToken.tokenExpiresIn = jwtExpiresIn;
+
+                    return userAccount;
                 } else {
                     throw new Error('[AuthenticationService] Bad Username or Password');
                 }
-                return userAccount;
             }).catch(function(error){
                 throw new Error('[AuthenticationService] Error during login: ' + error);
         });
