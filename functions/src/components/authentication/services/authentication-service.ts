@@ -11,6 +11,10 @@ export class AuthenticationService {
     public static login(userName: string, password: string): Promise<UserAccount> {
         console.log('START: AuthenticationService.login: ' + JSON.stringify(userName));
         const RSA_PRIVATE_KEY = fs.readFileSync('./src/util/authentication/private.key');
+        // because in the jwt token the value is milliseconds or you can use "2 days", "10h", "7d"
+        const jwtExpiresIn = '8h';
+
+        // TODO use this methode validateEmailAndPassword
 
         return AuthenticationDatabseService.readUserAccountByUserNamePassword(userName, password)
             .then(function(userAccount) {
@@ -22,11 +26,14 @@ export class AuthenticationService {
 
                         const jwtBearerToken = jwt.sign({}, RSA_PRIVATE_KEY, {
                             algorithm: 'RS256',
-                            expiresIn: 120,
+                            expiresIn: jwtExpiresIn,
                             subject: userAccount.uuid
                         });
 
-                        return jwtBearerToken;
+                        userAccount.authenticationToken.token = jwtBearerToken;
+                        userAccount.authenticationToken.tokenExpiresIn = jwtExpiresIn;
+
+                        return userAccount;
                     });
                 } else {
                     throw new Error('[AuthenticationService] Bad Username or Password');
@@ -72,5 +79,10 @@ export class AuthenticationService {
             });
         console.log('ERROR: isUserAccountExisting, return false');
         return false;
+    }
+
+    // @ts-ignore
+    private static validateEmailAndPassword(userName: string, password: string): boolean {
+        return true;
     }
 }
