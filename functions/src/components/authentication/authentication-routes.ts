@@ -41,8 +41,13 @@ export class AuthenticationRoutes {
             });
         })
 
-        // app.route('/user-account/activate/:activationCode').post((request: Request, response: Response) => {
-        //     AuthenticationService.activateUserAccount(request, response);
-        // })
+        app.route('/user-account/:uuidUserAccount').get(async (request: Request, response: Response) => {
+            AuthenticationService.getUserAccount(request.params.uuidUserAccount)
+                .then(function(userAccount: UserAccount) {
+                    response.status(200).send(userAccount);
+                }).catch(function(error: any){
+                response.status(404).send("User-Account wasn't found: " + error)
+            });
+        })
     }
 }

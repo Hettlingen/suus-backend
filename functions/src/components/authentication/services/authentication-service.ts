@@ -62,6 +62,16 @@ export class AuthenticationService {
         return Promise.resolve(true);
     }
 
+    public static async getUserAccount(uuidUserAccount: string): Promise<UserAccount> {
+        const userAccount = await AuthenticationDatabseService.readUserAccountByUuid(uuidUserAccount);
+
+        if (userAccount === null || userAccount === undefined) {
+            throw new Error('[myfarmer] AuthenticationService.getUserAccount - User-Account not found');
+        }
+
+        return userAccount;
+    }
+
     // @ts-ignore
     private static async isUserAccountExisting(userName: string): Promise<boolean> {
         try {
