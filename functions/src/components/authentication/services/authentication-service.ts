@@ -8,7 +8,7 @@ import {AuthenticationDatabseService} from "./database/authentication-databse-se
 
 export class AuthenticationService {
 
-    public static login(userName: string, password: string): Promise<UserAccount> {
+    public static async login(userName: string, password: string): Promise<UserAccount> {
         console.log('START: AuthenticationService.login: ' + JSON.stringify(userName));
         const RSA_PRIVATE_KEY = fs.readFileSync('./src/util/authentication/private.key');
         // because in the jwt token the value is milliseconds or you can use "2 days", "10h", "7d"
@@ -16,39 +16,36 @@ export class AuthenticationService {
 
         // TODO use this methode validateEmailAndPassword
 
-        return AuthenticationDatabseService.readUserAccountByUserName(userName)
-            .then(async function(userAccount) {
-                if (userAccount != null && userName === userAccount.userName) {
-                    const match = await bcrypt.compare(password, userAccount.password);
+        const userAccount = await AuthenticationDatabseService.readUserAccountByUserName(userName);
 
-                    if (!match) {
-                        throw new Error('[AuthenticationService] Bad Username or Password');
-                    }
+        if (userAccount === null || userAccount === undefined || userName !== userAccount.userName) {
+            throw new Error('[AuthenticationService] Bad Username or Password');
+        }
 
-                    const jwtBearerToken = jwt.sign({}, RSA_PRIVATE_KEY, {
-                        algorithm: 'RS256',
-                        expiresIn: jwtExpiresIn,
-                        subject: userAccount.uuid
-                    });
+        const match = await bcrypt.compare(password, userAccount.password);
 
-                    userAccount.authenticationToken.token = jwtBearerToken;
-                    userAccount.authenticationToken.tokenExpiresIn = jwtExpiresIn;
+        if (!match) {
+            throw new Error('[AuthenticationService] Bad Username or Password');
+        }
 
-                    return userAccount;
-                } else {
-                    throw new Error('[AuthenticationService] Bad Username or Password');
-                }
-            }).catch(function(error){
-                throw new Error('[AuthenticationService] Error during login: ' + error);
+        const jwtBearerToken = jwt.sign({}, RSA_PRIVATE_KEY, {
+            algorithm: 'RS256',
+            expiresIn: jwtExpiresIn,
+            subject: userAccount.uuid
         });
+
+        userAccount.authenticationToken.token = jwtBearerToken;
+        userAccount.authenticationToken.tokenExpiresIn = jwtExpiresIn;
+
+        return userAccount;
     };
 
     public static async register(userAccount: UserAccount): Promise<UserAccount> {
         const hashedPassword = await bcrypt.hash(userAccount.password, 10);
 
-        if (this.isUserAccountExisting(userAccount.userName)) {
-            throw new Error('[myfarmer] Cannot register the new user-account');
-        }
+        // if (this.isUserAccountExisting(userAccount.userName)) {
+        //     throw new Error('[myfarmer] AuthenticationService.register - UserAccount is already existing');
+        // }
 
         try {
             return AuthenticationDatabseService.createUserAccount(
@@ -57,27 +54,30 @@ export class AuthenticationService {
                 hashedPassword,
                 userAccount.email);
         } catch (error) {
-            throw new Error('[myfarmer] Error create new user-account: ' + error);
+            throw new Error('[myfarmer] AuthenticationService.register - Error create new user-account: ' + error);
         }
-
-        return Promise.reject();
     }
 
     public static logout(uuidUserAccount: string): Promise<boolean> {
         return Promise.resolve(true);
     }
 
-    private static isUserAccountExisting(userName: string): boolean {
-        AuthenticationDatabseService.readUserAccountByUserName(userName)
-            .then(userAccount => {
-                console.log('SUCCESSFUL: THEN isUserAccountExisting, retrun useraccount');
-                return userAccount ? true : false;
-            }).catch(error => {
-            console.log('ERROR: CATCH isUserAccountExisting, return false');
-                return false;
-            });
-        console.log('ERROR: isUserAccountExisting, return false');
-        return false;
+    // @ts-ignore
+    private static async isUserAccountExisting(userName: string): Promise<boolean> {
+        try {
+            const userAccount = await AuthenticationDatabseService.readUserAccountByUserName(userName);
+
+            if (userAccount) {
+                console.log('isUserAccountExisting => true: ' + JSON.stringify(userAccount));
+                return true;
+            }
+
+            console.log('isUserAccountExisting => false: ' + JSON.stringify(userAccount));
+            return false;
+        } catch (error) {
+            console.log('isUserAccountExisting => false');
+            return false;
+        }
     }
 
     // @ts-ignore

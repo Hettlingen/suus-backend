@@ -31,23 +31,22 @@ export class AuthenticationDatabseService {
     }
 
     static async readUserAccountByUserName(userName: string): Promise<UserAccount> {
-        if (!userName) throw new Error('[myfarmer] Wrong parameters');
+        if (!userName) throw new Error('[myfarmer] AuthenticationDatabseService.readUserAccountByUserName - Wrong parameters');
 
         const query = `SELECT * FROM UserAccount WHERE userName='${userName}'`;
 
         try {
             const userAccountFromDb = await databaseUserAccount.query(query);
 
-            if (!userAccountFromDb) {
-                console.log('ERROR: reading useraccount');
-                throw new Error('[myfarmer] Error sql user-account from database');
+            if (!userAccountFromDb || userAccountFromDb[0] === undefined) {
+                throw new Error('[myfarmer] AuthenticationDatabseService.readUserAccountByUserName - No user-account found.');
             }
 
-            console.log('SUCCESSFUL: UserAccount found ' + userAccountFromDb[0]);
+            console.log('SUCCESSFUL: UserAccount found ' + JSON.stringify(userAccountFromDb[0]));
             return userAccountFromDb[0];
         } catch(error) {
             console.log('ERROR: reading useraccount catch');
-            throw new Error('[myfarmer] Error reading user-account from database: ' + error);
+            throw new Error('[myfarmer] AuthenticationDatabseService.readUserAccountByUserName - Error reading user-account from database: ' + error);
         }
     }
 
