@@ -4,18 +4,19 @@ import * as uuidGenerator from 'uuid/v4';
 import * as bcrypt from 'bcrypt';
 import * as jwt from 'jsonwebtoken';
 import {AuthenticationDatabseService} from "./database/authentication-databse-service";
+import {AuthenticationToken} from "../model/authenticationToken";
 
 
 export class AuthenticationService {
 
+    private static RSA_PUBLIC_PRIVATE_KEY = fs.readFileSync('src/utils/authentication/private.key');
+    // private static RSA_PUBLIC_PUBLIC_KEY = fs.readFileSync('src/utils/authentication/public.key');
+
     public static async login(userName: string, password: string): Promise<UserAccount> {
-        console.log('START: AuthenticationService.login: ' + JSON.stringify(userName));
-        const RSA_PRIVATE_KEY = fs.readFileSync('./src/util/authentication/private.key');
         // because in the jwt token the value is milliseconds or you can use "2 days", "10h", "7d"
         const jwtExpiresIn = '8h';
 
-        // TODO use this methode validateEmailAndPassword
-
+        // TODO use this methode validateEmailAndPassword instead of reading the user
         const userAccount = await AuthenticationDatabseService.readUserAccountByUserName(userName);
 
         if (userAccount === null || userAccount === undefined || userName !== userAccount.userName) {
@@ -28,14 +29,16 @@ export class AuthenticationService {
             throw new Error('[AuthenticationService] Bad Username or Password');
         }
 
-        const jwtBearerToken = jwt.sign({}, RSA_PRIVATE_KEY, {
+        const jwtBearerToken = jwt.sign({}, this.RSA_PUBLIC_PRIVATE_KEY, {
             algorithm: 'RS256',
             expiresIn: jwtExpiresIn,
             subject: userAccount.uuid
         });
 
-        userAccount.authenticationToken.token = jwtBearerToken;
-        userAccount.authenticationToken.tokenExpiresIn = jwtExpiresIn;
+        const authenticationToken = new AuthenticationToken();
+        authenticationToken.token = jwtBearerToken;
+        authenticationToken.tokenExpiresIn = jwtExpiresIn;
+        userAccount.authenticationToken = authenticationToken;
 
         return userAccount;
     };
@@ -43,9 +46,9 @@ export class AuthenticationService {
     public static async register(userAccount: UserAccount): Promise<UserAccount> {
         const hashedPassword = await bcrypt.hash(userAccount.password, 10);
 
-        // if (this.isUserAccountExisting(userAccount.userName)) {
-        //     throw new Error('[myfarmer] AuthenticationService.register - UserAccount is already existing');
-        // }
+        if (this.isUserAccountExisting(userAccount.userName)) {
+            throw new Error('[myfarmer] AuthenticationService.register - UserAccount is already existing');
+        }
 
         try {
             return AuthenticationDatabseService.createUserAccount(
@@ -72,22 +75,15 @@ export class AuthenticationService {
         return userAccount;
     }
 
-    // @ts-ignore
     private static async isUserAccountExisting(userName: string): Promise<boolean> {
-        try {
-            const userAccount = await AuthenticationDatabseService.readUserAccountByUserName(userName);
 
-            if (userAccount) {
-                console.log('isUserAccountExisting => true: ' + JSON.stringify(userAccount));
-                return true;
-            }
+        const userAccount = await AuthenticationDatabseService.readUserAccountByUserName(userName);
 
-            console.log('isUserAccountExisting => false: ' + JSON.stringify(userAccount));
-            return false;
-        } catch (error) {
-            console.log('isUserAccountExisting => false');
+        if (userAccount === null || userAccount === undefined) {
             return false;
         }
+
+        return true;
     }
 
     // @ts-ignore

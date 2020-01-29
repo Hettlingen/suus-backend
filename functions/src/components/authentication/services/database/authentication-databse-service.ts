@@ -18,7 +18,7 @@ export class AuthenticationDatabseService {
     }
 
     static async readUserAccountByUuid(uuidUserAccount: string): Promise<UserAccount> {
-        if (!uuidUserAccount) throw new Error('[myfarmer] UserAccount-ID is required');
+        if (!uuidUserAccount) throw new Error('[myfarmer] AuthenticationDatabseService.readUserAccountByUuid - Wrong parameters');
 
         const query = `SELECT * FROM UserAccount WHERE uuid='${uuidUserAccount}'`;
 
@@ -26,7 +26,7 @@ export class AuthenticationDatabseService {
             const userAccountFromDb = await databaseUserAccount.query(query);
             return userAccountFromDb[0];
         } catch(error) {
-            throw new Error('[myfarmer] Error reading user-account from database: ' + error);
+            throw new Error('[myfarmer] AuthenticationDatabseService.readUserAccountByUuid - Error reading user-account from database: ' + error);
         }
     }
 
@@ -37,15 +37,8 @@ export class AuthenticationDatabseService {
 
         try {
             const userAccountFromDb = await databaseUserAccount.query(query);
-
-            if (!userAccountFromDb || userAccountFromDb[0] === undefined) {
-                throw new Error('[myfarmer] AuthenticationDatabseService.readUserAccountByUserName - No user-account found.');
-            }
-
-            console.log('SUCCESSFUL: UserAccount found ' + JSON.stringify(userAccountFromDb[0]));
             return userAccountFromDb[0];
         } catch(error) {
-            console.log('ERROR: reading useraccount catch');
             throw new Error('[myfarmer] AuthenticationDatabseService.readUserAccountByUserName - Error reading user-account from database: ' + error);
         }
     }
