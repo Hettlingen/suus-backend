@@ -3,6 +3,7 @@ import {UserAccount} from '../model/user-account';
 import * as uuidGenerator from 'uuid/v4';
 import * as bcrypt from 'bcrypt';
 import * as jwt from 'jsonwebtoken';
+import * as expressJwt from 'express-jwt';
 import {AuthenticationDatabseService} from "./database/authentication-databse-service";
 import {AuthenticationToken} from "../model/authenticationToken";
 
@@ -10,11 +11,11 @@ import {AuthenticationToken} from "../model/authenticationToken";
 export class AuthenticationService {
 
     private static RSA_PUBLIC_PRIVATE_KEY = fs.readFileSync('src/utils/authentication/private.key');
-    // private static RSA_PUBLIC_PUBLIC_KEY = fs.readFileSync('src/utils/authentication/public.key');
+    private static RSA_PUBLIC_PUBLIC_KEY = fs.readFileSync('src/utils/authentication/public.key');
 
     public static async login(userName: string, password: string): Promise<UserAccount> {
         // because in the jwt token the value is milliseconds or you can use "2 days", "10h", "7d"
-        const jwtExpiresIn = '8h';
+        const jwtExpiresIn = '100000';  // 100 Sekunden
 
         // TODO use this methode validateEmailAndPassword instead of reading the user
         const userAccount = await AuthenticationDatabseService.readUserAccountByUserName(userName);
@@ -90,4 +91,8 @@ export class AuthenticationService {
     private static validateEmailAndPassword(userName: string, password: string): boolean {
         return true;
     }
+
+    public static checkIfAuthenticated() {
+        return expressJwt({secret: this.RSA_PUBLIC_PUBLIC_KEY});
+    };
 }
