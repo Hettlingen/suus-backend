@@ -1,60 +1,23 @@
 import {Blog} from "../model/blog";
-import {databaseFirestore} from "../../../../index";
-import {mapBlogFromDbToBlog, mapBlogsFromDbToBlogs} from "./blog-mapper";
+import {mapBlogFromDbToBlog} from "./blog-mapper";
+import {BlogDatabseService} from "./database/blog-databse-service";
 
 export class BlogService {
 
-    static async createBlog(blogInput: Blog): Promise<Blog> {
-        try {
-            const data = {
-                uuid: blogInput.getUuid(),
-                title: blogInput.getTitle(),
-                description: blogInput.getDescription()
-            }
-            const blogRef = await databaseFirestore.collection('blog').add(data);
-            const blogFromDb = await blogRef.get();
-
-            return mapBlogFromDbToBlog(blogFromDb);
-        } catch(error){
-            throw new Error('Fight doesnt exist.')
-        }
-    }
-
-    static updateBlog(blog: Blog): Promise<Blog> {
-        return new Promise<Blog>((resolve, reject) => {
-            resolve(new Blog());
-        });
-    }
-
-    static deleteBlog(uuidBlog: string): Promise<boolean> {
-        return new Promise<boolean>((resolve, reject) => {
-            resolve(true);
-        });
-    }
-
-    static async getBlogs(): Promise<Blog[]> {
-        try {
-            const blogsFromDb = await databaseFirestore.collection('blog').get();
-            return mapBlogsFromDbToBlogs(blogsFromDb);
-        } catch(error){
-            throw new Error('No blogs available')
-        }
-    }
-
     static async getBlog(uuidBlog: string): Promise<Blog> {
         console.log('START: BlogService.getBlog: ' + uuidBlog);
+        if (!uuidBlog) throw new Error('Blog-ID is required');
+
         try {
-            if (!uuidBlog) throw new Error('Blog-ID is required');
+            const blogFromDb = await BlogDatabseService.readBlog(uuidBlog);
 
-            const blogFromDb = await databaseFirestore.collection('blogs').doc(uuidBlog).get();
-
-            if (!blogFromDb.exists){
-                throw new Error('Blog doesnt exist.')
+            if (blogFromDb === null || blogFromDb === undefined) {
+                throw new Error('[myfarmer] BlogService.getBlog - Blog not found');
             }
 
             return mapBlogFromDbToBlog(blogFromDb);
         } catch(error){
-            throw new Error('Blog doesnt exist.')
+            throw new Error('[myfarmer] BlogService.getBlog - Error reading Blog');
         }
     }
 }

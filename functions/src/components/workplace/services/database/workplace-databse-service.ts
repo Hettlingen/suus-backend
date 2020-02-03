@@ -14,6 +14,8 @@ export class WorkplaceDatabseService {
                 throw new Error('Terms of use doesnt exist.')
             }
 
+            console.log('Resultat von der DB: ' + termsOfUseFromDb);
+
             return mapTermsOfUseFromDbToString(mapTermsOfUseFromDbToString);
         } catch(error){
             throw new Error('Terms of use doesnt exist.')
