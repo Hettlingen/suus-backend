@@ -3,7 +3,6 @@ import {UserAccount} from '../model/user-account';
 import * as uuidGenerator from 'uuid/v4';
 import * as bcrypt from 'bcrypt';
 import * as jwt from 'jsonwebtoken';
-import * as expressJwt from 'express-jwt';
 import {AuthenticationDatabseService} from "./database/authentication-databse-service";
 import {AuthenticationToken} from "../model/authenticationToken";
 
@@ -15,7 +14,7 @@ export class AuthenticationService {
 
     public static async login(userName: string, password: string): Promise<UserAccount> {
         // because in the jwt token the value is milliseconds or you can use "2 days", "10h", "7d"
-        const jwtExpiresIn = '100000';  // 100 Sekunden
+        const jwtExpiresIn = '1h';
 
         // TODO use this methode validateEmailAndPassword instead of reading the user
         const userAccount = await AuthenticationDatabseService.readUserAccountByUserName(userName);
@@ -67,6 +66,9 @@ export class AuthenticationService {
     }
 
     public static async getUserAccount(uuidUserAccount: string): Promise<UserAccount> {
+
+        console.log('START AuthenticationService.getUserAccount: ' + uuidUserAccount);
+
         const userAccount = await AuthenticationDatabseService.readUserAccountByUuid(uuidUserAccount);
 
         if (userAccount === null || userAccount === undefined) {
@@ -92,7 +94,22 @@ export class AuthenticationService {
         return true;
     }
 
-    public static checkIfAuthenticated() {
-        return expressJwt({secret: this.RSA_PUBLIC_PUBLIC_KEY});
+    public static checkIfAuthenticated(request: any, response: any, next: any) {
+        console.log('START AuthenticationService.checkIfAuthenticated: ' + this.RSA_PUBLIC_PUBLIC_KEY);
+
+        // We take the second part of the bearer token 'Bearer abdslfjksf....'
+        const token = request.headers.authorization.split(' ')[1];
+        console.log('Das Bearer Token lautet: ' + token);
+
+        if (!token) {
+            return request.status(401).json({ message: '[myfarmer] Missing Authorization Header' });
+        }
+
+        try {
+            jwt.verify(token, this.RSA_PUBLIC_PUBLIC_KEY);
+            next();
+        } catch(error) {
+            response.status(401).json({ message: '[myfarmer] Missing Authorization Header' });
+        }
     };
 }
