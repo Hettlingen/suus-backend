@@ -39,7 +39,7 @@ export class BlogRoutes {
                 .then(function(blog: Blog) {
                     response.status(200).send(blog);
                 }).catch(function(error: any){
-                response.status(404).send("Product wasn't found: " + error)
+                response.status(404).send("Blog wasn't found: " + error)
             });
         })
     }

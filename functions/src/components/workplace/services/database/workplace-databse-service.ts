@@ -3,22 +3,22 @@ import {mapTermsOfUseFromDbToString} from "../workplace-mapper";
 
 export class WorkplaceDatabseService {
 
-    static async getTermsOfUse(uuidTermsOfUse: string): Promise<string> {
-        console.log('START: WorkplaceDatabaseService.getTermsOfUse: ' + uuidTermsOfUse);
-        try {
-            if (!uuidTermsOfUse) throw new Error('Terms-of-use-ID is required');
+    static async readTermsOfUse(uuidTermsOfUse: string): Promise<string> {
+        console.log('START: WorkplaceDatabseService.readTermsOfUse: ' + uuidTermsOfUse);
+        if (!uuidTermsOfUse) throw new Error('[myfarmer] WorkplaceDatabseService.readTermsOfUse - Wrong parameters');
 
+        try {
             const termsOfUseFromDb = await databaseFirestore.collection('terms-of-use').doc(uuidTermsOfUse).get();
 
             if (!termsOfUseFromDb.exists){
-                throw new Error('Terms of use doesnt exist.')
+                throw new Error('[myfarmer] WorkplaceDatabseService.readTermsOfUse - Terms of use doesnt exist.')
             }
 
-            console.log('Resultat von der DB: ' + termsOfUseFromDb);
+            console.log('Resultat von der DB: ' + JSON.stringify(termsOfUseFromDb));
 
-            return mapTermsOfUseFromDbToString(mapTermsOfUseFromDbToString);
+            return mapTermsOfUseFromDbToString(termsOfUseFromDb);
         } catch(error){
-            throw new Error('Terms of use doesnt exist.')
+            throw new Error('[myfarmer] WorkplaceDatabseService.readTermsOfUse - Error reading terms-of-use from database: ' + error);
         }
     }
 }
