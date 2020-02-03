@@ -14,8 +14,5 @@ export const mapBlogsFromDbToBlogs = (blogsFromDb: any) => {
 
 export const mapBlogFromDbToBlog = (blogFromDb: any) => {
     const blog = new Blog();
-    blog.setUuid(blogFromDb.data().uuid);
-    blog.setTitle(blogFromDb.data().title);
-    blog.setDescription(blogFromDb.data().description);
     return blog;
 }
