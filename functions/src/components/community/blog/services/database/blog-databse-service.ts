@@ -8,6 +8,7 @@ export class BlogDatabseService {
         if (!uuidBlog) throw new Error('[myfarmer] BlogDatabseService.readBlog - Wrong parameters');
 
         const query = `SELECT * FROM blog WHERE uuid='${uuidBlog}'`;
+        // const query = `SELECT * FROM blog INNER JOIN post-category WHERE blog.uuid='${uuidBlog}' AND blog.uuid=post-category.uuidBlog`;
 
         try {
             const blogFromDb = await databaseBlog.query(query);
@@ -18,7 +19,7 @@ export class BlogDatabseService {
 
             return blogFromDb[0];
         } catch(error) {
-            throw new Error('[myfarmer] BlogDatabseService.readBlog - Error reading user-account from database: ' + error);
+            throw new Error('[myfarmer] BlogDatabseService.readBlog - Error reading blog from database: ' + error);
         }
     }
 }

@@ -42,12 +42,4 @@ export class AuthenticationDatabseService {
             throw new Error('[myfarmer] AuthenticationDatabseService.readUserAccountByUserName - Error reading user-account from database: ' + error);
         }
     }
-
-    // static updateUserAccount(): UserAccount {
-    //     return null;
-    // }
-    //
-    // static deleteUserAccount(): UserAccount {
-    //     return null;
-    // }
 }

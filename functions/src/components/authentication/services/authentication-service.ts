@@ -9,8 +9,7 @@ import {AuthenticationToken} from "../model/authenticationToken";
 
 export class AuthenticationService {
 
-    private static RSA_PUBLIC_PRIVATE_KEY = fs.readFileSync('src/utils/authentication/private.key');
-    private static RSA_PUBLIC_PUBLIC_KEY = fs.readFileSync('src/utils/authentication/public.key');
+    private static RSA_PRIVATE_KEY = fs.readFileSync('src/utils/authentication/private.key');
 
     public static async login(userName: string, password: string): Promise<UserAccount> {
         // because in the jwt token the value is milliseconds or you can use "2 days", "10h", "7d"
@@ -29,7 +28,7 @@ export class AuthenticationService {
             throw new Error('[AuthenticationService] Bad Username or Password');
         }
 
-        const jwtBearerToken = jwt.sign({}, this.RSA_PUBLIC_PRIVATE_KEY, {
+        const jwtBearerToken = jwt.sign({}, this.RSA_PRIVATE_KEY, {
             algorithm: 'RS256',
             expiresIn: jwtExpiresIn,
             subject: userAccount.uuid
@@ -61,10 +60,6 @@ export class AuthenticationService {
         }
     }
 
-    public static logout(uuidUserAccount: string): Promise<boolean> {
-        return Promise.resolve(true);
-    }
-
     public static async getUserAccount(uuidUserAccount: string): Promise<UserAccount> {
 
         console.log('START AuthenticationService.getUserAccount: ' + uuidUserAccount);
@@ -89,24 +84,24 @@ export class AuthenticationService {
         return true;
     }
 
-    // @ts-ignore
-    private static validateEmailAndPassword(userName: string, password: string): boolean {
-        return true;
-    }
-
     public static checkIfAuthenticated(request: any, response: any, next: any) {
-        console.log('START AuthenticationService.checkIfAuthenticated: ' + this.RSA_PUBLIC_PUBLIC_KEY);
+        const RSA_PRIVATE_KEY = fs.readFileSync('src/utils/authentication/private.key');
+        console.log('START AuthenticationService.checkIfAuthenticated: ' + RSA_PRIVATE_KEY);
 
         // We take the second part of the bearer token 'Bearer abdslfjksf....'
-        const token = request.headers.authorization.split(' ')[1];
-        console.log('Das Bearer Token lautet: ' + token);
+        let token = '';
+        const bearerToken = request.headers['authorization']; // Express headers are auto converted to lowercase
+        if (bearerToken.startsWith('Bearer ')) {
+            // Remove Bearer from string
+            token = bearerToken.slice(7, bearerToken.length);
+        }
 
         if (!token) {
             return request.status(401).json({ message: '[myfarmer] Missing Authorization Header' });
         }
 
         try {
-            jwt.verify(token, this.RSA_PUBLIC_PUBLIC_KEY);
+            jwt.verify(token, RSA_PRIVATE_KEY);
             next();
         } catch(error) {
             response.status(401).json({ message: '[myfarmer] Missing Authorization Header' });

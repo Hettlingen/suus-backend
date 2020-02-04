@@ -10,7 +10,7 @@ export class BlogService {
         try {
             return await BlogDatabseService.readBlog(uuidBlog);
         } catch(error){
-            throw new Error('[myfarmer] BlogService.getBlog - Error reading Blog');
+            throw new Error('[myfarmer] BlogService.getBlog - Error reading Blog' + error);
         }
     }
 }

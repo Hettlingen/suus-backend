@@ -23,15 +23,6 @@ export class AuthenticationRoutes {
             });
         })
 
-        app.route('/user-account/logout').post((request: Request, response: Response) => {
-            AuthenticationService.logout(request.body.uuidUserAccount)
-                .then(function(logoutSuccessful: boolean) {
-                    response.status(200).send(logoutSuccessful);
-                }).catch(function(error: any){
-                    response.status(404).send("Logout wasn't successful: " + error)
-            });
-        })
-
         app.route('/user-account/register').post(async (request: Request, response: Response) => {
             AuthenticationService.register(request.body)
                 .then(function(userAccount: UserAccount) {
