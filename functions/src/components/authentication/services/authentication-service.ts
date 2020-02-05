@@ -85,26 +85,33 @@ export class AuthenticationService {
     }
 
     public static checkIfAuthenticated(request: any, response: any, next: any) {
-        const RSA_PRIVATE_KEY = fs.readFileSync('src/utils/authentication/private.key');
-        console.log('START AuthenticationService.checkIfAuthenticated: ' + RSA_PRIVATE_KEY);
+        const RSA_PUBLIC_KEY = fs.readFileSync('src/utils/authentication/public.key');
+        console.log('START AuthenticationService.checkIfAuthenticated');
 
         // We take the second part of the bearer token 'Bearer abdslfjksf....'
         let token = '';
         const bearerToken = request.headers['authorization']; // Express headers are auto converted to lowercase
+
+        console.log('Bearer Token: ' + bearerToken);
+
         if (bearerToken.startsWith('Bearer ')) {
             // Remove Bearer from string
             token = bearerToken.slice(7, bearerToken.length);
         }
 
+        console.log('Token without text Bearer: ' + token);
+
         if (!token) {
-            return request.status(401).json({ message: '[myfarmer] Missing Authorization Header' });
+            return request.status(401).json({ message: '[myfarmer] Missing authorization header' });
         }
 
         try {
-            jwt.verify(token, RSA_PRIVATE_KEY);
+            jwt.verify(token, RSA_PUBLIC_KEY, { algorithms: ['RS256']});
+            console.log('Token was verified');
             next();
         } catch(error) {
-            response.status(401).json({ message: '[myfarmer] Missing Authorization Header' });
+            console.log('Error verifing token: ' + error);
+            response.status(401).json({ message: '[myfarmer] Couldnt verify the authorization header' });
         }
     };
 }
