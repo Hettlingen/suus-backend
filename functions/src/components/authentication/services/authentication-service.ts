@@ -86,20 +86,15 @@ export class AuthenticationService {
 
     public static checkIfAuthenticated(request: any, response: any, next: any) {
         const RSA_PUBLIC_KEY = fs.readFileSync('src/utils/authentication/public.key');
-        console.log('START AuthenticationService.checkIfAuthenticated');
 
-        // We take the second part of the bearer token 'Bearer abdslfjksf....'
         let token = '';
-        const bearerToken = request.headers['authorization']; // Express headers are auto converted to lowercase
-
-        console.log('Bearer Token: ' + bearerToken);
+        // Express headers are auto converted to lowercase
+        const bearerToken = request.headers['authorization'];
 
         if (bearerToken.startsWith('Bearer ')) {
             // Remove Bearer from string
             token = bearerToken.slice(7, bearerToken.length);
         }
-
-        console.log('Token without text Bearer: ' + token);
 
         if (!token) {
             return request.status(401).json({ message: '[myfarmer] Missing authorization header' });
@@ -107,10 +102,8 @@ export class AuthenticationService {
 
         try {
             jwt.verify(token, RSA_PUBLIC_KEY, { algorithms: ['RS256']});
-            console.log('Token was verified');
             next();
         } catch(error) {
-            console.log('Error verifing token: ' + error);
             response.status(401).json({ message: '[myfarmer] Couldnt verify the authorization header' });
         }
     };
