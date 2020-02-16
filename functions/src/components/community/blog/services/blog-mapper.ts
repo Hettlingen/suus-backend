@@ -1,4 +1,6 @@
 import {Blog} from "../model/blog";
+import {PostCategory} from "../model/post-category";
+import {Post} from "../model/post";
 
 export const mapBlogsFromDbToBlogs = (blogsFromDb: any) => {
     const blogs: Blog[] = [];
@@ -18,4 +20,20 @@ export const mapBlogFromDbToBlog = (blogFromDb: any) => {
     blog.title = blogFromDb.title;
     blog.description = blogFromDb.description;
     return blog;
+}
+
+export const mapPostCategoryFromDbToPostCategory = (postCategoryFromDb: any) => {
+    const postCategory = new PostCategory();
+    postCategory.uuid = postCategoryFromDb.uuid;
+    postCategory.title = postCategoryFromDb.title;
+    postCategory.description = postCategoryFromDb.description;
+    return postCategory;
+}
+
+export const mapPostFromDbToPost = (postFromDb: any) => {
+    const post = new Post();
+    post.uuid = postFromDb.uuid;
+    post.title = postFromDb.title;
+    post.content = postFromDb.content;
+    return post;
 }
