@@ -1,8 +1,8 @@
 import {Request, Response} from "express";
 import {ShopService} from "./services/shop-service";
 import {Shop} from "./model/shop";
-import {CheckoutService} from "./services/checkout-service";
-import {Payment} from "./model/accounting/payment";
+import {PaymentService} from "./services/payment-service";
+import {Payment} from "./model/accounting/Payment";
 
 export class ShopRoutes {
     public static routes(app: any): void {
@@ -17,7 +17,7 @@ export class ShopRoutes {
         })
 
         app.route('/checkout').get(async (request: Request, response: Response) => {
-            CheckoutService.checkout(request.body)
+            PaymentService.checkout(request.body)
                 .then(function(payment: Payment) {
                     response.status(200).send(payment);
                 }).catch(function(error: any){

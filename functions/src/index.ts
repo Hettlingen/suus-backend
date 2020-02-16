@@ -92,7 +92,7 @@ const createPool = async () => {
     databaseBlog = await mysql.createPool({
         user: 'root',
         password: 'scoop',
-        database: 'blog',
+        database: 'BlogSchema',
         socketPath: '/cloudsql/scoop-backend-3000:europe-west1:scoop-database',
         connectionLimit: 5,
         connectTimeout: 10000, // 10 seconds
@@ -107,3 +107,8 @@ createPool()
     .catch((error) => {console.log('[myFarmer] Fehler beim Erstellen des Pools')});
 
 // END Database GOOGLE CLOUD MYSQL ----------------------------------------
+
+// Initialize STRIPE PAYMENT ----------------------------------------------
+// const secret = process.env.STRIPE_KEY!;
+// export const stripe = new Stripe(secret, null);
+// END Database STRIPE PAYMENT --------------------------------------------

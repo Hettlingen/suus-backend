@@ -1,5 +1,6 @@
 import {Blog} from "../../model/blog";
 import {databaseBlog} from "../../../../../index";
+import {mapBlogFromDbToBlog} from "../blog-mapper";
 
 export class BlogDatabseService {
 
@@ -7,17 +8,19 @@ export class BlogDatabseService {
         console.log('START: BlogDatabseService.readBlog: ' + uuidBlog);
         if (!uuidBlog) throw new Error('[myfarmer] BlogDatabseService.readBlog - Wrong parameters');
 
-        const query = `SELECT * FROM blog WHERE uuid='${uuidBlog}'`;
-        // const query = `SELECT * FROM blog INNER JOIN post-category WHERE blog.uuid='${uuidBlog}' AND blog.uuid=post-category.uuidBlog`;
+        // const query = `SELECT * FROM blog WHERE uuid='${uuidBlog}'`;
+        const query = `SELECT * FROM Blog, PostCategory WHERE Blog.uuid='${uuidBlog}' AND Blog.uuid=PostCategory.uuidBlog`;
 
         try {
             const blogFromDb = await databaseBlog.query(query);
+
+            console.log('SCOOP Datenbank Resultat: ' + blogFromDb);
 
             if (blogFromDb === null || blogFromDb === undefined) {
                 throw new Error('[myfarmer] BlogDatabseService.readBlog - Blog doesnt exist on database');
             }
 
-            return blogFromDb[0];
+            return mapBlogFromDbToBlog(blogFromDb[0]);
         } catch(error) {
             throw new Error('[myfarmer] BlogDatabseService.readBlog - Error reading blog from database: ' + error);
         }
