@@ -8,13 +8,13 @@ export class BlogDatabseService {
         console.log('START: BlogDatabseService.readBlog: ' + uuidBlog);
         if (!uuidBlog) throw new Error('[myfarmer] BlogDatabseService.readBlog - Wrong parameters');
 
-        // const query = `SELECT * FROM blog WHERE uuid='${uuidBlog}'`;
+        // const query = `SELECT * FROM Blog, PostCategory WHERE Blog.uuid='${uuidBlog}' AND Blog.uuid=PostCategory.uuidBlog`;
         const query = `SELECT * FROM Blog, PostCategory WHERE Blog.uuid='${uuidBlog}' AND Blog.uuid=PostCategory.uuidBlog`;
 
         try {
             const blogFromDb = await databaseBlog.query(query);
 
-            console.log('SCOOP Datenbank Resultat: ' + blogFromDb);
+            console.log('SCOOP Datenbank Resultat: ' + JSON.stringify(blogFromDb));
 
             if (blogFromDb === null || blogFromDb === undefined) {
                 throw new Error('[myfarmer] BlogDatabseService.readBlog - Blog doesnt exist on database');
