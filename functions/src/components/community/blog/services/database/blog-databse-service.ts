@@ -10,7 +10,11 @@ export class BlogDatabseService {
         console.log('START: BlogDatabseService.readBlog: ' + uuidBlog);
         if (!uuidBlog) throw new Error('[myfarmer] BlogDatabseService.readBlog - Wrong parameters');
 
-        const query = `SELECT Blog.uuid, Blog.title, Blog.description, PostCategory.* FROM Blog, PostCategory WHERE Blog.uuid='${uuidBlog}' AND Blog.uuid=PostCategory.uuidBlog`;
+        const query = `SELECT Blog.uuid, Blog.title, Blog.description, PostCategory.title titlePostCategory  
+                            FROM Blog 
+                            LEFT JOIN PostCategory 
+                                ON Blog.uuid=PostCategory.uuidBlog
+                                WHERE Blog.uuid='${uuidBlog}';`;
 
         try {
             const blogFromDb = await databaseBlog.query(query);
