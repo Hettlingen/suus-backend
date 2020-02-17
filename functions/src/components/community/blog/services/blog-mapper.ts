@@ -16,9 +16,18 @@ export const mapBlogsFromDbToBlogs = (blogsFromDb: any) => {
 
 export const mapBlogFromDbToBlog = (blogFromDb: any) => {
     const blog = new Blog();
-    blog.uuid = blogFromDb.uuid;
-    blog.title = blogFromDb.title;
-    blog.description = blogFromDb.description;
+
+    for (let row of blogFromDb) {
+        blog.uuid = row.uuid;
+        blog.title = row.title;
+        blog.description = row.description;
+
+        const postCategory = new PostCategory();
+        postCategory.title = row.titleOfPostCategory;
+        postCategory.description = row.descriptionOfPostCategory;
+        blog.listPostCategory.push(postCategory);
+    }
+
     return blog;
 }
 

@@ -8,5 +8,5 @@ export class Blog {
     public dateCreated!: Date;
     public dateUpdated!: Date;
     public datePublished!: Date;
-    public listPostCategory!: PostCategory[];
+    public listPostCategory: PostCategory[] = [];
 }
