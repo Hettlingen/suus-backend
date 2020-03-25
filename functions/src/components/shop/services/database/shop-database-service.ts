@@ -7,7 +7,7 @@ export class ShopDatabaseService {
         console.log('START: BlogDatabseService.readBlog: ' + uuidShop);
         if (!uuidShop) throw new Error('[myfarmer] BlogDatabseService.readBlog - Wrong parameters');
 
-        const query = `SELECT * FROM shop WHERE uuid=${uuidShop}`;
+        const query = `SELECT * FROM Shop WHERE uuid=${uuidShop}`;
 
         try {
             const shopFromDb = await databaseShop.query(query);

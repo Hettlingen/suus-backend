@@ -20,8 +20,6 @@ export class BlogDatabseService {
         try {
             const blogFromDb = await databaseBlog.query(query);
 
-            console.log('SCOOP Datenbank Resultat: ' + JSON.stringify(blogFromDb));
-
             if (blogFromDb === null || blogFromDb === undefined) {
                 throw new Error('[myfarmer] BlogDatabseService.readBlog - Blog doesnt exist on database');
             }

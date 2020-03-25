@@ -39,7 +39,7 @@ const createPool = async () => {
     databaseShop = await mysql.createPool({
         user: 'root',
         password: 'scoop',
-        database: 'shop',
+        database: 'Shop',
         // If connecting via unix domain socket, specify the path
         socketPath: '/cloudsql/scoop-backend-3000:europe-west1:scoop-database',
 
@@ -81,7 +81,7 @@ const createPool = async () => {
     databaseUserAccount = await mysql.createPool({
         user: 'root',
         password: 'scoop',
-        database: 'user',
+        database: 'User',
         socketPath: '/cloudsql/scoop-backend-3000:europe-west1:scoop-database',
         connectionLimit: 5,
         connectTimeout: 10000, // 10 seconds
