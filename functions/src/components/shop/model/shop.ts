@@ -6,5 +6,5 @@ export class Shop {
     public description!: string;
     public dateCreated!: Date;
     public dateUpdated!: Date;
-    public listShopItem!: Array<ShopItem>;
+    public listShopItem: Array<ShopItem> = new Array<ShopItem>();
 }
