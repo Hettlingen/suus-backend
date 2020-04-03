@@ -3,6 +3,7 @@ import {ShopService} from "./services/shop-service";
 import {Shop} from "./model/shop";
 import {PaymentService} from "./services/payment-service";
 import {Payment} from "./model/accounting/Payment";
+import {ShopItem} from "./model/shop-item";
 
 export class ShopRoutes {
     public static routes(app: any): void {
@@ -13,6 +14,15 @@ export class ShopRoutes {
                     response.status(200).send(shop);
                 }).catch(function(error: any){
                     response.status(404).send("Shop wasn't found: " + error)
+            });
+        })
+
+        app.route('/shops/shopitem/:uuidShopItem').get(async (request: Request, response: Response) => {
+            ShopService.getShopItem(request.params.uuidShopItem)
+                .then(function(shopItem: ShopItem) {
+                    response.status(200).send(shopItem);
+                }).catch(function(error: any){
+                response.status(404).send("Shopitem wasn't found: " + error)
             });
         })
 
