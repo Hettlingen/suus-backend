@@ -94,8 +94,6 @@ export class AuthenticationService {
         // Express headers are auto converted to lowercase
         const bearerToken = request.headers['authorization'];
 
-        console.log('Bearer Token: ' + JSON.stringify(bearerToken));
-
         if (bearerToken === null || bearerToken === undefined) {
             console.log('[myfarmer] Missing authorization header');
             return request.status(401).json({ message: '[myfarmer] Missing authorization header' });
@@ -112,21 +110,12 @@ export class AuthenticationService {
 
         jwt.verify(token, RSA_PUBLIC_KEY, { algorithms: ['RS256']}, (err, payload) => {
             if (err) {
+                console.error('[myfarmer] Couldnt verify the authorization header');
                 response.status(401).json({ message: '[myfarmer] Couldnt verify the authorization header' });
             }
-
-            console.log('User lautet: ' + JSON.stringify(payload));
-            // request.uuidUserAccount = payload;
 
             // if the JWT is valid, allow them to go to the intended endpoint
             return next();
         });
-
-        // try {
-        //     jwt.verify(token, RSA_PUBLIC_KEY, { algorithms: ['RS256']});
-        //     next();
-        // } catch(error) {
-        //     response.status(401).json({ message: '[myfarmer] Couldnt verify the authorization header' });
-        // }
     };
 }
