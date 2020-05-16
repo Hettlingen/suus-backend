@@ -37,8 +37,8 @@ export class ShopRoutes {
             });
         })
 
-        app.route('/orders').get(AuthenticationService.checkIfAuthenticated, async (request: Request, response: Response) => {
-            ShopService.getOrders(request.body)
+        app.route('/orders/:uuidUserAccount').get(AuthenticationService.checkIfAuthenticated, async (request: Request, response: Response) => {
+            ShopService.getOrders(request.params.uuidUserAccount)
                 .then(function(orders: Array<Order>) {
                     response.status(200).send(orders);
                 }).catch(function(error: any){

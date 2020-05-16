@@ -28,7 +28,7 @@ export class ShopService {
     }
 
     static async getOrders(uuidUserAccount: string): Promise<Array<Order>> {
-        console.log('START: ShopService.getOrders: ' + uuidUserAccount);
+        console.log('START: ShopService.getOrders: ' + JSON.stringify(uuidUserAccount));
 
         try {
             return await ShopDatabaseService.readOrders(uuidUserAccount);

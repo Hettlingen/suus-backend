@@ -41,11 +41,11 @@ export const mapShopItemFromDbToShopItem = (shopItemFromDb: any) => {
 export const mapOrdersFromDbToOrders = (ordersFromDb: any) => {
     const orders: Order[] = [];
 
-    // ordersFromDb.forEach(
-    //     (orderFromDb: any) => {
-    //         orders.push(mapOrderFromDbToOrder(orderFromDb));
-    //     }
-    // );
+    ordersFromDb.forEach(
+        (orderFromDb: any) => {
+            orders.push(mapOrderFromDbToOrder(orderFromDb));
+        }
+    );
 
     return orders;
 }
@@ -53,5 +53,8 @@ export const mapOrdersFromDbToOrders = (ordersFromDb: any) => {
 export const mapOrderFromDbToOrder = (orderFromDb: any) => {
     const order = new Order();
     order.uuid = orderFromDb.uuid;
+    order.uuidUserAccount = orderFromDb.uuidUserAccount;
+    order.number = orderFromDb.number;
+    order.state = orderFromDb.state;
     return order;
 }

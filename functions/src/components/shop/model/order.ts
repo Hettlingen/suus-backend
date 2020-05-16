@@ -5,6 +5,7 @@ import {OrderState} from '../utils/codes/OrderState';
 
 export class Order {
   public uuid!: string;
+  public uuidUserAccount!: string;
   public number!: number;
   public state!: OrderState;
   public dateOrder!: Date;

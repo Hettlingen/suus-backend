@@ -56,10 +56,10 @@ export class ShopDatabaseService {
     }
 
     static async readOrders(uuidUserAccount: string): Promise<Array<Order>> {
-        console.log('START: ShopDatabaseService.readOrders: ' + uuidUserAccount);
+        console.log('START: ShopDatabaseService.readOrders: ' + JSON.stringify(uuidUserAccount));
         if (!uuidUserAccount) throw new Error('[myfarmer] ShopDatabaseService.readOrders - Wrong parameters');
 
-        const query = `SELECT * FROM Order WHERE Order.uuidUserAccount='${uuidUserAccount}'`;
+        const query = `SELECT * FROM Orders WHERE Orders.uuidUserAccount='${uuidUserAccount}'`;
 
         try {
             const ordersFromDb = await databaseShop.query(query);
@@ -72,7 +72,8 @@ export class ShopDatabaseService {
 
             return mapOrdersFromDbToOrders(ordersFromDb);
         } catch(error) {
-            throw new Error('[myfarmer] ShopDatabaseService.readShopItem - Error reading shop-item details from database: ' + error);
+            console.error('[myfarmer] ShopDatabaseService.readOrders - Error reading orders from database: '  + error)
+            throw new Error('[myfarmer] ShopDatabaseService.readOrders - Error reading orders from database: ' + error);
         }
     }
 }
