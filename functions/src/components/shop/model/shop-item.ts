@@ -4,6 +4,7 @@ export class ShopItem {
     public uuid!: string;
     public name!: string;
     public description!: string;
+    public category!: number;
     public price!: number;
     public currencyPrice!: string;
     public quantity!: number;

@@ -19,13 +19,15 @@ export class AuthenticationService {
         const userAccount = await AuthenticationDatabseService.readUserAccountByUserName(userName);
 
         if (userAccount === null || userAccount === undefined || userName !== userAccount.userName) {
+            console.log('[AuthenticationService] Bad Username or Password');
             throw new Error('[AuthenticationService] Bad Username or Password');
         }
 
         const match = await bcrypt.compare(password, userAccount.password);
 
         if (!match) {
-            throw new Error('[AuthenticationService] Bad Username or Password');
+            console.log('[AuthenticationService] Bad Password');
+            throw new Error('[AuthenticationService] Bad Password');
         }
 
         const jwtBearerToken = jwt.sign({}, this.RSA_PRIVATE_KEY, {
@@ -45,7 +47,8 @@ export class AuthenticationService {
     public static async register(userAccount: UserAccount): Promise<UserAccount> {
         const hashedPassword = await bcrypt.hash(userAccount.password, 10);
 
-        if (this.isUserAccountExisting(userAccount.userName)) {
+        if (await this.isUserAccountExisting(userAccount.userName)) {
+            console.info('[myfarmer] AuthenticationService.register - UserAccount is already existing');
             throw new Error('[myfarmer] AuthenticationService.register - UserAccount is already existing');
         }
 
@@ -56,6 +59,7 @@ export class AuthenticationService {
                 hashedPassword,
                 userAccount.email);
         } catch (error) {
+            console.log('[myfarmer] AuthenticationService.register - Error create new user-account: ' + error);
             throw new Error('[myfarmer] AuthenticationService.register - Error create new user-account: ' + error);
         }
     }
@@ -74,7 +78,6 @@ export class AuthenticationService {
     }
 
     private static async isUserAccountExisting(userName: string): Promise<boolean> {
-
         const userAccount = await AuthenticationDatabseService.readUserAccountByUserName(userName);
 
         if (userAccount === null || userAccount === undefined) {
@@ -91,7 +94,14 @@ export class AuthenticationService {
         // Express headers are auto converted to lowercase
         const bearerToken = request.headers['authorization'];
 
-        if (bearerToken.startsWith('Bearer ')) {
+        console.log('Bearer Token: ' + JSON.stringify(bearerToken));
+
+        if (bearerToken === null || bearerToken === undefined) {
+            console.log('[myfarmer] Missing authorization header');
+            return request.status(401).json({ message: '[myfarmer] Missing authorization header' });
+        }
+
+        if (bearerToken.startsWith('Bearer')) {
             // Remove Bearer from string
             token = bearerToken.slice(7, bearerToken.length);
         }
@@ -100,11 +110,23 @@ export class AuthenticationService {
             return request.status(401).json({ message: '[myfarmer] Missing authorization header' });
         }
 
-        try {
-            jwt.verify(token, RSA_PUBLIC_KEY, { algorithms: ['RS256']});
-            next();
-        } catch(error) {
-            response.status(401).json({ message: '[myfarmer] Couldnt verify the authorization header' });
-        }
+        jwt.verify(token, RSA_PUBLIC_KEY, { algorithms: ['RS256']}, (err, payload) => {
+            if (err) {
+                response.status(401).json({ message: '[myfarmer] Couldnt verify the authorization header' });
+            }
+
+            console.log('User lautet: ' + JSON.stringify(payload));
+            // request.uuidUserAccount = payload;
+
+            // if the JWT is valid, allow them to go to the intended endpoint
+            return next();
+        });
+
+        // try {
+        //     jwt.verify(token, RSA_PUBLIC_KEY, { algorithms: ['RS256']});
+        //     next();
+        // } catch(error) {
+        //     response.status(401).json({ message: '[myfarmer] Couldnt verify the authorization header' });
+        // }
     };
 }

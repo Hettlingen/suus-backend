@@ -1,6 +1,7 @@
 import {Shop} from "../model/shop";
 import {ShopDatabaseService} from "./database/shop-database-service";
 import {ShopItem} from "../model/shop-item";
+import {Order} from "../model/order";
 
 export class ShopService {
 
@@ -23,6 +24,16 @@ export class ShopService {
             return await ShopDatabaseService.readShopItem(uuidShopItem);
         } catch(error){
             throw new Error('[myfarmer] ShopService.getShopItem - Error reading Shopitem');
+        }
+    }
+
+    static async getOrders(uuidUserAccount: string): Promise<Array<Order>> {
+        console.log('START: ShopService.getOrders: ' + uuidUserAccount);
+
+        try {
+            return await ShopDatabaseService.readOrders(uuidUserAccount);
+        } catch(error){
+            throw new Error('[myfarmer] ShopService.getOrders - Error reading Orders of user: ' + uuidUserAccount);
         }
     }
 }

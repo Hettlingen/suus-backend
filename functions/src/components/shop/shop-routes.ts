@@ -4,6 +4,8 @@ import {Shop} from "./model/shop";
 import {PaymentService} from "./services/payment-service";
 import {Payment} from "./model/accounting/Payment";
 import {ShopItem} from "./model/shop-item";
+import {AuthenticationService} from "../authentication/services/authentication-service";
+import {Order} from "./model/order";
 
 export class ShopRoutes {
     public static routes(app: any): void {
@@ -32,6 +34,15 @@ export class ShopRoutes {
                     response.status(200).send(payment);
                 }).catch(function(error: any){
                 response.status(404).send("Shop wasn't found: " + error)
+            });
+        })
+
+        app.route('/orders').get(AuthenticationService.checkIfAuthenticated, async (request: Request, response: Response) => {
+            ShopService.getOrders(request.body)
+                .then(function(orders: Array<Order>) {
+                    response.status(200).send(orders);
+                }).catch(function(error: any){
+                response.status(404).send("Orders weren't found: " + error)
             });
         })
     }

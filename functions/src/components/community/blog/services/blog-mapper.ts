@@ -17,7 +17,7 @@ export const mapBlogsFromDbToBlogs = (blogsFromDb: any) => {
 export const mapBlogFromDbToBlog = (blogFromDb: any) => {
     const blog = new Blog();
 
-    for (let row of blogFromDb) {
+    for (const row of blogFromDb) {
         blog.uuid = row.uuid;
         blog.title = row.title;
         blog.description = row.description;
