@@ -61,6 +61,24 @@ export class ShopDatabaseService {
 
         const query = `SELECT * FROM Orders WHERE Orders.uuidUserAccount='${uuidUserAccount}'`;
 
+        // const query = `SELECT Orders.uuid,
+        //                       Orders.number,
+        //                       Orders.state,
+        //                       Orders.dateDelivery,
+        //                       Payment.uuid uuidOfPayment,
+        //                       Payment.type typeOfPayment,
+        //                       Payment.state stateOfPayment,
+        //                       Payment.priceTotal priceTotalOfPayment,
+        //                       Payment.currencyPriceTotal currencyPriceTotalOfPayment,
+        //                       Payment.amountTax amountTaxOfPayment,
+        //                       Payment.currencyAmountTax currencyAmountTaxOfPayment,
+        //                       Payment.datePaymentDeadline datePaymentDeadlineOfPayment,
+        //                       Payment.datePayment datePaymentOfPayment
+        //                     FROM Orders
+        //                     LEFT JOIN Payment
+        //                         ON Orders.uuid=Payment.uuidOrder
+        //                         WHERE Orders.uuidUserAccount='${uuidUserAccount}';`;
+
         try {
             const ordersFromDb = await databaseShop.query(query);
 
