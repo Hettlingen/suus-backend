@@ -1,18 +1,5 @@
 import {Blog} from "../model/blog";
-import {PostCategory} from "../model/post-category";
 import {Post} from "../model/post";
-
-export const mapBlogsFromDbToBlogs = (blogsFromDb: any) => {
-    const blogs: Blog[] = [];
-
-    blogsFromDb.forEach(
-        (blog: any) => {
-            blogs.push(mapBlogFromDbToBlog(blog));
-        }
-    );
-
-    return blogs;
-}
 
 export const mapBlogFromDbToBlog = (blogFromDb: any) => {
     const blog = new Blog();
@@ -22,21 +9,16 @@ export const mapBlogFromDbToBlog = (blogFromDb: any) => {
         blog.title = row.title;
         blog.description = row.description;
 
-        const postCategory = new PostCategory();
-        postCategory.title = row.titleOfPostCategory;
-        postCategory.description = row.descriptionOfPostCategory;
-        blog.listPostCategory.push(postCategory);
+        const post = new Post();
+        post.uuid = row.uuid;
+        post.title = row.titleOfPost;
+        post.content = row.contentOfPost;
+        post.imageName = row.imageNameOfPost;
+        post.duration = row.durationOfPost;
+        blog.listPost.push(post);
     }
 
     return blog;
-}
-
-export const mapPostCategoryFromDbToPostCategory = (postCategoryFromDb: any) => {
-    const postCategory = new PostCategory();
-    postCategory.uuid = postCategoryFromDb.uuid;
-    postCategory.title = postCategoryFromDb.title;
-    postCategory.description = postCategoryFromDb.description;
-    return postCategory;
 }
 
 export const mapPostFromDbToPost = (postFromDb: any) => {
@@ -44,5 +26,7 @@ export const mapPostFromDbToPost = (postFromDb: any) => {
     post.uuid = postFromDb.uuid;
     post.title = postFromDb.title;
     post.content = postFromDb.content;
+    post.imageName = postFromDb.imageName;
+    post.duration = postFromDb.duration;
     return post;
 }

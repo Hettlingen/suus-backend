@@ -11,7 +11,15 @@ export const mapShopFromDbToShop = (shopFromDb: any) => {
     shop.description = shopFromDb[0].description;
 
     for (const row of shopFromDb) {
-        shop.listShopItem.push(mapShopItemFromDbToShopItem(row));
+        const shopItem = new ShopItem();
+        shopItem.uuid = row.uuidOfShopItem;
+        shopItem.name = row.nameOfShopItem;
+        shopItem.description = row.descriptionOfShopItem;
+        shopItem.category = row.categoryOfShopItem;
+        shopItem.price = row.priceOfShopItem;
+        shopItem.currencyPrice = row.currencyPriceOfShopItem;
+        shopItem.imageName = row.imageNameOfShopItem;
+        shop.listShopItem.push(shopItem);
     }
 
     return shop;

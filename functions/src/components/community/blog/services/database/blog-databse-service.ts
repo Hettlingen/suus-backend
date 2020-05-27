@@ -1,7 +1,6 @@
 import {Blog} from "../../model/blog";
 import {databaseBlog} from "../../../../../index";
-import {mapBlogFromDbToBlog, mapPostCategoryFromDbToPostCategory, mapPostFromDbToPost} from "../blog-mapper";
-import {PostCategory} from "../../model/post-category";
+import {mapBlogFromDbToBlog, mapPostFromDbToPost} from "../blog-mapper";
 import {Post} from "../../model/post";
 
 export class BlogDatabseService {
@@ -10,11 +9,16 @@ export class BlogDatabseService {
         console.log('START: BlogDatabseService.readBlog: ' + uuidBlog);
         if (!uuidBlog) throw new Error('[myfarmer] BlogDatabseService.readBlog - Wrong parameters');
 
-        const query = `SELECT Blog.uuid, Blog.title, Blog.description, 
-                              PostCategory.title titleOfPostCategory, PostCategory.description descriptionOfPostCategory  
+        const query = `SELECT Blog.uuid,
+                              Blog.title,
+                              Blog.description, 
+                              Post.title titleOfPost,
+                              Post.content contentOfPost,
+                              Post.imageName imageNameOfPost,
+                              Post.duration durationOfPost  
                             FROM Blog 
-                            LEFT JOIN PostCategory 
-                                ON Blog.uuid=PostCategory.uuidBlog
+                            LEFT JOIN Post 
+                                ON Blog.uuid=Post.uuidBlog
                                 WHERE Blog.uuid='${uuidBlog}';`;
 
         try {
@@ -27,25 +31,6 @@ export class BlogDatabseService {
             return mapBlogFromDbToBlog(blogFromDb);
         } catch(error) {
             throw new Error('[myfarmer] BlogDatabseService.readBlog - Error reading blog from database: ' + error);
-        }
-    }
-
-    static async readPostCategory(uuidPostCategory: string): Promise<PostCategory> {
-        console.log('START: BlogDatabseService.readPostCategory: ' + uuidPostCategory);
-        if (!uuidPostCategory) throw new Error('[myfarmer] BlogDatabseService.readPostCategory - Wrong parameters');
-
-        const query = `SELECT * from PostCategory WHERE PostCategory.uuid='${uuidPostCategory}' AND PostCategory.uuid=Post.uuidPostCategory;`;
-
-        try {
-            const postCategoryFromDb = await databaseBlog.query(query);
-
-            if (postCategoryFromDb === null || postCategoryFromDb === undefined) {
-                throw new Error('[myfarmer] BlogDatabseService.readPostCategory - Post-category doesnt exist on database');
-            }
-
-            return mapPostCategoryFromDbToPostCategory(postCategoryFromDb[0]);
-        } catch(error) {
-            throw new Error('[myfarmer] BlogDatabseService.readPostCategory - Error reading post-category from database: ' + error);
         }
     }
 
