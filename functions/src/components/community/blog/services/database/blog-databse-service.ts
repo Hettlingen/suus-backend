@@ -11,7 +11,8 @@ export class BlogDatabseService {
 
         const query = `SELECT Blog.uuid,
                               Blog.title,
-                              Blog.description, 
+                              Blog.description,
+                              Post.uuid uuidOfPost, 
                               Post.title titleOfPost,
                               Post.content contentOfPost,
                               Post.imageName imageNameOfPost,
@@ -46,6 +47,8 @@ export class BlogDatabseService {
             if (postFromDb === null || postFromDb === undefined) {
                 throw new Error('[myfarmer] BlogDatabseService.readPost - Post doesnt exist on database');
             }
+
+            console.log('Post from database: ' + JSON.stringify(postFromDb));
 
             return mapPostFromDbToPost(postFromDb[0]);
         } catch(error) {

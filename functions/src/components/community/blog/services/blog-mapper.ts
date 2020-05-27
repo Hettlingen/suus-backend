@@ -10,7 +10,7 @@ export const mapBlogFromDbToBlog = (blogFromDb: any) => {
         blog.description = row.description;
 
         const post = new Post();
-        post.uuid = row.uuid;
+        post.uuid = row.uuidOfPost;
         post.title = row.titleOfPost;
         post.content = row.contentOfPost;
         post.imageName = row.imageNameOfPost;
