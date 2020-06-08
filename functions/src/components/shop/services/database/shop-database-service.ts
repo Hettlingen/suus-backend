@@ -1,8 +1,14 @@
 import {databaseShop} from "../../../../index";
 import {Shop} from "../../model/shop";
-import {mapOrdersFromDbToOrders, mapShopFromDbToShop, mapShopItemFromDbToShopItem} from "../../mapper/shop-mapper";
+import {
+    mapOrderFromDbToOrder,
+    mapOrdersFromDbToOrders,
+    mapShopFromDbToShop,
+    mapShopItemFromDbToShopItem
+} from "../../mapper/shop-mapper";
 import {ShopItem} from "../../model/shop-item";
 import {Order} from "../../model/order";
+import {OrderState} from "../../utils/codes/OrderState";
 
 export class ShopDatabaseService {
 
@@ -59,25 +65,25 @@ export class ShopDatabaseService {
         console.log('START: ShopDatabaseService.readOrders: ' + JSON.stringify(uuidUserAccount));
         if (!uuidUserAccount) throw new Error('[myfarmer] ShopDatabaseService.readOrders - Wrong parameters');
 
-        const query = `SELECT * FROM Orders WHERE Orders.uuidUserAccount='${uuidUserAccount}'`;
+        // const query = `SELECT * FROM Orders WHERE Orders.uuidUserAccount='${uuidUserAccount}'`;
 
-        // const query = `SELECT Orders.uuid,
-        //                       Orders.number,
-        //                       Orders.state,
-        //                       Orders.dateDelivery,
-        //                       Payment.uuid uuidOfPayment,
-        //                       Payment.type typeOfPayment,
-        //                       Payment.state stateOfPayment,
-        //                       Payment.priceTotal priceTotalOfPayment,
-        //                       Payment.currencyPriceTotal currencyPriceTotalOfPayment,
-        //                       Payment.amountTax amountTaxOfPayment,
-        //                       Payment.currencyAmountTax currencyAmountTaxOfPayment,
-        //                       Payment.datePaymentDeadline datePaymentDeadlineOfPayment,
-        //                       Payment.datePayment datePaymentOfPayment
-        //                     FROM Orders
-        //                     LEFT JOIN Payment
-        //                         ON Orders.uuid=Payment.uuidOrder
-        //                         WHERE Orders.uuidUserAccount='${uuidUserAccount}';`;
+        const query = `SELECT Orders.uuid,
+                              Orders.number,
+                              Orders.state,
+                              Orders.dateDelivery,
+                              Payment.uuid uuidOfPayment,
+                              Payment.type typeOfPayment,
+                              Payment.state stateOfPayment,
+                              Payment.priceTotal priceTotalOfPayment,
+                              Payment.currencyPriceTotal currencyPriceTotalOfPayment,
+                              Payment.amountTax amountTaxOfPayment,
+                              Payment.currencyAmountTax currencyAmountTaxOfPayment,
+                              Payment.datePaymentDeadline datePaymentDeadlineOfPayment,
+                              Payment.datePayment datePaymentOfPayment
+                            FROM Orders
+                            LEFT JOIN Payment
+                                ON Orders.uuid=Payment.uuidOrder
+                                WHERE Orders.uuidUserAccount='${uuidUserAccount}';`;
 
         try {
             const ordersFromDb = await databaseShop.query(query);
@@ -90,8 +96,45 @@ export class ShopDatabaseService {
 
             return mapOrdersFromDbToOrders(ordersFromDb);
         } catch(error) {
-            console.error('[myfarmer] ShopDatabaseService.readOrders - Error reading orders from database: '  + error)
             throw new Error('[myfarmer] ShopDatabaseService.readOrders - Error reading orders from database: ' + error);
+        }
+    }
+
+    static async readOrder(uuidOrder: string): Promise<Order> {
+        console.log('START: ShopDatabaseService.readOrder: ' + JSON.stringify(uuidOrder));
+        if (!uuidOrder) throw new Error('[myfarmer] ShopDatabaseService.readOrder - Wrong parameters');
+
+        const query = `SELECT * FROM Orders WHERE Orders.uuid='${uuidOrder}'`;
+
+        try {
+            const orderFromDb = await databaseShop.query(query);
+
+            if (orderFromDb === null || orderFromDb === undefined) {
+                throw new Error('[myfarmer] ShopDatabaseService.readOrder - Order doesnt exist on database');
+            }
+
+            return mapOrderFromDbToOrder(orderFromDb);
+        } catch(error) {
+            throw new Error('[myfarmer] ShopDatabaseService.readOrder - Error reading order from database: ' + error);
+        }
+    }
+
+    static async readOrderByUserAccountUuidAndState(uuidUserAccount: string, orderState: OrderState): Promise<Order> {
+        console.log('START: ShopDatabaseService.readOrder with user-account-uuid: ' + JSON.stringify(uuidUserAccount));
+        if (!uuidUserAccount) throw new Error('[myfarmer] ShopDatabaseService.readOrder - Wrong parameters');
+
+        const query = `SELECT * FROM Orders WHERE Orders.uuidUserAccount='${uuidUserAccount}'`;
+
+        try {
+            const orderFromDb = await databaseShop.query(query);
+
+            if (orderFromDb === null || orderFromDb === undefined) {
+                throw new Error('[myfarmer] ShopDatabaseService.readOrder - Order doesnt exist on database');
+            }
+
+            return mapOrderFromDbToOrder(orderFromDb);
+        } catch(error) {
+            throw new Error('[myfarmer] ShopDatabaseService.readOrder - Error reading order from database: ' + error);
         }
     }
 }

@@ -28,21 +28,30 @@ export class ShopRoutes {
             });
         })
 
-        app.route('/checkout').get(async (request: Request, response: Response) => {
-            PaymentService.checkout(request.body)
-                .then(function(payment: Payment) {
-                    response.status(200).send(payment);
-                }).catch(function(error: any){
-                response.status(404).send("Shop wasn't found: " + error)
-            });
-        })
-
         app.route('/orders/:uuidUserAccount').get(AuthenticationService.checkIfAuthenticated, async (request: Request, response: Response) => {
             ShopService.getOrders(request.params.uuidUserAccount)
                 .then(function(orders: Array<Order>) {
                     response.status(200).send(orders);
                 }).catch(function(error: any){
                 response.status(404).send("Orders weren't found: " + error)
+            });
+        })
+
+        app.route('/orders/:uuidOrder').get(AuthenticationService.checkIfAuthenticated, async (request: Request, response: Response) => {
+            ShopService.getOrder(request.params.uuidOrder)
+                .then(function(order: Order) {
+                    response.status(200).send(order);
+                }).catch(function(error: any){
+                response.status(404).send("Order isn't found: " + error)
+            });
+        })
+
+        app.route('/checkout').get(async (request: Request, response: Response) => {
+            PaymentService.checkout(request.body)
+                .then(function(payment: Payment) {
+                    response.status(200).send(payment);
+                }).catch(function(error: any){
+                response.status(404).send("Shop wasn't found: " + error)
             });
         })
     }

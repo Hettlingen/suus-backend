@@ -2,6 +2,7 @@ import {Shop} from "../model/shop";
 import {ShopDatabaseService} from "./database/shop-database-service";
 import {ShopItem} from "../model/shop-item";
 import {Order} from "../model/order";
+import {OrderState} from "../utils/codes/OrderState";
 
 export class ShopService {
 
@@ -34,6 +35,26 @@ export class ShopService {
             return await ShopDatabaseService.readOrders(uuidUserAccount);
         } catch(error){
             throw new Error('[myfarmer] ShopService.getOrders - Error reading Orders of user: ' + uuidUserAccount);
+        }
+    }
+
+    static async getOrder(uuidOrder: string): Promise<Order> {
+        console.log('START: ShopService.getOrder: ' + JSON.stringify(uuidOrder));
+
+        try {
+            return await ShopDatabaseService.readOrder(uuidOrder);
+        } catch(error){
+            throw new Error('[myfarmer] ShopService.getOrder - Error reading Orders of user: ' + uuidOrder);
+        }
+    }
+
+    static async getShoppingCart(uuidUserAccount: string): Promise<Order> {
+        console.log('START: ShopService.getShoppingCart: ' + JSON.stringify(uuidUserAccount));
+
+        try {
+            return await ShopDatabaseService.readOrderByUserAccountUuidAndState(uuidUserAccount, OrderState.SHOPPING_CART);
+        } catch(error){
+            throw new Error('[myfarmer] ShopService.getShoppingCart - Error reading Orders of user: ' + uuidUserAccount);
         }
     }
 }

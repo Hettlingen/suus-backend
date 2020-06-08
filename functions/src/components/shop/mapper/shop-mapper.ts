@@ -1,7 +1,7 @@
 import {Shop} from "../model/shop";
 import {ShopItem} from "../model/shop-item";
 import {Order} from "../model/order";
-import {OrderState} from "../utils/codes/OrderState";
+import {getOrderState} from "../utils/codes/OrderState";
 
 export const mapShopFromDbToShop = (shopFromDb: any) => {
     const shop = new Shop();
@@ -55,7 +55,7 @@ export const mapOrderFromDbToOrder = (orderFromDb: any) => {
     const order = new Order();
     order.uuid = orderFromDb.uuid;
     order.number = orderFromDb.number;
-    order.state = orderFromDb.state === 1 ? OrderState.OFFEN : OrderState.ABGESCHLOSSEN;
+    order.state = getOrderState(orderFromDb.state);
     order.dateOrder = orderFromDb.dateDelivery;
     //order.payment= mapPaymentFromDbToPayment(orderFromDb);
     return order;

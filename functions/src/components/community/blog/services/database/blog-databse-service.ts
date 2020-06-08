@@ -48,8 +48,6 @@ export class BlogDatabseService {
                 throw new Error('[myfarmer] BlogDatabseService.readPost - Post doesnt exist on database');
             }
 
-            console.log('Post from database: ' + JSON.stringify(postFromDb));
-
             return mapPostFromDbToPost(postFromDb[0]);
         } catch(error) {
             throw new Error('[myfarmer] BlogDatabseService.readPost - Error reading Post from database: ' + error);

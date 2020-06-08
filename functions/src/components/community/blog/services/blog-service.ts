@@ -22,7 +22,9 @@ export class BlogService {
         try {
             return await BlogDatabseService.readPost(uuidPost);
         } catch(error){
-            throw new Error('[myfarmer] BlogService.getPost - Error reading Post' + error);
+            throw new Error('[myfarmer] BlogService.getPost - Error reading Post with uuid '
+                + uuidPost + ', error: ' +
+                + error);
         }
     }
 }
