@@ -42,11 +42,15 @@ export const mapShopItemFromDbToShopItem = (shopItemFromDb: any) => {
 export const mapOrdersFromDbToOrders = (ordersFromDb: any) => {
     const orders: Order[] = [];
 
-    ordersFromDb.forEach(
-        (orderFromDb: any) => {
-            orders.push(mapOrderFromDbToOrder(orderFromDb));
-        }
-    );
+    for (const orderFromDb of ordersFromDb) {
+        const order = new Order();
+        order.uuid = orderFromDb.uuid;
+        order.number = orderFromDb.number;
+        order.state = getOrderState(orderFromDb.state);
+        order.dateOrder = orderFromDb.dateDelivery;
+        //order.payment= mapPaymentFromDbToPayment(orderFromDb);
+        orders.push(order);
+    }
 
     return orders;
 }
