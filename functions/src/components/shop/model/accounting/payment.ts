@@ -1,8 +1,7 @@
-import {DeliveryAddress} from "../order/delivery-address";
-import {BillingAddress} from "./billing-address";
 import {Amount} from "./amount";
 import {PaymentState} from "./payment-state";
 import {PaymentType} from "./payment-type";
+import {Address} from "../../../community/partner/model/address";
 
 export class Payment {
     public uuid!: string;
@@ -13,6 +12,5 @@ export class Payment {
     public dateCreated!: Date;
     public datePayment!: Date;
     public datePaymentDeadline!: Date;
-    public billingAddress!: BillingAddress;
-    public deliveryAddress!: DeliveryAddress;
+    public billingAddress!: Address;
 }

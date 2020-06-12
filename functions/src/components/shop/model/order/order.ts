@@ -1,7 +1,7 @@
 import {OrderItem} from './order-item';
 import {Payment} from '../accounting/payment';
 import {OrderState} from "./order-state";
-import {DeliveryAddress} from "./delivery-address";
+import {Address} from "../../../community/partner/model/address";
 
 export class Order {
   public uuid!: string;
@@ -11,6 +11,6 @@ export class Order {
   public dateOrder!: Date;
   public dateDelivery!: Date;
   public listOrderItem!: Array<OrderItem>;
-  public deliveryAddress!: DeliveryAddress;
+  public deliveryAddress!: Address;
   public payment!: Payment;
 }
