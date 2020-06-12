@@ -1,5 +1,3 @@
-import {Product} from "./product";
-
 export class ShopItem {
     public uuid!: string;
     public name!: string;
@@ -12,5 +10,4 @@ export class ShopItem {
     public dateCreated!: Date;
     public dateUpdated!: Date;
     public datePublished!: Date;
-    public product!: Product;
 }

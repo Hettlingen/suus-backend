@@ -7,8 +7,8 @@ import {
     mapShopItemFromDbToShopItem
 } from "../../mapper/shop-mapper";
 import {ShopItem} from "../../model/shop-item";
-import {Order} from "../../model/order";
-import {OrderState} from "../../utils/codes/OrderState";
+import {Order} from "../../model/order/order";
+import {OrderState} from "../../model/order/order-state";
 
 export class ShopDatabaseService {
 

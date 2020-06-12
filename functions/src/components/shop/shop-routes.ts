@@ -5,7 +5,7 @@ import {PaymentService} from "./services/payment-service";
 import {Payment} from "./model/accounting/Payment";
 import {ShopItem} from "./model/shop-item";
 import {AuthenticationService} from "../authentication/services/authentication-service";
-import {Order} from "./model/order";
+import {Order} from "./model/order/order";
 
 export class ShopRoutes {
     public static routes(app: any): void {

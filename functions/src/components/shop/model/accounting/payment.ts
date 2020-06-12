@@ -1,7 +1,7 @@
-import {DeliveryAddress} from "./delivery-address";
+import {DeliveryAddress} from "../order/delivery-address";
 import {BillingAddress} from "./billing-address";
 import {Amount} from "./amount";
-import {PaymentState} from "../../utils/codes/PaymentState";
+import {PaymentState} from "./payment-state";
 
 export class Payment {
     public uuid!: string;

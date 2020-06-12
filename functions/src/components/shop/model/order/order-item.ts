@@ -1,4 +1,4 @@
-import {ShopItem} from './shop-item';
+import {ShopItem} from '../shop-item';
 
 export class OrderItem {
 
