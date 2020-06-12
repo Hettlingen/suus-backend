@@ -71,7 +71,7 @@ export const mapOrderFromDbToOrder = (orderFromDb: any) => {
 //     payment.type = paymentFromDb.typeOfPayment === 1 ? PaymentType.CREDITCARD : PaymentType.INVOICE;
 //     payment.state = paymentFromDb.stateOfPayment === 1 ? PaymentState.OFFEN : PaymentState.BEZAHLT;
 //     payment.priceTotal = new Amount(paymentFromDb.priceTotalOfPayment, paymentFromDb.currencyPriceTotalOfPayment);
-//     payment.amountTax = new Amount(paymentFromDb.amountTaxOfPayment, paymentFromDb.currencyAmountTaxOfPayment);
+//     payment.tax = new Amount(paymentFromDb.amountTaxOfPayment, paymentFromDb.currencyAmountTaxOfPayment);
 //     payment.datePaymentDeadline = paymentFromDb.datePaymentDeadlineOfPayment;
 //     payment.datePayment = paymentFromDb.datePaymentOfPayment;
 //     return payment;
