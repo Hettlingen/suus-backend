@@ -71,18 +71,18 @@ export class ShopDatabaseService {
                               Orders.number,
                               Orders.state,
                               Orders.dateDelivery,
-                              Payment.uuid uuidOfPayment,
-                              Payment.type typeOfPayment,
-                              Payment.state stateOfPayment,
-                              Payment.priceTotal priceTotalOfPayment,
-                              Payment.currencyPriceTotal currencyPriceTotalOfPayment,
-                              Payment.amountTax amountTaxOfPayment,
-                              Payment.currencyAmountTax currencyAmountTaxOfPayment,
-                              Payment.datePaymentDeadline datePaymentDeadlineOfPayment,
-                              Payment.datePayment datePaymentOfPayment
+                              Invoice.uuid uuidOfInvoice,
+                              Invoice.type typeOfInvoice,
+                              Invoice.state stateOfInvoice,
+                              Invoice.priceTotal priceTotalOfInvoice,
+                              Invoice.currencyPriceTotal currencyPriceTotalOfInvoice,
+                              Invoice.amountTax amountTaxOfInvoice,
+                              Invoice.currencyAmountTax currencyAmountTaxOfInvoice,
+                              Invoice.dateInvoiceDeadline dateInvoiceDeadlineOfInvoice,
+                              Invoice.dateInvoice dateInvoiceOfInvoice
                             FROM Orders
-                            LEFT JOIN Payment
-                                ON Orders.uuid=Payment.uuidOrder
+                            LEFT JOIN Invoice
+                                ON Orders.uuid=Invoice.uuidOrder
                                 WHERE Orders.uuidUserAccount='${uuidUserAccount}';`;
 
         try {

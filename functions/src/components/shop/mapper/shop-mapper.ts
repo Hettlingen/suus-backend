@@ -52,7 +52,7 @@ export const mapOrdersFromDbToOrders = (ordersFromDb: any) => {
         order.number = orderFromDb.number;
         order.state = getOrderState(orderFromDb.state);
         order.dateOrder = orderFromDb.dateDelivery;
-        //order.invoice= mapInvoiceFromDbToInvoice(orderFromDb);
+        order.invoice= mapInvoiceFromDbToInvoice(orderFromDb);
         orders.push(order);
     }
 
