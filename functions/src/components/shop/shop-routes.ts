@@ -2,7 +2,7 @@ import {Request, Response} from "express";
 import {ShopService} from "./services/shop-service";
 import {Shop} from "./model/shop";
 import {PaymentService} from "./services/payment-service";
-import {Payment} from "./model/accounting/Payment";
+import {Invoice} from "./model/accounting/invoice";
 import {ShopItem} from "./model/shop-item";
 import {AuthenticationService} from "../authentication/services/authentication-service";
 import {Order} from "./model/order/order";
@@ -48,7 +48,7 @@ export class ShopRoutes {
 
         app.route('/checkout').get(async (request: Request, response: Response) => {
             PaymentService.checkout(request.body)
-                .then(function(payment: Payment) {
+                .then(function(payment: Invoice) {
                     response.status(200).send(payment);
                 }).catch(function(error: any){
                 response.status(404).send("Shop wasn't found: " + error)

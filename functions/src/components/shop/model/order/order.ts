@@ -1,5 +1,5 @@
 import {OrderItem} from './order-item';
-import {Payment} from '../accounting/payment';
+import {Invoice} from '../accounting/invoice';
 import {OrderState} from "./order-state";
 import {Address} from "../../../community/partner/model/address";
 
@@ -12,5 +12,5 @@ export class Order {
   public dateDelivery!: Date;
   public listOrderItem!: Array<OrderItem>;
   public deliveryAddress!: Address;
-  public payment!: Payment;
+  public invoice!: Invoice;
 }

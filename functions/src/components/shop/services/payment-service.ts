@@ -1,8 +1,8 @@
-import {Payment} from "../model/accounting/Payment";
+import {Invoice} from "../model/accounting/invoice";
 
 export class PaymentService {
 
-    static async checkout(payment: Payment): Promise<Payment> {
+    static async checkout(payment: Invoice): Promise<Invoice> {
         console.log('START: CheckoutService.checkout');
 
         // stripe.charges.create(
@@ -16,6 +16,6 @@ export class PaymentService {
         //         // asynchronously called
         //     }
         // );
-        return Promise.resolve(new Payment());
+        return Promise.resolve(new Invoice());
     }
 }

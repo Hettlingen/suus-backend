@@ -1,16 +1,17 @@
 import {Amount} from "./amount";
-import {PaymentState} from "./payment-state";
-import {PaymentType} from "./payment-type";
 import {Address} from "../../../community/partner/model/address";
+import {InvoiceType} from "./invoice-type";
+import {InvoiceState} from "./invoice-state";
 
-export class Payment {
+export class Invoice {
     public uuid!: string;
     public priceTotal!: Amount;
     public tax!: Amount;
-    public type!: PaymentType;
-    public state!: PaymentState;
+    public type!: InvoiceType;
+    public state!: InvoiceState;
     public dateCreated!: Date;
-    public datePayment!: Date;
+    public dateInvoice!: Date;
+    public dateinvoiceDeadline!: Date;
     public datePaymentDeadline!: Date;
     public billingAddress!: Address;
 }

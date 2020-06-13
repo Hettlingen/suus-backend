@@ -2,6 +2,10 @@ import {Shop} from "../model/shop";
 import {ShopItem} from "../model/shop-item";
 import {Order} from "../model/order/order";
 import {getOrderState} from "../model/order/order-state";
+import {InvoiceType} from "../model/accounting/invoice-type";
+import {InvoiceState} from "../model/accounting/invoice-state";
+import {Amount} from "../model/accounting/amount";
+import {Invoice} from "../model/accounting/invoice";
 
 export const mapShopFromDbToShop = (shopFromDb: any) => {
     const shop = new Shop();
@@ -48,7 +52,7 @@ export const mapOrdersFromDbToOrders = (ordersFromDb: any) => {
         order.number = orderFromDb.number;
         order.state = getOrderState(orderFromDb.state);
         order.dateOrder = orderFromDb.dateDelivery;
-        //order.payment= mapPaymentFromDbToPayment(orderFromDb);
+        //order.invoice= mapInvoiceFromDbToInvoice(orderFromDb);
         orders.push(order);
     }
 
@@ -61,18 +65,18 @@ export const mapOrderFromDbToOrder = (orderFromDb: any) => {
     order.number = orderFromDb.number;
     order.state = getOrderState(orderFromDb.state);
     order.dateOrder = orderFromDb.dateDelivery;
-    //order.payment= mapPaymentFromDbToPayment(orderFromDb);
+    //order.invoice= mapInvoiceFromDbToInvoice(orderFromDb);
     return order;
 }
 
-// export const mapPaymentFromDbToPayment = (paymentFromDb: any) => {
-//     const payment = new Payment();
-//     payment.uuid = paymentFromDb.uuidOfPayment;
-//     payment.type = paymentFromDb.typeOfPayment === 1 ? PaymentType.CREDITCARD : PaymentType.INVOICE;
-//     payment.state = paymentFromDb.stateOfPayment === 1 ? PaymentState.OFFEN : PaymentState.BEZAHLT;
-//     payment.priceTotal = new Amount(paymentFromDb.priceTotalOfPayment, paymentFromDb.currencyPriceTotalOfPayment);
-//     payment.tax = new Amount(paymentFromDb.amountTaxOfPayment, paymentFromDb.currencyAmountTaxOfPayment);
-//     payment.datePaymentDeadline = paymentFromDb.datePaymentDeadlineOfPayment;
-//     payment.datePayment = paymentFromDb.datePaymentOfPayment;
-//     return payment;
-// }
+export const mapInvoiceFromDbToInvoice = (invoiceFromDb: any) => {
+    const invoice = new Invoice();
+    invoice.uuid = invoiceFromDb.uuidOfinvoice;
+    invoice.type = invoiceFromDb.typeOfinvoice === 1 ? InvoiceType.CREDITCARD : InvoiceType.INVOICE;
+    invoice.state = invoiceFromDb.stateOfinvoice === 1 ? InvoiceState.OFFEN : InvoiceState.BEZAHLT;
+    invoice.priceTotal = new Amount(invoiceFromDb.priceTotalOfinvoice, invoiceFromDb.currencyPriceTotalOfinvoice);
+    invoice.tax = new Amount(invoiceFromDb.amountTaxOfinvoice, invoiceFromDb.currencyAmountTaxOfinvoice);
+    invoice.dateinvoiceDeadline = invoiceFromDb.dateinvoiceDeadlineOfinvoice;
+    invoice.dateInvoice = invoiceFromDb.dateinvoiceOfinvoice;
+    return invoice;
+}
