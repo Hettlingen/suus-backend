@@ -74,8 +74,8 @@ export const mapInvoiceFromDbToInvoice = (invoiceFromDb: any) => {
     invoice.uuid = invoiceFromDb.uuidOfinvoice;
     invoice.type = invoiceFromDb.typeOfinvoice === 1 ? InvoiceType.CREDITCARD : InvoiceType.INVOICE;
     invoice.state = invoiceFromDb.stateOfinvoice === 1 ? InvoiceState.OFFEN : InvoiceState.BEZAHLT;
-    invoice.priceTotal = new Amount(invoiceFromDb.priceTotalOfinvoice, invoiceFromDb.currencyPriceTotalOfinvoice);
-    invoice.tax = new Amount(invoiceFromDb.amountTaxOfinvoice, invoiceFromDb.currencyAmountTaxOfinvoice);
+    invoice.priceTotal = new Amount(invoiceFromDb.priceTotalOfInvoice, invoiceFromDb.currencyPriceTotalOfInvoice);
+    invoice.tax = new Amount(invoiceFromDb.amountTaxOfInvoice, invoiceFromDb.currencyAmountTaxOfInvoice);
     invoice.dateinvoiceDeadline = invoiceFromDb.dateinvoiceDeadlineOfinvoice;
     invoice.dateInvoice = invoiceFromDb.dateinvoiceOfinvoice;
     return invoice;

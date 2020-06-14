@@ -88,14 +88,13 @@ export class ShopDatabaseService {
         try {
             const ordersFromDb = await databaseShop.query(query);
 
-            console.log('Orders Database: ' + JSON.stringify(ordersFromDb));
-
             if (ordersFromDb === null || ordersFromDb === undefined) {
                 throw new Error('[myfarmer] ShopDatabaseService.readOrders - Orders dont exist on database');
             }
 
             return mapOrdersFromDbToOrders(ordersFromDb);
         } catch(error) {
+            console.log('[myfarmer] ShopDatabaseService.readOrders - Error reading orders from database: ' + error);
             throw new Error('[myfarmer] ShopDatabaseService.readOrders - Error reading orders from database: ' + error);
         }
     }
@@ -109,11 +108,13 @@ export class ShopDatabaseService {
         try {
             const orderFromDb = await databaseShop.query(query);
 
+            console.log('Order Database: ' + JSON.stringify(orderFromDb));
+
             if (orderFromDb === null || orderFromDb === undefined) {
                 throw new Error('[myfarmer] ShopDatabaseService.readOrder - Order doesnt exist on database');
             }
 
-            return mapOrderFromDbToOrder(orderFromDb);
+            return mapOrderFromDbToOrder(orderFromDb[0]);
         } catch(error) {
             throw new Error('[myfarmer] ShopDatabaseService.readOrder - Error reading order from database: ' + error);
         }
