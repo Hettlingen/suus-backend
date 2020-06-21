@@ -65,7 +65,7 @@ export const mapOrderFromDbToOrder = (orderFromDb: any) => {
     order.number = orderFromDb.number;
     order.state = getOrderState(orderFromDb.state);
     order.dateOrder = orderFromDb.dateDelivery;
-    //order.invoice= mapInvoiceFromDbToInvoice(orderFromDb);
+    order.invoice= mapInvoiceFromDbToInvoice(orderFromDb);
     return order;
 }
 

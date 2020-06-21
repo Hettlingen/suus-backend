@@ -27,7 +27,7 @@ export class ShopDatabaseService {
                             FROM Shop 
                             LEFT JOIN ShopItem 
                                 ON Shop.uuid=ShopItem.uuidShop
-                                WHERE Shop.uuid='${uuidShop}';`;
+                            WHERE Shop.uuid='${uuidShop}';`;
 
         try {
             const shopFromDb = await databaseShop.query(query);
@@ -65,8 +65,6 @@ export class ShopDatabaseService {
         console.log('START: ShopDatabaseService.readOrders: ' + JSON.stringify(uuidUserAccount));
         if (!uuidUserAccount) throw new Error('[myfarmer] ShopDatabaseService.readOrders - Wrong parameters');
 
-        // const query = `SELECT * FROM Orders WHERE Orders.uuidUserAccount='${uuidUserAccount}'`;
-
         const query = `SELECT Orders.uuid,
                               Orders.number,
                               Orders.state,
@@ -83,7 +81,7 @@ export class ShopDatabaseService {
                             FROM Orders
                             LEFT JOIN Invoice
                                 ON Orders.uuid=Invoice.uuidOrder
-                                WHERE Orders.uuidUserAccount='${uuidUserAccount}';`;
+                            WHERE Orders.uuidUserAccount='${uuidUserAccount}';`;
 
         try {
             const ordersFromDb = await databaseShop.query(query);
@@ -103,12 +101,40 @@ export class ShopDatabaseService {
         console.log('START: ShopDatabaseService.readOrder: ' + JSON.stringify(uuidOrder));
         if (!uuidOrder) throw new Error('[myfarmer] ShopDatabaseService.readOrder - Wrong parameters');
 
-        const query = `SELECT * FROM Orders WHERE Orders.uuid='${uuidOrder}'`;
+//        const query = `SELECT * FROM Orders WHERE Orders.uuid='${uuidOrder}'`;
+
+        const query = `SELECT Orders.uuid,
+                              Orders.number,
+                              Orders.state,
+                              Orders.dateDelivery,
+                              OrderItem.uuid uuidOfOrderItem,
+                              OrderItem.quantity quantityOfOrderItem,
+                              ShopItem.uuid uuidOfShopItem,
+                              ShopItem.name nameOfShopItem,
+                              ShopItem.price priceOfShopItem,
+                              ShopItem.currencyPrice currencyPriceOfShopItem,
+                              Invoice.uuid uuidOfInvoice,
+                              Invoice.type typeOfInvoice,
+                              Invoice.state stateOfInvoice,
+                              Invoice.priceTotal priceTotalOfInvoice,
+                              Invoice.currencyPriceTotal currencyPriceTotalOfInvoice,
+                              Invoice.amountTax amountTaxOfInvoice,
+                              Invoice.currencyAmountTax currencyAmountTaxOfInvoice,
+                              Invoice.dateInvoiceDeadline dateInvoiceDeadlineOfInvoice,
+                              Invoice.dateInvoice dateInvoiceOfInvoice
+                            FROM Orders
+                            LEFT JOIN OrderItem
+                                ON Orders.uuid=OrderItem.uuidOrder
+                            LEFT JOIN ShopItem
+                                ON OrderItem.uuidShopItem=ShopItem.uuid
+                            LEFT JOIN Invoice
+                                ON Orders.uuid=Invoice.uuidOrder
+                            WHERE Orders.uuid='${uuidOrder}';`;
 
         try {
             const orderFromDb = await databaseShop.query(query);
 
-            console.log('Order Database: ' + JSON.stringify(orderFromDb));
+            console.log('Order with Orderitem and Shopitem: ' + JSON.stringify(orderFromDb));
 
             if (orderFromDb === null || orderFromDb === undefined) {
                 throw new Error('[myfarmer] ShopDatabaseService.readOrder - Order doesnt exist on database');
