@@ -6,6 +6,8 @@ import {Invoice} from "./model/accounting/invoice";
 import {ShopItem} from "./model/shop-item";
 import {AuthenticationService} from "../authentication/services/authentication-service";
 import {Order} from "./model/order/order";
+import {OfferItem} from "./model/offer/offer-item";
+import {Delivery} from "./model/delivery/delivery";
 
 export class ShopRoutes {
     public static routes(app: any): void {
@@ -52,6 +54,42 @@ export class ShopRoutes {
                     response.status(200).send(payment);
                 }).catch(function(error: any){
                 response.status(404).send("Shop wasn't found: " + error)
+            });
+        })
+
+        app.route('/offer-items/user/:uuidUserAccount').get(AuthenticationService.checkIfAuthenticated, async (request: Request, response: Response) => {
+            ShopService.getOfferItems(request.params.uuidUserAccount)
+                .then(function(offerItems: Array<OfferItem>) {
+                    response.status(200).send(offerItems);
+                }).catch(function(error: any){
+                response.status(404).send("Offer-items weren't found: " + error)
+            });
+        })
+
+        app.route('/offer-items/:uuidOffer').get(AuthenticationService.checkIfAuthenticated, async (request: Request, response: Response) => {
+            ShopService.getOfferItem(request.params.uuidOffer)
+                .then(function(offerItem: OfferItem) {
+                    response.status(200).send(offerItem);
+                }).catch(function(error: any){
+                response.status(404).send("Offer-item isn't found: " + error)
+            });
+        })
+
+        app.route('/deliveries/user/:uuidUserAccount').get(AuthenticationService.checkIfAuthenticated, async (request: Request, response: Response) => {
+            ShopService.getDeliveries(request.params.uuidUserAccount)
+                .then(function(deliveries: Array<Delivery>) {
+                    response.status(200).send(deliveries);
+                }).catch(function(error: any){
+                response.status(404).send("Deliveries weren't found: " + error)
+            });
+        })
+
+        app.route('/deliveries/:uuidDelivery').get(AuthenticationService.checkIfAuthenticated, async (request: Request, response: Response) => {
+            ShopService.getDelivery(request.params.uuidDelivery)
+                .then(function(delivery: Delivery) {
+                    response.status(200).send(delivery);
+                }).catch(function(error: any){
+                response.status(404).send("Order isn't found: " + error)
             });
         })
     }

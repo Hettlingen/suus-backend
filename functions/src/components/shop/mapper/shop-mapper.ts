@@ -6,6 +6,10 @@ import {InvoiceType} from "../model/accounting/invoice-type";
 import {InvoiceState} from "../model/accounting/invoice-state";
 import {Amount} from "../model/accounting/amount";
 import {Invoice} from "../model/accounting/invoice";
+import {OfferItem} from "../model/offer/offer-item";
+import {getOfferItemState} from "../model/offer/offer-item-state";
+import {Delivery} from "../model/delivery/delivery";
+import {getDeliveryState} from "../model/delivery/delivery-state";
 
 export const mapShopFromDbToShop = (shopFromDb: any) => {
     const shop = new Shop();
@@ -79,4 +83,62 @@ export const mapInvoiceFromDbToInvoice = (invoiceFromDb: any) => {
     invoice.dateinvoiceDeadline = invoiceFromDb.dateinvoiceDeadlineOfinvoice;
     invoice.dateInvoice = invoiceFromDb.dateinvoiceOfinvoice;
     return invoice;
+}
+
+export const mapOfferItemsFromDbToOfferItems = (offerItemsFromDb: any) => {
+    const offerItems: OfferItem[] = [];
+
+    for (const offerItemFromDb of offerItemsFromDb) {
+        offerItems.push(mapOfferItemFromDbToOfferItem(offerItemFromDb));
+    }
+
+    return offerItems;
+}
+
+export const mapOfferItemFromDbToOfferItem = (offerItemFromDb: any) => {
+    const offerItem = new OfferItem();
+    offerItem.uuid = offerItemFromDb.uuid;
+    offerItem.state = getOfferItemState(offerItemFromDb.state);
+    offerItem.quantity = offerItemFromDb.quantity;
+
+    const shopItem = new ShopItem();
+    shopItem.uuid = offerItemFromDb.uuidOfShopItem;
+    shopItem.name = offerItemFromDb.nameOfShopItem;
+    shopItem.description = offerItemFromDb.descriptionOfShopItem;
+    shopItem.category = offerItemFromDb.categoryOfShopItem;
+    shopItem.price = offerItemFromDb.priceOfShopItem;
+    shopItem.currencyPrice = offerItemFromDb.currencyPriceOfShopItem;
+    shopItem.imageName = offerItemFromDb.imageName;
+    offerItem.shopItem= shopItem;
+
+    return offerItem;
+}
+
+export const mapDeliveriesFromDbToDeliveries = (deliveriesFromDb: any) => {
+    const deliveries: Delivery[] = [];
+
+    for (const deliveryFromDb of deliveriesFromDb) {
+        deliveries.push(mapDeliveryFromDbToDelivery(deliveryFromDb));
+    }
+
+    return deliveries;
+}
+
+export const mapDeliveryFromDbToDelivery = (deliveryFromDb: any) => {
+    const delivery = new Delivery();
+    delivery.uuid = deliveryFromDb.uuid;
+    delivery.uuidUserAccount = deliveryFromDb.uuid;
+    delivery.number = deliveryFromDb.uuid;
+    delivery.state = getDeliveryState(deliveryFromDb.state);
+    delivery.dateDelivery = deliveryFromDb.quantity;
+
+    const order = new Order();
+    order.uuid = deliveryFromDb.uuidOfOrder;
+    order.number = deliveryFromDb.numberOfOrder;
+    order.state = deliveryFromDb.stateOfOrder;
+    order.dateOrder = deliveryFromDb.dateOrderOfOrder;
+    order.dateDelivery = deliveryFromDb.dateDeliveryOfOrder;
+    delivery.order = order;
+
+    return delivery;
 }

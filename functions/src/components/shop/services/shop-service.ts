@@ -3,6 +3,8 @@ import {ShopDatabaseService} from "./database/shop-database-service";
 import {ShopItem} from "../model/shop-item";
 import {Order} from "../model/order/order";
 import {OrderState} from "../model/order/order-state";
+import {Delivery} from "../model/delivery/delivery";
+import {OfferItem} from "../model/offer/offer-item";
 
 export class ShopService {
 
@@ -44,7 +46,7 @@ export class ShopService {
         try {
             return await ShopDatabaseService.readOrder(uuidOrder);
         } catch(error){
-            throw new Error('[myfarmer] ShopService.getOrder - Error reading Orders of user: ' + uuidOrder);
+            throw new Error('[myfarmer] ShopService.getOrder - Error reading order with uuid: ' + uuidOrder);
         }
     }
 
@@ -55,6 +57,45 @@ export class ShopService {
             return await ShopDatabaseService.readOrderByUserAccountUuidAndState(uuidUserAccount, OrderState.SHOPPING_CART);
         } catch(error){
             throw new Error('[myfarmer] ShopService.getShoppingCart - Error reading Orders of user: ' + uuidUserAccount);
+        }
+    }
+
+    static async getOfferItems(uuidUserAccount: string): Promise<Array<OfferItem>> {
+        console.log('START: ShopService.getOfferItems: ' + JSON.stringify(uuidUserAccount));
+
+        try {
+            return await ShopDatabaseService.readOfferItems(uuidUserAccount);
+        } catch(error){
+            throw new Error('[myfarmer] ShopService.getOfferItems - Error reading offer-items of user: ' + uuidUserAccount);
+        }
+    }
+
+    static async getOfferItem(uuidOfferItem: string): Promise<OfferItem> {
+        console.log('START: ShopService.getOfferItem: ' + JSON.stringify(uuidOfferItem));
+
+        try {
+            return await ShopDatabaseService.readOfferItem(uuidOfferItem);
+        } catch(error){
+            throw new Error('[myfarmer] ShopService.getOfferItem - Error reading offer-item with uuid: ' + uuidOfferItem);
+        }
+    }
+    static async getDeliveries(uuidUserAccount: string): Promise<Array<Delivery>> {
+        console.log('START: ShopService.getDeliveries: ' + JSON.stringify(uuidUserAccount));
+
+        try {
+            return await ShopDatabaseService.readDeliveries(uuidUserAccount);
+        } catch(error){
+            throw new Error('[myfarmer] ShopService.getDeliveries - Error reading deliveries of user: ' + uuidUserAccount);
+        }
+    }
+
+    static async getDelivery(uuidDelivery: string): Promise<Delivery> {
+        console.log('START: ShopService.getDelivery: ' + JSON.stringify(uuidDelivery));
+
+        try {
+            return await ShopDatabaseService.readDelivery(uuidDelivery);
+        } catch(error){
+            throw new Error('[myfarmer] ShopService.getDelivery - Error reading delivery with uuid: ' + uuidDelivery);
         }
     }
 }
