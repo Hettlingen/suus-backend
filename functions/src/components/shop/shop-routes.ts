@@ -89,7 +89,7 @@ export class ShopRoutes {
                 .then(function(delivery: Delivery) {
                     response.status(200).send(delivery);
                 }).catch(function(error: any){
-                response.status(404).send("Order isn't found: " + error)
+                response.status(404).send("Delivery isn't found: " + error)
             });
         })
     }
