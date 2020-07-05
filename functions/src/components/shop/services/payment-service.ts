@@ -1,21 +1,26 @@
-import {Invoice} from "../model/accounting/invoice";
+import {Payment} from "../model/accounting/payment";
 
 export class PaymentService {
 
-    static async checkout(payment: Invoice): Promise<Invoice> {
-        console.log('START: CheckoutService.checkout');
+    static async chargeCreditCard(payment: Payment): Promise<Payment> {
+        console.log('START: CheckoutService.chargeCreditCard');
 
-        // stripe.charges.create(
-        //     {
-        //         amount: 2000,
-        //         currency: 'chf',
-        //         source: 'tok_visa',
-        //         description: 'My First Test Charge (created for API docs)',
-        //     },
-        //     function(err: any, charge: Charge) {
-        //         // asynchronously called
-        //     }
-        // );
-        return Promise.resolve(new Invoice());
+        // const token = payment.creditcard.token;
+        // const amount = payment.invoice.priceTotal.value;
+        // const currency = payment.invoice.priceTotal.currency;
+
+        // Charge card
+        // stripe.charges.create({
+        //     amount,
+        //     currency,
+        //     description: 'Firebase Example',
+        //     source: token,
+        // }).then(charge => {
+        //     // TODO Successful
+        // }).catch(err => {
+        //     // TODO Error
+        // });
+
+        return Promise.resolve(new Payment());
     }
 }
