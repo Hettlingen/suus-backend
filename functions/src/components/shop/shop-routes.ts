@@ -49,7 +49,7 @@ export class ShopRoutes {
         })
 
         app.route('/checkout').get(async (request: Request, response: Response) => {
-            PaymentService.chargeCreditCard(request.body)
+            PaymentService.pay(request.body)
                 .then(function(payment: Payment) {
                     response.status(200).send(payment);
                 }).catch(function(error: any){

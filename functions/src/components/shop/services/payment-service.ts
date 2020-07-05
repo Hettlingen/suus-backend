@@ -2,7 +2,7 @@ import {Payment} from "../model/accounting/payment";
 
 export class PaymentService {
 
-    static async chargeCreditCard(payment: Payment): Promise<Payment> {
+    static async pay(payment: Payment): Promise<Payment> {
         console.log('START: CheckoutService.chargeCreditCard');
 
         // const token = payment.creditcard.token;
