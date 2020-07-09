@@ -48,7 +48,7 @@ export class ShopRoutes {
             });
         })
 
-        app.route('/checkout').get(async (request: Request, response: Response) => {
+        app.route('/checkout').post(async (request: Request, response: Response) => {
             PaymentService.pay(request.body)
                 .then(function(payment: Payment) {
                     response.status(200).send(payment);
