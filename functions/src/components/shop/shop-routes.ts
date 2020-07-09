@@ -7,7 +7,6 @@ import {AuthenticationService} from "../authentication/services/authentication-s
 import {Order} from "./model/order/order";
 import {OfferItem} from "./model/offer/offer-item";
 import {Delivery} from "./model/delivery/delivery";
-import {Payment} from "./model/accounting/payment";
 
 export class ShopRoutes {
     public static routes(app: any): void {
@@ -50,8 +49,8 @@ export class ShopRoutes {
 
         app.route('/checkout').post(async (request: Request, response: Response) => {
             PaymentService.pay(request.body)
-                .then(function(payment: Payment) {
-                    response.status(200).send(payment);
+                .then(function(successful: boolean) {
+                    response.status(200).send(successful);
                 }).catch(function(error: any){
                 response.status(404).send("Payment wasn't executed: " + error)
             });
