@@ -1,9 +1,11 @@
 import {Payment} from "../model/accounting/payment";
 
+/**
+ * See: https://medium.com/better-programming/payments-simplified-stripe-angular-express-4a88bf69f82e
+ */
 export class PaymentService {
 
     private static stripe = require('stripe')('sk_test_ijLDjyiCzl44BdJvBnNkGfEu00yIsYTPcQ');
-    private static charge: any;
 
     static async pay(payment: Payment): Promise<boolean> {
         console.log('START: CheckoutService.pay');
@@ -11,9 +13,10 @@ export class PaymentService {
         const token = payment.card.token;
         const amount = payment.invoice.priceTotal.value * 100;
         const currency = payment.invoice.priceTotal.currency;
+        let charge;
 
         try {
-            this.charge = await this.stripe.charges.create({
+            charge = await this.stripe.charges.create({
                 amount,
                 currency,
                 source: token,
@@ -24,9 +27,9 @@ export class PaymentService {
         }
 
         try {
-            await this.makePayment(this.charge);
+            await this.makePayment(charge);
         } catch(error) {
-            this.refundPayment(this.charge);
+            this.refundPayment(charge);
             return Promise.resolve(false);
         }
 
