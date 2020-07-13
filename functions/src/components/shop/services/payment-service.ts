@@ -22,33 +22,13 @@ export class PaymentService {
                 amount,
                 currency,
                 source: token,
-                capture: false,
             });
+            console.log('Zahlung erfolgreich: ' + JSON.stringify(charge));
         } catch(error){
             console.log(error);
             throw new Error('[myfarmer] PaymentService.pay - Error charging credit-card');
         }
 
-        try {
-            return await this.makePayment(charge);
-        } catch(error) {
-            return await this.refundPayment(charge);
-        }
-    }
-
-    static makePayment(charge: any): Promise<boolean> {
-        try {
-            return this.stripe.charges.capture(charge.id)
-        } catch(error) {
-            throw error;
-        }
-    }
-
-    static refundPayment(charge: any): Promise<boolean> {
-        try {
-            return this.stripe.refunds.create({charge: charge.id});
-        } catch(error) {
-            throw error;
-        }
+        return true;
     }
 }
