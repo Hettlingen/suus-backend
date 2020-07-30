@@ -4,9 +4,13 @@ import * as express from 'express';
 import * as bodyParser from "body-parser";
 import * as mysql from 'promise-mysql';
 import {Routes} from "./routes";
+import * as dotenv from 'dotenv';
 
+// Configuration
+dotenv.config(); // config the *.env files
 admin.initializeApp(functions.config().firebase);
 
+// const multer = require('multer')
 const app = express();
 const main = express();
 
