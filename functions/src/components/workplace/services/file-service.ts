@@ -36,7 +36,7 @@ export class FileService {
      * URL to read a file: https://storage.googleapis.com/${bucketName}/${fileName}
      * exports.getPublicUrl = (bucketName, fileName) => `https://storage.googleapis.com/${bucketName}/${fileName}`;
      */
-    public static async getFile(uuidFile: string) {
-
+    public static async getFile(uuidFile: string): Promise<MyFile> {
+        return new MyFile();
     }
 }
