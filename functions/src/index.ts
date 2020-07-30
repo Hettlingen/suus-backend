@@ -10,7 +10,6 @@ import * as dotenv from 'dotenv';
 dotenv.config(); // config the *.env files
 admin.initializeApp(functions.config().firebase);
 
-// const multer = require('multer')
 const app = express();
 const main = express();
 
@@ -116,3 +115,13 @@ createPool()
 // const secret = process.env.STRIPE_KEY!;
 // export const stripe = new Stripe(secret, null);
 // END Database STRIPE PAYMENT --------------------------------------------
+
+// we need that for the handling with google cloud storage
+const multer = require('multer')
+const multerMid = multer({
+    storage: multer.memoryStorage(),
+    limits: {
+        fileSize: 5 * 1024 * 1024,
+    },
+})
+app.use(multerMid.single('file'));
