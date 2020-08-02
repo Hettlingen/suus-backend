@@ -1,48 +1,40 @@
 import {MyFile} from "../model/my-file";
 
-// const util = require('util')
-// const gc = require('./config/');
-// const bucket = gc.bucket('all-mighti') // should be your bucket name
-
 const path = require('path');
-const serviceKey = path.join(__dirname, './google-storage-keys.json');
-
+// Imports the Google Cloud client library
+const {Storage} = require('@google-cloud/storage');
+const bucketName = 'images-products';
+const storage = new Storage();
+storage.keyFilename = path.join(__dirname, './google-storage-keys.json');
+storage.projectId = 'scoop-backend-3000';
 
 export class FileService {
 
-    public static async saveFile(file: MyFile): Promise<boolean> {
-        console.log('START: FileService.saveFiles');
+    public static async saveFile(myFile: MyFile): Promise<boolean> {
+        console.log('MyFile: ' + JSON.stringify(myFile));
 
-        // only for testing with local files
-        const fileName = './assets/carrots.png';
+        const stream     = require('stream');
+        const dataStream = new stream.PassThrough();
+        const gcFile     = storage.bucket(bucketName).file(myFile.fileName);
 
-        const storage = new Storage();
-        storage.keyFilename = serviceKey;
-        storage.projectId = 'scoop-backend-3000';
+        dataStream.push(myFile.file)
+        dataStream.push(null)
 
-        const bucketName = 'images-products';
+        await new Promise((resolve, reject) => {
+            dataStream.pipe(gcFile.createWriteStream({
+                resumable  : false,
+                validation : false,
+                metadata   : {'Cache-Control': 'public, max-age=31536000'}
+            }))
+                .on('error', (error : Error) => {
+                    reject(error)
+                })
+                .on('finish', () => {
+                    resolve(true)
+                })
+        })
 
-        try {
-            await storage.bucket(bucketName).upload(fileName, {
-                // Support for HTTP requests made with `Accept-Encoding: gzip`
-                gzip: true,
-                // By setting the option `destination`, you can change the name of the
-                // object you are uploading to a bucket.
-                metadata: {
-                    // Enable long-lived HTTP caching headers
-                    // Use only if the contents of the file will never change
-                    // (If the contents will change, use cacheControl: 'no-cache')
-                    cacheControl: 'public, max-age=31536000',
-                },
-            });
-        } catch(error){
-            console.log(error);
-            throw new Error('[myfarmer] FileService.saveFiles - Error saving files');
-        }
-
-        console.log(`${file.fileName} uploaded to ${bucketName}.`);
-
-        return true;
+        throw new Error('[myfarmer] FileService.saveFiles - Error saving files');
     }
 
     /**
@@ -50,31 +42,47 @@ export class FileService {
      * exports.getPublicUrl = (bucketName, fileName) => `https://storage.googleapis.com/${bucketName}/${fileName}`;
      */
     public static async getFile(uuidFile: string): Promise<MyFile> {
+        const options = {
+            // name of the folder within bucket
+            destination: "550e8400-e29b-11d6-a716-446655450001/egg.png",
+            // Support for HTTP requests made with `Accept-Encoding: gzip`
+            gzip: true,
+            // By setting the option `destination`, you can change the name of the
+            // object you are uploading to a bucket.
+            metadata: {
+                // Enable long-lived HTTP caching headers
+                // Use only if the contents of the file will never change
+                // (If the contents will change, use cacheControl: 'no-cache')
+                cacheControl: 'public, max-age=31536000',
+            },
+        }
+
+        storage
+            .bucket(bucketName)
+            .file('egg.png')
+            .download(options)
+            .then(() => {
+                console.log("Download Completed");
+            })
+            .catch((error: any) => {
+                throw new Error('[myfarmer] FileService.getFile - Error readgin file: ' + error);
+            });
+
         return new MyFile();
     }
 
     /**
-     *
-     * @param { File } object file object that will be uploaded
-     * @description - This function does the following
-     * - It uploads a file to the image bucket on Google Cloud
-     * - It accepts an object as an argument with the
-     *   "originalname" and "buffer" as keys
+     * Creates a new bucket in the Asia region with the coldline default storage
+     * class. Leave the second argument blank for default settings.
+     * For default values see: https://cloud.google.com/storage/docs/locations and
+     * https://cloud.google.com/storage/docs/storage-classes
      */
-    // private uploadFile(file: any): string {
-    //     const { originalname, buffer } = file
-    //     const blob = bucket.file(originalname.replace(/ /g, "_"))
-    //     const blobStream = blob.createWriteStream({
-    //         resumable: false
-    //     })
-    //     blobStream.on('finish', () => {
-    //         const publicUrl = util.format(
-    //             `https://storage.googleapis.com/${bucket.name}/${blob.name}`
-    //         )
-    //         return publicUrl;
-    //     }).on('error', () => {
-    //             return 'Unable to upload image, something went wrong';
-    //         })
-    //         .end(buffer)
+    // private async createBucket() {
+    //      const bucket = await storage.createBucket(bucketName, {
+    //         location: 'ASIA',
+    //         storageClass: 'COLDLINE',
+    //     });
+    //
+    //     console.log('Neuer Bucket lautet: ' + bucket);
     // }
 }

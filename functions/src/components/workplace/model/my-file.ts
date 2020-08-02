@@ -4,6 +4,7 @@ export class MyFile {
   public title!: string;
   public fileName!: string;
   public file!: File;
+  mimeType!: string;
   public dateCreated!: Date;
   public dateUpdated!: Date;
 }

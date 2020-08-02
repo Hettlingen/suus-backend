@@ -10,3 +10,4 @@ node_modules/
 # Ignores all environement files
 *.env
 /functions/firebase-debug.log
+google-storage-keys.json
