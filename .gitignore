@@ -9,5 +9,7 @@ node_modules/
 
 # Ignores all environement files
 *.env
-/functions/firebase-debug.log
 google-storage-keys.json
+
+/functions/firebase-debug.log
+/.idea/shelf/Uncommitted_changes_before_Update_at_03_08_20,_07_52_[Default_Changelist]/
