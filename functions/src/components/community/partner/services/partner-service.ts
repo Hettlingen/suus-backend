@@ -13,7 +13,7 @@ export class PartnerService {
         try {
             return await PartnerDatabseService.createPerson(person);
         } catch(error){
-            throw new Error('[myfarmer] PartnerService.addPerson - Error creating person: '
+            throw new Error('[myfarmer] PartnerService.createPerson - Error creating person: '
                 + person.uuid + ', error: ' +
                 + error);
         }

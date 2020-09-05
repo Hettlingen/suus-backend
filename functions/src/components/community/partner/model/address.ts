@@ -1,9 +1,11 @@
-import {Country} from "./country";
+import {Role} from "./roles/role";
 
 export class Address {
+    public uuid!: string;
     public street!: string;
     public streetNumber!: string;
-    public postalCode!: string;
     public city!: string;
-    public country!: Country;
+    public postalCode!: string;
+    public countryCode!: string;
+    public role!: Role;
 }

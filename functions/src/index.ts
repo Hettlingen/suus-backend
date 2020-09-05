@@ -35,7 +35,7 @@ export const databaseFirestore = admin.firestore();
 
 // Initialize Database GOOGLE CLOUD MYSQL ----------------------------------------
 export let databaseShop: any;
-export let databaseUserAccount: any;
+export let databasePartner: any;
 export let databaseBlog: any;
 
 const createPool = async () => {
@@ -81,10 +81,10 @@ const createPool = async () => {
 
         //[END_EXCLUDE]
     });
-    databaseUserAccount = await mysql.createPool({
+    databasePartner = await mysql.createPool({
         user: 'root',
         password: 'scoop',
-        database: 'User',
+        database: 'PartnerSchema',
         socketPath: '/cloudsql/scoop-backend-3000:europe-west1:scoop-database',
         connectionLimit: 5,
         connectTimeout: 10000, // 10 seconds

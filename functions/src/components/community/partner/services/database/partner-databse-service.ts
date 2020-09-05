@@ -1,6 +1,11 @@
 import {RoleUser} from "../../model/roles/role-user";
+import {Person} from "../../model/person";
 
 export class PartnerDatabseService {
+
+    static async createPerson(person: Person): Promise<Person> {
+        return new Person();
+    }
 
     static async readFriends(uuidUserAccount: string): Promise<Array<RoleUser>> {
         return [];
