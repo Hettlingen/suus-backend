@@ -42,7 +42,7 @@ const createPool = async () => {
     databaseShop = await mysql.createPool({
         user: 'root',
         password: 'scoop',
-        database: 'Shop',
+        database: 'ShopSchema',
         // If connecting via unix domain socket, specify the path
         socketPath: '/cloudsql/scoop-backend-3000:europe-west1:scoop-database',
 

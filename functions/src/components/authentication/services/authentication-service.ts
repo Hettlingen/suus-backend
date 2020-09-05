@@ -65,7 +65,6 @@ export class AuthenticationService {
     }
 
     public static async getUserAccount(uuidUserAccount: string): Promise<UserAccount> {
-
         console.log('START AuthenticationService.getUserAccount: ' + uuidUserAccount);
 
         const userAccount = await AuthenticationDatabseService.readUserAccountByUuid(uuidUserAccount);

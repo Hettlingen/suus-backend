@@ -85,7 +85,7 @@ export class ShopDatabaseService {
                             FROM Orders
                             LEFT JOIN Invoice
                                 ON Orders.uuid=Invoice.uuidOrder
-                            WHERE Orders.uuidUserAccount='${uuidUserAccount}';`;
+                            WHERE Order.uuidUserAccount='${uuidUserAccount}';`;
 
         try {
             const ordersFromDb = await databaseShop.query(query);
