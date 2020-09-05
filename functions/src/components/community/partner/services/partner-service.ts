@@ -1,7 +1,23 @@
 import {PartnerDatabseService} from "./database/partner-databse-service";
 import {RoleUser} from "../model/roles/role-user";
+import {Person} from "../model/person";
+import * as uuidGenerator from "uuid/v4";
 
 export class PartnerService {
+
+    // PERSON ---------------------------------------------
+    static async createPerson(person: Person): Promise<Person> {
+        console.log('START: PartnerService.addPerson: ' + person);
+        person.uuid = uuidGenerator();
+
+        try {
+            return await PartnerDatabseService.createPerson(person);
+        } catch(error){
+            throw new Error('[myfarmer] PartnerService.addPerson - Error creating person: '
+                + person.uuid + ', error: ' +
+                + error);
+        }
+    }
 
     // FRIENDS ---------------------------------------------
     static async getFriends(uuidUserAccount: string): Promise<Array<RoleUser>> {

@@ -53,4 +53,50 @@ export class BlogDatabseService {
             throw new Error('[myfarmer] BlogDatabseService.readPost - Error reading Post from database: ' + error);
         }
     }
+
+    static async createPost(uuid: string, post: Post): Promise<Post> {
+        console.log('START: BlogDatabseService.createPost');
+
+        // TODO remove the blog uuid and use it dynamically
+        const query = `INSERT INTO Post(uuid, title, content, duration, uuidBlog) VALUES ('${uuid}', '${post.title}', '${post.content}', '${post.duration}', '550e8400-e29b-11d4-a716-446655450001')`;
+
+        try {
+            const uuidFromDb = await databaseBlog.query(query);
+
+            if (!uuidFromDb) throw new Error('[myfarmer] Error inserting post in database.');
+
+            return uuidFromDb[0];
+        } catch(error) {
+            throw new Error('[myfarmer] Error execute insert-query post: ' + error);
+        }
+    }
+
+    static async updatePost(post: Post): Promise<Post> {
+        console.log('START: BlogDatabseService.updatePost');
+
+        const query = `UPDATE Post SET 'uuid' = '${post.uuid}', 'title' = '${post.title}', 'content' = '${post.content}', 'duration' = '${post.duration}'`;
+
+        try {
+            const uuidFromDb = await databaseBlog.query(query);
+
+            if (!uuidFromDb) throw new Error('[myfarmer] Error inserting post in database.');
+
+            return uuidFromDb[0];
+        } catch(error) {
+            throw new Error('[myfarmer] Error execute insert-query post: ' + error);
+        }
+    }
+
+    static async deletePost(uuidPost: string): Promise<boolean> {
+        console.log('START: BlogDatabseService.deletePost');
+
+        const query = `DELETE FROM Post WHERE uuid = '${uuidPost}'`;
+
+        try {
+            await databaseBlog.query(query);
+            return true;
+        } catch(error) {
+            throw new Error('[myfarmer] Error execute insert-query post: ' + error);
+        }
+    }
 }
