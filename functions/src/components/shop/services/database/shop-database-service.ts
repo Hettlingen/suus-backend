@@ -1,4 +1,4 @@
-import {databaseShop} from "../../../../index";
+import {database} from "../../../../index";
 import {Shop} from "../../model/shop";
 import {
     mapDeliveriesFromDbToDeliveries, mapDeliveryFromDbToDelivery,
@@ -34,7 +34,7 @@ export class ShopDatabaseService {
                             WHERE Shop.uuid='${uuidShop}';`;
 
         try {
-            const shopFromDb = await databaseShop.query(query);
+            const shopFromDb = await database.query(query);
 
             if (shopFromDb === null || shopFromDb === undefined || shopFromDb.length === 0) {
                 throw new Error('[myfarmer] ShopDatabaseService.readShop - Shop doesnt exist on database');
@@ -53,7 +53,7 @@ export class ShopDatabaseService {
         const query = `SELECT * FROM ShopItem WHERE ShopItem.uuid='${uuidShopItem}'`;
 
         try {
-            const shopItemFromDb = await databaseShop.query(query);
+            const shopItemFromDb = await database.query(query);
 
             if (shopItemFromDb === null || shopItemFromDb === undefined) {
                 throw new Error('[myfarmer] ShopDatabaseService.readShopItem - Shopitem doesnt exist on database');
@@ -88,7 +88,7 @@ export class ShopDatabaseService {
                             WHERE Order.uuidUserAccount='${uuidUserAccount}';`;
 
         try {
-            const ordersFromDb = await databaseShop.query(query);
+            const ordersFromDb = await database.query(query);
 
             if (ordersFromDb === null || ordersFromDb === undefined) {
                 throw new Error('[myfarmer] ShopDatabaseService.readOrders - Orders dont exist on database');
@@ -134,7 +134,7 @@ export class ShopDatabaseService {
                             WHERE Orders.uuid='${uuidOrder}';`;
 
         try {
-            const orderFromDb = await databaseShop.query(query);
+            const orderFromDb = await database.query(query);
 
             if (orderFromDb === null || orderFromDb === undefined) {
                 throw new Error('[myfarmer] ShopDatabaseService.readOrder - Order doesnt exist on database');
@@ -153,7 +153,7 @@ export class ShopDatabaseService {
         const query = `SELECT * FROM Orders WHERE Orders.uuidUserAccount='${uuidUserAccount}'`;
 
         try {
-            const orderFromDb = await databaseShop.query(query);
+            const orderFromDb = await database.query(query);
 
             if (orderFromDb === null || orderFromDb === undefined) {
                 throw new Error('[myfarmer] ShopDatabaseService.readOrder - Order doesnt exist on database');
@@ -184,7 +184,7 @@ export class ShopDatabaseService {
                             WHERE OfferItem.uuidUserAccount='${uuidUserAccount}';`;
 
         try {
-            const offerItemsFromDb = await databaseShop.query(query);
+            const offerItemsFromDb = await database.query(query);
 
             console.log('OfferItems with Shopitem: ' + JSON.stringify(offerItemsFromDb));
 
@@ -219,7 +219,7 @@ export class ShopDatabaseService {
                             WHERE OfferItem.uuid='${uuidOfferItem}';`;
 
         try {
-            const offerItemFromDb = await databaseShop.query(query);
+            const offerItemFromDb = await database.query(query);
 
             console.log('OfferItem with Shopitem: ' + JSON.stringify(offerItemFromDb));
 
@@ -251,7 +251,7 @@ export class ShopDatabaseService {
                             WHERE Delivery.uuidUserAccount='${uuidUserAccount}';`;
 
         try {
-            const deliveriesFromDb = await databaseShop.query(query);
+            const deliveriesFromDb = await database.query(query);
 
             console.log('Deliveries with Order: ' + JSON.stringify(deliveriesFromDb));
 
@@ -285,7 +285,7 @@ export class ShopDatabaseService {
                             WHERE Delivery.uuid='${uuidDelivery}';`;
 
         try {
-            const deliveryFromDb = await databaseShop.query(query);
+            const deliveryFromDb = await database.query(query);
 
             console.log('Delivery with Order: ' + JSON.stringify(deliveryFromDb));
 

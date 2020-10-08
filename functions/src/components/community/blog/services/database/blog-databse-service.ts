@@ -1,7 +1,7 @@
 import {Blog} from "../../model/blog";
-import {databaseBlog} from "../../../../../index";
 import {mapBlogFromDbToBlog, mapPostFromDbToPost} from "../blog-mapper";
 import {Post} from "../../model/post";
+import {database} from "../../../../../index";
 
 export class BlogDatabseService {
 
@@ -23,7 +23,7 @@ export class BlogDatabseService {
                                 WHERE Blog.uuid='${uuidBlog}';`;
 
         try {
-            const blogFromDb = await databaseBlog.query(query);
+            const blogFromDb = await database.query(query);
 
             if (blogFromDb === null || blogFromDb === undefined) {
                 throw new Error('[myfarmer] BlogDatabseService.readBlog - Blog doesnt exist on database');
@@ -42,7 +42,7 @@ export class BlogDatabseService {
         const query = `SELECT * FROM Post WHERE Post.uuid='${uuidPost}'`;
 
         try {
-            const postFromDb = await databaseBlog.query(query);
+            const postFromDb = await database.query(query);
 
             if (postFromDb === null || postFromDb === undefined) {
                 throw new Error('[myfarmer] BlogDatabseService.readPost - Post doesnt exist on database');
@@ -61,7 +61,7 @@ export class BlogDatabseService {
         const query = `INSERT INTO Post(uuid, title, content, duration, uuidBlog) VALUES ('${uuid}', '${post.title}', '${post.content}', '${post.duration}', '550e8400-e29b-11d4-a716-446655450001')`;
 
         try {
-            const uuidFromDb = await databaseBlog.query(query);
+            const uuidFromDb = await database.query(query);
 
             if (!uuidFromDb) throw new Error('[myfarmer] Error inserting post in database.');
 
@@ -77,7 +77,7 @@ export class BlogDatabseService {
         const query = `UPDATE Post SET 'uuid' = '${post.uuid}', 'title' = '${post.title}', 'content' = '${post.content}', 'duration' = '${post.duration}'`;
 
         try {
-            const uuidFromDb = await databaseBlog.query(query);
+            const uuidFromDb = await database.query(query);
 
             if (!uuidFromDb) throw new Error('[myfarmer] Error inserting post in database.');
 
@@ -93,7 +93,7 @@ export class BlogDatabseService {
         const query = `DELETE FROM Post WHERE uuid = '${uuidPost}'`;
 
         try {
-            await databaseBlog.query(query);
+            await database.query(query);
             return true;
         } catch(error) {
             throw new Error('[myfarmer] Error execute insert-query post: ' + error);
