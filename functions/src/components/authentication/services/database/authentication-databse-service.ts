@@ -13,9 +13,9 @@ export class AuthenticationDatabseService {
             }
 
             await database.query(query, async (queryError: MysqlError | null, results: any, fields: FieldInfo[] | undefined) => {
-                if (queryError != null) {
+                if (queryError !== null) {
                     await database.rollback((rollbackError: MysqlError) => {
-                        if (rollbackError != null) {
+                        if (rollbackError !== null) {
                             throw new Error('[myfarmer] Error rollback insert-query user-account: ' + rollbackError.message);
                         } else {
                             throw new Error('[myfarmer] Error execute insert-query user-account: ' + queryError.message);
@@ -23,7 +23,7 @@ export class AuthenticationDatabseService {
                     });
                 } else {
                     await database.commit((commitError: MysqlError) => {
-                        if (commitError != null) {
+                        if (commitError !== null) {
                             throw new Error('[myfarmer] Error commit insert-query user-account: ' + commitError.message);
                         }
                         return results[0];

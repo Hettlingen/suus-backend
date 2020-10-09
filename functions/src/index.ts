@@ -42,8 +42,7 @@ const createPool = async () => {
         password: 'scoop',
         database: 'SCOOP-SCHEMA',
         // If connecting via unix domain socket, specify the path
-        socketPath: '/cloudsql/scoop-backend-3000:europe-west1:scoop-database',
-
+        socketPath: '/cloudsql/scoop-backend-3000:europe-west6:scoop-database-8-0',
         // If connecting via TCP, enter the IP and port instead
         // host: 'localhost',
         // port: 3306,
