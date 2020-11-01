@@ -40,6 +40,8 @@ export class AuthenticationDatabseService {
         } finally {
             await database.close();
         }
+
+        return new UserAccount('','','','')
     }
 
     static async readUserAccountByUuid(uuidUserAccount: string): Promise<UserAccount> {
@@ -69,6 +71,6 @@ export class AuthenticationDatabseService {
     }
 
     static async createRoleUser(roleUser: RoleUser): Promise<RoleUser> {
-        return new Promise(new RoleUser());
+        return new RoleUser();
     }
 }
