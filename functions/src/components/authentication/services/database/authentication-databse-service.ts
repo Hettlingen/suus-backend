@@ -1,38 +1,45 @@
 import {UserAccount} from "../../model/user-account";
-import {FieldInfo, MysqlError} from "mysql";
+import {MysqlError} from "mysql";
 import {database} from "../../../../index";
+import {RoleUser} from "../../../community/partner/model/roles/role-user";
 
 export class AuthenticationDatabseService {
 
-    static async createUserAccount(uuid: string, userName: string, hashedPassword: string, email: string): Promise<UserAccount> {
-        const query = `INSERT INTO UserAccount(uuid, userName, password, email) VALUES ('${uuid}', '${userName}', '${hashedPassword}', '${email}')`;
+    /**
+     * See: https://codeburst.io/node-js-mysql-and-async-await-6fb25b01b628
+     *
+     * @param uuid
+     * @param userName
+     * @param hashedPassword
+     * @param email
+     */
+    static async createUserAccount(userAccount: UserAccount): Promise<UserAccount> {
+        try {
+            await database.beginTransaction();
 
-        await database.beginTransaction(async (error: MysqlError) => {
-            if (error !== null) {
-                throw new Error('[myfarmer] Error execute insert-query user-account: ' + error.message);
-            }
+            // INSERT UserAccount
+            const queryUserAccount = `INSERT INTO UserAccount(uuid, userName, password, email) VALUES ('${userAccount.uuid}', '${userAccount.userName}', '${userAccount.hashedPassword}', '${userAccount.email}')`;
+            await database.query(queryUserAccount);
 
-            await database.query(query, async (queryError: MysqlError | null, results: any, fields: FieldInfo[] | undefined) => {
-                if (queryError !== null) {
-                    await database.rollback((rollbackError: MysqlError) => {
-                        if (rollbackError !== null) {
-                            throw new Error('[myfarmer] Error rollback insert-query user-account: ' + rollbackError.message);
-                        } else {
-                            throw new Error('[myfarmer] Error execute insert-query user-account: ' + queryError.message);
-                        }
-                    });
-                } else {
-                    await database.commit((commitError: MysqlError) => {
-                        if (commitError !== null) {
-                            throw new Error('[myfarmer] Error commit insert-query user-account: ' + commitError.message);
-                        }
-                        return results[0];
-                    });
+            // INSERT RoleUser
+            // const queryRoleUser = `INSERT INTO UserAccount(uuid, userName, password, email) VALUES ('${uuidUserAccount}', '${userName}', '${hashedPassword}', '${email}')`;
+            // await database.query(queryRoleUser);
+
+            await database.commit((commitError: MysqlError) => {
+                if (commitError !== null) {
+                    throw new Error('[myfarmer] Error commit insert-query user-account: ' + commitError.message);
+                }
+                return this.readUserAccountByUuid(userAccount.uuid);
+            });
+        } catch ( err ) {
+            await database.rollback((rollbackError: MysqlError) => {
+                if (rollbackError !== null) {
+                    throw new Error('[myfarmer] Error rollback insert-query user-account: ' + rollbackError.message);
                 }
             });
-        });
-
-        throw new Error('[myfarmer] Unknown error insert-query user-account');
+        } finally {
+            await database.close();
+        }
     }
 
     static async readUserAccountByUuid(uuidUserAccount: string): Promise<UserAccount> {
@@ -59,5 +66,9 @@ export class AuthenticationDatabseService {
         } catch(error) {
             throw new Error('[myfarmer] AuthenticationDatabseService.readUserAccountByUserName - Error reading user-account from database: ' + error);
         }
+    }
+
+    static async createRoleUser(roleUser: RoleUser): Promise<RoleUser> {
+        return new Promise(new RoleUser());
     }
 }

@@ -45,19 +45,16 @@ export class AuthenticationService {
     };
 
     public static async register(userAccount: UserAccount): Promise<UserAccount> {
-        const hashedPassword = await bcrypt.hash(userAccount.password, 10);
-
         if (await this.isUserAccountExisting(userAccount.userName)) {
             console.info('[myfarmer] AuthenticationService.register - UserAccount is already existing');
             throw new Error('[myfarmer] AuthenticationService.register - UserAccount is already existing');
         }
 
+        userAccount.uuid = uuidGenerator();
+        userAccount.hashedPassword = await bcrypt.hash(userAccount.password, 10);
+
         try {
-            return AuthenticationDatabseService.createUserAccount(
-                uuidGenerator(),
-                userAccount.userName,
-                hashedPassword,
-                userAccount.email);
+            return AuthenticationDatabseService.createUserAccount(userAccount);
         } catch (error) {
             console.log('[myfarmer] AuthenticationService.register - Error create new user-account: ' + error);
             throw new Error('[myfarmer] AuthenticationService.register - Error create new user-account: ' + error);
