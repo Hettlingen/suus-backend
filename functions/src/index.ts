@@ -114,14 +114,3 @@ const multerMid = multer({
     },
 })
 app.use(multerMid.single('file'));
-
-// Nodemailer
-// const nodemailer = require('nodemailer');
-// export const transporter = nodemailer.createTransport({
-//     host: "asmtp.mail.hostpoint.ch",
-//     port: 587, // unverschlüsselt oder verschlüsselt mit STARTTLS. Port 465 verschlüsselt mit SSL
-//     auth: {
-//         user: "martin.braun@scoop.ch",
-//         pass: "Hettlingen-3000"
-//     }
-// });
