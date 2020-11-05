@@ -51,4 +51,20 @@ export class NewsletterService {
             throw new Error('[myfarmer] NewsletterService.getOrdersOfNewsletter - Error reading all Newsletter');
         }
     }
+
+    // static async sendNewslettersToUsers(): Promise<boolean> {
+    //     const mailOptions = {
+    //         from: 'farmy@myfarmer.ch', //Adding sender's email
+    //         to: 'sibylle_kunz@hotmail.com', //Recipient's email
+    //         subject: 'Email Sent via Firebase', //Email subject
+    //         html: '<b>Sending emails with Firebase is easy!</b>' //Email content in HTML
+    //     };
+    //
+    //     return transporter.sendMail(mailOptions, (err: any, info: any) => {
+    //         if(err){
+    //             return false;
+    //         }
+    //         return true;
+    //     });
+    // }
 }
