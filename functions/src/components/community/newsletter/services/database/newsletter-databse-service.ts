@@ -9,8 +9,11 @@ export class NewsletterDatabseService {
 
     static async createNewsletterOrder(uuid: string, newsletterOrder: NewsletterOrder): Promise<NewsletterOrder> {
         console.log('START: NewsletterDatabseService.createNewsletter');
+        const infoForCustomer = newsletterOrder.infoForCustomer === true ? 1 : 0;
+        const infoForProducer = newsletterOrder.infoForProducer === true ? 1 : 0;
+        const infoForDeliverer = newsletterOrder.infoForDeliverer === true ? 1 : 0;
 
-        const query = `INSERT INTO NewsletterOrder(uuid, email, infoForCustomer, infoForProducer, infoForDeliverer) VALUES ('${uuid}', '${newsletterOrder.email}', '${newsletterOrder.infoForCustomer}', '${newsletterOrder.infoForProducer}', , '${newsletterOrder.infoForDeliverer}')`;
+        const query = `INSERT INTO NewsletterOrder(uuid, email, infoForCustomer, infoForProducer, infoForDeliverer) VALUES ('${uuid}', '${newsletterOrder.email}', ${infoForCustomer}, ${infoForProducer}, ${infoForDeliverer})`;
 
         try {
             const uuidFromDb = await database.query(query);
@@ -19,6 +22,7 @@ export class NewsletterDatabseService {
 
             return uuidFromDb[0];
         } catch(error) {
+            console.log('Fehler SQL: ' + error);
             throw new Error('[myfarmer] Error execute insert-query newsletter-order: ' + error);
         }
     }

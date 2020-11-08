@@ -6,7 +6,7 @@ import * as nodemailer from 'nodemailer';
 export class NewsletterService {
 
     static async subscribeNewsletter(newsletterOrder: NewsletterOrder): Promise<NewsletterOrder> {
-        console.log('START: NewsletterService.createPost');
+        console.log('START: NewsletterService.subscribeNewsletter');
 
         // TODO check if there is already the same email in the database
 

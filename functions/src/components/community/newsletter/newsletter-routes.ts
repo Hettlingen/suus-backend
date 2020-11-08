@@ -12,7 +12,7 @@ export class NewsletterRoutes {
                 .then(function (newsletterOrder: NewsletterOrder) {
                     response.status(200).send(newsletterOrder);
                 }).catch(function (error: any) {
-                response.status(404).send("Post wasn't created successful: " + error);
+                response.status(404).send("Newsletter wasn't subscribed successfully: " + error);
             });
         });
 
@@ -22,7 +22,7 @@ export class NewsletterRoutes {
                 .then(function (successful: boolean) {
                     response.status(200).send(successful);
                 }).catch(function (error: any) {
-                response.status(404).send("Post wasn't deleted successful: " + error);
+                response.status(404).send("Newsletter wasn't unsubscribed successfully: " + error);
             });
         });
 
