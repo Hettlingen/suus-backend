@@ -10,7 +10,7 @@ export class NewsletterDatabseService {
     static async createNewsletterOrder(uuid: string, newsletterOrder: NewsletterOrder): Promise<NewsletterOrder> {
         console.log('START: NewsletterDatabseService.createNewsletter');
 
-        const query = `INSERT INTO NewsletterOrder(uuid, title, content, duration, uuidBlog) VALUES ('${uuid}', '${newsletterOrder.email}', '${newsletterOrder.infoForCustomer}', '${newsletterOrder.infoForProducer}', , '${newsletterOrder.infoForDeliverer}')`;
+        const query = `INSERT INTO NewsletterOrder(uuid, email, infoForCustomer, infoForProducer, infoForDeliverer) VALUES ('${uuid}', '${newsletterOrder.email}', '${newsletterOrder.infoForCustomer}', '${newsletterOrder.infoForProducer}', , '${newsletterOrder.infoForDeliverer}')`;
 
         try {
             const uuidFromDb = await database.query(query);

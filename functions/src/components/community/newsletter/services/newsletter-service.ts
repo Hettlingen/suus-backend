@@ -8,6 +8,8 @@ export class NewsletterService {
     static async subscribeNewsletter(newsletterOrder: NewsletterOrder): Promise<NewsletterOrder> {
         console.log('START: NewsletterService.createPost');
 
+        // TODO check if there is already the same email in the database
+
         try {
             return await NewsletterDatabseService.createNewsletterOrder(
                 uuidGenerator(),
@@ -72,9 +74,9 @@ export class NewsletterService {
 
         transporter.sendMail( mailOptions, (error, info) => {
             if (error) {
-                console.log(`error: ${error}`);
+                console.log(`Send mail error: ${error}`);
             }
-            console.log(`Message Sent ${info.response}`);
+            console.log(`Message/Mail sent ${info.response}`);
         });
         return true;
     }
