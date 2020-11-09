@@ -56,12 +56,15 @@ export class NewsletterService {
     }
 
     static async sendNewslettersToUsers(): Promise<boolean> {
+        const userNameMailServer = process.env.MAIL_SERVER_USER_NAME;
+        const passwordMailServer = process.env.MAIL_SERVER_PASSWORD;
+
         const transporter = nodemailer.createTransport({
             host: "asmtp.mail.hostpoint.ch",
             port: 587, // unverschlüsselt oder verschlüsselt mit STARTTLS. Port 465 verschlüsselt mit SSL
             auth: {
-                user: "martin.braun@scoop.ch",
-                pass: "Hettlingen-3000"
+                user: userNameMailServer,
+                pass: passwordMailServer
             }
         });
 
