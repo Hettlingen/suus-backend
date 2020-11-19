@@ -10,8 +10,10 @@ export class NewsletterService {
 
         // TODO check if there is already the same email in the database
 
+        let newsletterOrderCreated;
+
         try {
-            return await NewsletterDatabseService.createNewsletterOrder(
+            newsletterOrderCreated = await NewsletterDatabseService.createNewsletterOrder(
                 uuidGenerator(),
                 newsletterOrder);
         } catch(error){
@@ -19,6 +21,15 @@ export class NewsletterService {
                 + newsletterOrder.email + ', error: ' +
                 + error);
         }
+
+        try {
+            await this.sendNewslettersToUsers(newsletterOrder);
+        } catch(error) {
+            console.log('Fehler beim Mailversand: ' + error);
+            throw error;
+        }
+
+        return newsletterOrderCreated;
     }
 
     static async unsubscribeNewsletter(newsletterOrder: NewsletterOrder): Promise<boolean> {
@@ -55,13 +66,16 @@ export class NewsletterService {
         }
     }
 
-    static async sendNewslettersToUsers(): Promise<boolean> {
+    static async sendNewslettersToUsers(newsletterOrder: NewsletterOrder): Promise<boolean> {
         const userNameMailServer = process.env.MAIL_SERVER_USER_NAME;
         const passwordMailServer = process.env.MAIL_SERVER_PASSWORD;
 
+        console.log('Benutzername: ' + userNameMailServer);
+
         const transporter = nodemailer.createTransport({
             host: "asmtp.mail.hostpoint.ch",
-            port: 587, // unverschlüsselt oder verschlüsselt mit STARTTLS. Port 465 verschlüsselt mit SSL
+            port: 465, // unverschlüsselt oder verschlüsselt mit STARTTLS. Port 465 verschlüsselt mit SSL
+            secure: true, // STARTTLS
             auth: {
                 user: userNameMailServer,
                 pass: passwordMailServer
@@ -69,15 +83,17 @@ export class NewsletterService {
         });
 
         const mailOptions = {
-            from: 'farmy@myfarmer.ch', //Adding sender's email
-            to: 'sibylle_kunz@hotmail.com', //Recipient's email
-            subject: 'Email Sent via Firebase', //Email subject
+            from: 'martin.braun@scoop.ch', //Adding sender's email
+            to: 'martinbraun@scoop.ch', //Recipient's email
+            subject: 'myFarmer - Testmail', //Email subject
             html: '<b>Sending emails with Firebase is easy!</b>' //Email content in HTML
         };
 
         transporter.sendMail( mailOptions, (error, info) => {
             if (error) {
-                console.log(`Send mail error: ${error}`);
+                throw new Error('[myfarmer] NewsletterService.sendNewslettersToUsers - Error send email vor user: '
+                    + newsletterOrder.email + ', error: ' +
+                    + error);
             }
             console.log(`Message/Mail sent ${info.response}`);
         });
