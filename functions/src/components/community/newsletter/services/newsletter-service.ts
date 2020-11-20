@@ -74,11 +74,21 @@ export class NewsletterService {
 
         const transporter = nodemailer.createTransport({
             host: "asmtp.mail.hostpoint.ch",
-            port: 465, // unverschlüsselt oder verschlüsselt mit STARTTLS. Port 465 verschlüsselt mit SSL
-            secure: true, // STARTTLS
+            port: 587, // unverschlüsselt oder verschlüsselt mit STARTTLS. Port 465 verschlüsselt mit SSL
+            secure: false, // STARTTLS
             auth: {
                 user: userNameMailServer,
                 pass: passwordMailServer
+            }
+        });
+
+        console.log('Nodemailer Transporter: ' + transporter);
+
+        transporter.verify(function(error, success) {
+            if (error) {
+                console.log('Verify Mail Connection Error: ' + error);
+            } else {
+                console.log("Mail Server is ready to take our messages");
             }
         });
 
