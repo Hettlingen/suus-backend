@@ -1,5 +1,3 @@
-import {Role} from "./roles/role";
-
 export class Address {
     public uuid!: string;
     public street!: string;
@@ -7,5 +5,4 @@ export class Address {
     public city!: string;
     public postalCode!: string;
     public countryCode!: string;
-    public role!: Role;
 }
