@@ -9,6 +9,9 @@ import {Person} from "../../community/partner/model/person";
 import {RoleUser} from "../../community/partner/model/roles/role-user";
 import {UserSettings} from "../../community/partner/model/user-settings";
 import {Address} from "../../community/partner/model/address";
+import {RoleCustomer} from "../../community/partner/model/roles/role-customer";
+import {RoleProducer} from "../../community/partner/model/roles/role-producer";
+import {RoleDeliverer} from "../../community/partner/model/roles/role-deliverer";
 
 
 export class AuthenticationService {
@@ -67,6 +70,15 @@ export class AuthenticationService {
         roleUser.userSettings.notificationsYesNo = 1;
         roleUser.address = address;
         person.listRole.push(roleUser);
+
+        let roleCustomer: RoleCustomer = new RoleCustomer();
+        person.listRole.push(roleCustomer);
+
+        let roleProducer: RoleProducer = new RoleProducer();
+        person.listRole.push(roleProducer);
+
+        let roleDeliverer: RoleDeliverer = new RoleDeliverer();
+        person.listRole.push(roleDeliverer);
 
         return person;
     };
