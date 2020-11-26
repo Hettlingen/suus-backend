@@ -6,5 +6,6 @@ export class Person {
   public firstName!: string;
   public age!: number;
   public genderCode!: number;
+
   public listRole: Array<Role> = [];
 }

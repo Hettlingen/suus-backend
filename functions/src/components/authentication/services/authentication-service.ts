@@ -12,6 +12,7 @@ import {Address} from "../../community/partner/model/address";
 import {RoleCustomer} from "../../community/partner/model/roles/role-customer";
 import {RoleProducer} from "../../community/partner/model/roles/role-producer";
 import {RoleDeliverer} from "../../community/partner/model/roles/role-deliverer";
+import {RoleType} from "../../community/partner/model/roles/role-type";
 
 
 export class AuthenticationService {
@@ -51,19 +52,20 @@ export class AuthenticationService {
         userAccount.authenticationToken = authenticationToken;
 
         // TODO we have to read partner, roles, address from the database
-        let person: Person = new Person();
+        const person: Person = new Person();
         person.lastName = 'Braun';
         person.firstName = 'Martin';
         person.age = 52;
 
-        let address: Address = new Address();
+        const address: Address = new Address();
         address.street = 'Lärchenstrasse';
         address.streetNumber = '10';
         address.postalCode = '8442';
         address.city = 'Hettlingen';
         address.countryCode = 'CH';
 
-        let roleUser: RoleUser = new RoleUser();
+        const roleUser: RoleUser = new RoleUser();
+        roleUser.type = RoleType.ROLE_USER;
         roleUser.userAccount = userAccount;
         roleUser.userSettings = new UserSettings();
         roleUser.userSettings.languageApplicationCode = 'de';
@@ -71,13 +73,19 @@ export class AuthenticationService {
         roleUser.address = address;
         person.listRole.push(roleUser);
 
-        let roleCustomer: RoleCustomer = new RoleCustomer();
+        const roleCustomer: RoleCustomer = new RoleCustomer();
+        roleCustomer.type = RoleType.ROLE_CUSTOMER;
+        roleCustomer.numberCustomer = 111;
         person.listRole.push(roleCustomer);
 
-        let roleProducer: RoleProducer = new RoleProducer();
+        const roleProducer: RoleProducer = new RoleProducer();
+        roleProducer.type = RoleType.ROLE_PRODUCER;
+        roleProducer.numberProducer = 222;
         person.listRole.push(roleProducer);
 
-        let roleDeliverer: RoleDeliverer = new RoleDeliverer();
+        const roleDeliverer: RoleDeliverer = new RoleDeliverer();
+        roleDeliverer.type = RoleType.ROLE_DELIVERER;
+        roleDeliverer.numberDeliverer = 333;
         person.listRole.push(roleDeliverer);
 
         return person;

@@ -1,7 +1,7 @@
 import {Address} from "../address";
-import {Person} from "../person";
 
 export class Role {
-    public person!: Person;
+
+    public type!: number;
     public address!: Address;
 }
