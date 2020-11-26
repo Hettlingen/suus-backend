@@ -13,6 +13,7 @@ import {RoleCustomer} from "../../community/partner/model/roles/role-customer";
 import {RoleProducer} from "../../community/partner/model/roles/role-producer";
 import {RoleDeliverer} from "../../community/partner/model/roles/role-deliverer";
 import {RoleType} from "../../community/partner/model/roles/role-type";
+import {GenderCode} from "../../community/partner/model/gender-code";
 
 
 export class AuthenticationService {
@@ -56,6 +57,7 @@ export class AuthenticationService {
         person.lastName = 'Braun';
         person.firstName = 'Martin';
         person.age = 52;
+        person.genderCode = GenderCode.MALE;
 
         const address: Address = new Address();
         address.street = 'Lärchenstrasse';
@@ -76,16 +78,19 @@ export class AuthenticationService {
         const roleCustomer: RoleCustomer = new RoleCustomer();
         roleCustomer.type = RoleType.ROLE_CUSTOMER;
         roleCustomer.numberCustomer = 111;
+        roleCustomer.address = address;
         person.listRole.push(roleCustomer);
 
         const roleProducer: RoleProducer = new RoleProducer();
         roleProducer.type = RoleType.ROLE_PRODUCER;
         roleProducer.numberProducer = 222;
+        roleProducer.address = address;
         person.listRole.push(roleProducer);
 
         const roleDeliverer: RoleDeliverer = new RoleDeliverer();
         roleDeliverer.type = RoleType.ROLE_DELIVERER;
         roleDeliverer.numberDeliverer = 333;
+        roleDeliverer.address = address;
         person.listRole.push(roleDeliverer);
 
         return person;
