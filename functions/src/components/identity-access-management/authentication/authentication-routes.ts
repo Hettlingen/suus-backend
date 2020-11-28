@@ -9,7 +9,7 @@
 import {AuthenticationService} from "./services/authentication-service";
 import {Request, Response} from "express";
 import {UserAccount} from "./model/user-account";
-import {Person} from "../community/partner/model/person";
+import {Person} from "../partner/model/person";
 
 export class AuthenticationRoutes {
 

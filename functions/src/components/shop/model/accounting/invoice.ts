@@ -1,5 +1,5 @@
 import {Amount} from "./amount";
-import {Address} from "../../../community/partner/model/address";
+import {Address} from "../../../identity-access-management/partner/model/address";
 import {InvoiceType} from "./invoice-type";
 import {InvoiceState} from "./invoice-state";
 

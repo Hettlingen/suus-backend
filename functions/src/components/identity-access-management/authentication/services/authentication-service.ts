@@ -5,15 +5,15 @@ import * as bcrypt from 'bcrypt';
 import * as jwt from 'jsonwebtoken';
 import {AuthenticationDatabseService} from "./database/authentication-databse-service";
 import {AuthenticationToken} from "../model/authenticationToken";
-import {Person} from "../../community/partner/model/person";
-import {RoleUser} from "../../community/partner/model/roles/role-user";
-import {UserSettings} from "../../community/partner/model/user-settings";
-import {Address} from "../../community/partner/model/address";
-import {RoleCustomer} from "../../community/partner/model/roles/role-customer";
-import {RoleProducer} from "../../community/partner/model/roles/role-producer";
-import {RoleDeliverer} from "../../community/partner/model/roles/role-deliverer";
-import {RoleType} from "../../community/partner/model/roles/role-type";
-import {GenderCode} from "../../community/partner/model/gender-code";
+import {Person} from "../../partner/model/person";
+import {RoleUser} from "../../partner/model/roles/role-user";
+import {UserSettings} from "../../partner/model/user-settings";
+import {Address} from "../../partner/model/address";
+import {RoleCustomer} from "../../partner/model/roles/role-customer";
+import {RoleProducer} from "../../partner/model/roles/role-producer";
+import {RoleDeliverer} from "../../partner/model/roles/role-deliverer";
+import {RoleType} from "../../partner/model/roles/role-type";
+import {GenderCode} from "../../partner/model/gender-code";
 
 
 export class AuthenticationService {

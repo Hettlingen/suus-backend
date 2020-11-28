@@ -1,6 +1,6 @@
 import {Request, Response} from "express";
 import {NewsletterService} from "./services/newsletter-service";
-import {AuthenticationService} from "../../authentication/services/authentication-service";
+import {AuthenticationService} from "../../identity-access-management/authentication/services/authentication-service";
 import {NewsletterOrder} from "./model/newsletter-order";
 
 export class NewsletterRoutes {

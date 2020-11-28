@@ -1,10 +1,10 @@
-import {BlogRoutes} from "./components/community/blog/blog-routes";
+import {BlogRoutes} from "./components/content-management-system/blog/blog-routes";
 import {ShopRoutes} from "./components/shop/shop-routes";
-import {AuthenticationRoutes} from "./components/authentication/authentication-routes";
+import {AuthenticationRoutes} from "./components/identity-access-management/authentication/authentication-routes";
 import {WorkplaceRoutes} from "./components/workplace/workplace-routes";
-import {PartnerRoutes} from "./components/community/partner/partner-routes";
-import {NewsletterRoutes} from "./components/community/newsletter/newsletter-routes";
-import {NotificationRoutes} from "./components/community/notification/notification-routes";
+import {PartnerRoutes} from "./components/identity-access-management/partner/partner-routes";
+import {NewsletterRoutes} from "./components/content-management-system/newsletter/newsletter-routes";
+import {NotificationRoutes} from "./components/content-management-system/notification/notification-routes";
 
 export class Routes {
     public static routes(app: any): void {

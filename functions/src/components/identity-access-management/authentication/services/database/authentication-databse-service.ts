@@ -1,7 +1,7 @@
 import {UserAccount} from "../../model/user-account";
 import {MysqlError} from "mysql";
-import {database} from "../../../../index";
-import {RoleUser} from "../../../community/partner/model/roles/role-user";
+import {database} from "../../../../../index";
+import {RoleUser} from "../../../partner/model/roles/role-user";
 
 export class AuthenticationDatabseService {
 

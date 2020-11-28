@@ -3,7 +3,7 @@ import {ShopService} from "./services/shop-service";
 import {Shop} from "./model/shop";
 import {PaymentService} from "./services/payment-service";
 import {ShopItem} from "./model/shop-item";
-import {AuthenticationService} from "../authentication/services/authentication-service";
+import {AuthenticationService} from "../identity-access-management/authentication/services/authentication-service";
 import {Order} from "./model/order/order";
 import {OfferItem} from "./model/offer/offer-item";
 import {Delivery} from "./model/delivery/delivery";

@@ -1,5 +1,5 @@
 import {Role} from "./role";
-import {UserAccount} from "../../../../authentication/model/user-account";
+import {UserAccount} from "../../../authentication/model/user-account";
 import {UserSettings} from "../user-settings";
 
 export class RoleUser extends Role {

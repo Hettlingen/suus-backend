@@ -1,7 +1,7 @@
 import {OrderItem} from './order-item';
 import {Invoice} from '../accounting/invoice';
 import {OrderState} from "./order-state";
-import {Address} from "../../../community/partner/model/address";
+import {Address} from "../../../identity-access-management/partner/model/address";
 
 export class Order {
   public uuid!: string;
