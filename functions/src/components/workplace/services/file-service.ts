@@ -1,40 +1,22 @@
 import {MyFile} from "../model/my-file";
+import {FileHelper} from "./utils/fileHelper";
 
-const path = require('path');
-// Imports the Google Cloud client library
-const {Storage} = require('@google-cloud/storage');
-const bucketName = 'images-products';
-const storage = new Storage();
-storage.keyFilename = path.join(__dirname, './google-storage-keys.json');
-storage.projectId = 'scoop-backend-3000';
+const bucketName = 'myfarmer';
 
 export class FileService {
 
     public static async saveFile(myFile: MyFile): Promise<boolean> {
-        console.log('MyFile: ' + JSON.stringify(myFile));
+        console.log('Mein Dateiname lautet: ' + myFile.fileName);
 
-        const stream     = require('stream');
-        const dataStream = new stream.PassThrough();
-        const gcFile     = storage.bucket(bucketName).file(myFile.fileName);
+        const myBucket = FileHelper.getStorage().bucket(bucketName);
+        console.log('myBucket lautet: ' + myBucket.name);
 
-        dataStream.push(myFile.file)
-        dataStream.push(null)
+        // const file = myBucket.file(myFile.fileName);
+        // file.save(myFile.fileContent)
+        //     .then(x => console.log('File erfolgreich gespeichert'))
+        //     .catch(error => console.log('Fehler beim Speichern des Files: ' + error));
 
-        await new Promise((resolve, reject) => {
-            dataStream.pipe(gcFile.createWriteStream({
-                resumable  : false,
-                validation : false,
-                metadata   : {'Cache-Control': 'public, max-age=31536000'}
-            }))
-                .on('error', (error : Error) => {
-                    reject(error)
-                })
-                .on('finish', () => {
-                    resolve(true)
-                })
-        })
-
-        throw new Error('[myfarmer] FileService.saveFiles - Error saving files');
+        return true;
     }
 
     /**
@@ -57,7 +39,7 @@ export class FileService {
             },
         }
 
-        storage
+        FileHelper.getStorage()
             .bucket(bucketName)
             .file('egg.png')
             .download(options)

@@ -14,6 +14,7 @@ import {RoleProducer} from "../../partner/model/roles/role-producer";
 import {RoleDeliverer} from "../../partner/model/roles/role-deliverer";
 import {RoleType} from "../../partner/model/roles/role-type";
 import {GenderCode} from "../../partner/model/gender-code";
+import {RoleAdministrator} from "../../partner/model/roles/role-administrator";
 
 
 export class AuthenticationService {
@@ -51,6 +52,7 @@ export class AuthenticationService {
         authenticationToken.token = jwtBearerToken;
         authenticationToken.tokenExpiresIn = jwtExpiresIn;
         userAccount.authenticationToken = authenticationToken;
+        userAccount.password = '';
 
         // TODO we have to read partner, roles, address from the database
         const person: Person = new Person();
@@ -92,6 +94,11 @@ export class AuthenticationService {
         roleDeliverer.numberDeliverer = 333;
         roleDeliverer.address = address;
         person.listRole.push(roleDeliverer);
+
+        const roleAdministrator: RoleAdministrator = new RoleAdministrator();
+        roleAdministrator.type = RoleType.ROLE_ADMINISTRATOR;
+        roleAdministrator.address = address;
+        person.listRole.push(roleAdministrator);
 
         return person;
     };

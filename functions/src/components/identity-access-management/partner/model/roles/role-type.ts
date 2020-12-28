@@ -3,7 +3,8 @@ export enum RoleType {
   ROLE_USER = 1,
   ROLE_CUSTOMER = 2,
   ROLE_PRODUCER = 3,
-  ROLE_DELIVERER = 4
+  ROLE_DELIVERER = 4,
+  ROLE_ADMINISTRATOR = 99,
 }
 
 export function getRoleType(roleType: number): number {
@@ -22,6 +23,10 @@ export function getRoleType(roleType: number): number {
     }
     case RoleType.ROLE_DELIVERER: {
       return RoleType.ROLE_DELIVERER;
+      break;
+    }
+    case RoleType.ROLE_ADMINISTRATOR: {
+      return RoleType.ROLE_ADMINISTRATOR;
       break;
     }
     default: {

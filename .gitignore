@@ -4,7 +4,6 @@
 
 # Typescript v1 declaration files
 typings/
-
 node_modules/
 
 # Ignores all environement files
@@ -12,4 +11,5 @@ node_modules/
 google-storage-keys.json
 
 /functions/firebase-debug.log
+service-key-google-cloud-storage.json
 /.idea/shelf/Uncommitted_changes_before_Update_at_03_08_20,_07_52_[Default_Changelist]/
