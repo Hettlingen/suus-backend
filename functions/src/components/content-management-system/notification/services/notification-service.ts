@@ -33,7 +33,7 @@ export class NotificationService {
             }
         };
 
-        let sendResult = await WebPush.sendNotification(notificationSubscription, JSON.stringify(notificationPayload));
+        const sendResult = await WebPush.sendNotification(notificationSubscription, JSON.stringify(notificationPayload));
         console.log('Notifikation versendet: ' + JSON.stringify(sendResult));
         return true;
 

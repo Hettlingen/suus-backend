@@ -6,7 +6,6 @@ const serviceKeyFileName = path.join(__dirname, '../config/service-key-google-cl
 export class FileHelper {
 
     public static getStorage() {
-        console.log('Service Key: ' + serviceKeyFileName);
         return new Storage({
             keyFilename: serviceKeyFileName,
             projectId: 'scoop-backend-3000',

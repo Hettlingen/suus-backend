@@ -6,15 +6,29 @@ const bucketName = 'myfarmer';
 export class FileService {
 
     public static async saveFile(myFile: MyFile): Promise<boolean> {
-        console.log('Mein Dateiname lautet: ' + myFile.fileName);
-
+        console.log('File Name lautet: ' + myFile.fileName);
+        console.log('File Content lautet: ' + myFile.fileContent);
         const myBucket = FileHelper.getStorage().bucket(bucketName);
         console.log('myBucket lautet: ' + myBucket.name);
+        const contentType = 'image/jpeg';
+        console.log('Contenttype lautet: ' + contentType);
+        const imageBuffer = Buffer.from(myFile.fileContent, 'base64');
+        console.log('Imagebuffer lautet: ' + imageBuffer);
 
-        // const file = myBucket.file(myFile.fileName);
-        // file.save(myFile.fileContent)
-        //     .then(x => console.log('File erfolgreich gespeichert'))
-        //     .catch(error => console.log('Fehler beim Speichern des Files: ' + error));
+        try {
+            await myBucket.file(myFile.fileName).save(imageBuffer, {
+                public: true,
+                gzip: true,
+                metadata: {
+                    contentType: contentType,
+                    cacheControl: 'public, max-age=31536000',
+                }
+            });
+            console.log('Speichern des Files war erfolgreich');
+        } catch(error) {
+            console.log('Fehler beim Speichern des Files: ' + error);
+            throw error;
+        }
 
         return true;
     }
