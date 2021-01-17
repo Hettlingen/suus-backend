@@ -27,7 +27,7 @@ export class WorkplaceRoutes {
         })
 
         app.route('/files/:uuidFile').get(async (request: Request, response: Response) => {
-            FileService.getFile(request.params.uuidTermsOfUse)
+            FileService.readFile(request.params.uuidTermsOfUse)
                 .then(function(file: MyFile) {
                     response.status(200).send(file);
                 }).catch(function(error: any){

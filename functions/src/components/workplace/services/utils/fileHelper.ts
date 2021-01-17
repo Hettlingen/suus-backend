@@ -12,11 +12,12 @@ export class FileHelper {
         })
     }
 
-    /**
-     * Access public files on google cloud storage:
-     * https://storage.googleapis.com/${bucketName}/${fileName}
-     */
-    public static getPublicUrl(bucketName: string, fileName: string): string {
-        return `https://storage.googleapis.com/${bucketName}/${fileName}`;
+    public static encodeBinaryToBase64Content(contentBinary: Buffer) {
+        let contentAsBase64 = contentBinary.toString('base64');
+        return contentAsBase64;
+    }
+
+    public static decodeBase64ToBinaryContent(contentBase64: string): Buffer {
+        return Buffer.from(contentBase64, 'base64');
     }
 }

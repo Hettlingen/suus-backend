@@ -5,39 +5,33 @@ const bucketName = 'myfarmer';
 
 export class FileService {
 
-    public static async saveFile(myFile: MyFile): Promise<boolean> {
-        console.log('File Name lautet: ' + myFile.fileName);
-        console.log('File Content lautet: ' + myFile.fileContent);
+    public static async saveFile(myFile: MyFile): Promise<MyFile> {
         const myBucket = FileHelper.getStorage().bucket(bucketName);
-        console.log('myBucket lautet: ' + myBucket.name);
-        const contentType = 'image/jpeg';
-        console.log('Contenttype lautet: ' + contentType);
-        const imageBuffer = Buffer.from(myFile.fileContent, 'base64');
-        console.log('Imagebuffer lautet: ' + imageBuffer);
+        const imageBuffer = FileHelper.decodeBase64ToBinaryContent(myFile.fileContent);
 
         try {
             await myBucket.file(myFile.fileName).save(imageBuffer, {
                 public: true,
                 gzip: true,
                 metadata: {
-                    contentType: contentType,
+                    contentType: myFile.mimeType,
                     cacheControl: 'public, max-age=31536000',
                 }
             });
-            console.log('Speichern des Files war erfolgreich');
         } catch(error) {
-            console.log('Fehler beim Speichern des Files: ' + error);
             throw error;
         }
 
-        return true;
+        // TODO generate uuid and save it in myFile
+        // TODO save myFile to database (without the myFile.fileContent
+        return myFile;
     }
 
     /**
      * URL to read a file: https://storage.googleapis.com/${bucketName}/${fileName}
      * exports.getPublicUrl = (bucketName, fileName) => `https://storage.googleapis.com/${bucketName}/${fileName}`;
      */
-    public static async getFile(uuidFile: string): Promise<MyFile> {
+    public static async readFile(uuidFile: string): Promise<MyFile> {
         const options = {
             // name of the folder within bucket
             destination: "550e8400-e29b-11d6-a716-446655450001/egg.png",
