@@ -1,5 +1,5 @@
 import {MyFile} from "../model/my-file";
-import {FileHelper} from "./utils/fileHelper";
+import {FileHelper} from "./utils/file-helper";
 
 const bucketName = 'myfarmer';
 
@@ -12,7 +12,8 @@ export class FileService {
         try {
             await myBucket.file(myFile.fileName).save(imageBuffer, {
                 public: true,
-                gzip: true,
+                gzip: false,
+                resumable: false,
                 metadata: {
                     contentType: myFile.mimeType,
                     cacheControl: 'public, max-age=31536000',

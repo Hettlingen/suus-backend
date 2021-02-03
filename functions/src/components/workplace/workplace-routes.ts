@@ -19,8 +19,8 @@ export class WorkplaceRoutes {
 
         app.route('/files').post(async (request: Request, response: Response) => {
             FileService.saveFile(request.body)
-                .then(function(successful: boolean) {
-                    response.status(200).send(successful);
+                .then(function(myFile: MyFile) {
+                    response.status(200).send(myFile);
                 }).catch(function(error: any){
                 response.status(404).send("Files weren't saved successfully: " + error)
             });

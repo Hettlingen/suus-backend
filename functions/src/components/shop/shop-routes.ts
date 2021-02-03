@@ -7,6 +7,8 @@ import {AuthenticationService} from "../identity-access-management/authenticatio
 import {Order} from "./model/order/order";
 import {OfferItem} from "./model/offer/offer-item";
 import {Delivery} from "./model/delivery/delivery";
+import {ShopAdministrationService} from "./services/shop-administration-service";
+import {RoleProducer} from "../identity-access-management/partner/model/roles/role-producer";
 
 export class ShopRoutes {
     public static routes(app: any): void {
@@ -89,6 +91,30 @@ export class ShopRoutes {
                     response.status(200).send(delivery);
                 }).catch(function(error: any){
                 response.status(404).send("Delivery isn't found: " + error)
+            });
+        })
+
+        // --------------------------------------------------
+        // SHOP ADMINISTRATION
+        // --------------------------------------------------
+
+        // Update Producer
+        app.route('/shop/producers/:uuidRoleProducer').get(AuthenticationService.checkIfAuthenticated, async (request: Request, response: Response) => {
+            ShopAdministrationService.getProducer(request.params.uuidRoleProducer)
+                .then(function(roleProducer: RoleProducer) {
+                    response.status(200).send(roleProducer);
+                }).catch(function(error: any){
+                response.status(404).send("Delivery isn't found: " + error)
+            });
+        })
+
+        // Update Producer
+        app.route('/shop/producers').post(async (request: Request, response: Response) => {
+            ShopAdministrationService.updateProducer(request.body)
+                .then(function(roleProducer: RoleProducer) {
+                    response.status(200).send(roleProducer);
+                }).catch(function(error: any){
+                response.status(404).send("Producer isn't saved successfully: " + error)
             });
         })
     }

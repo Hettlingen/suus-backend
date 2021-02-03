@@ -2,6 +2,6 @@ import {Address} from "../address";
 
 export class Role {
 
-    public type!: number;
+    public uuid!: string;
     public address!: Address;
 }

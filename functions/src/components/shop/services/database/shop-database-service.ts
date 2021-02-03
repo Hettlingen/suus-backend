@@ -13,6 +13,7 @@ import {Order} from "../../model/order/order";
 import {OrderState} from "../../model/order/order-state";
 import {OfferItem} from "../../model/offer/offer-item";
 import {Delivery} from "../../model/delivery/delivery";
+import {RoleProducer} from "../../../identity-access-management/partner/model/roles/role-producer";
 
 export class ShopDatabaseService {
 
@@ -297,5 +298,9 @@ export class ShopDatabaseService {
         } catch(error) {
             throw new Error('[myfarmer] ShopDatabaseService.readDelivery - Error reading delivery from database: ' + error);
         }
+    }
+
+    static async updateProducer(roleProducer: RoleProducer) {
+        return undefined;
     }
 }
