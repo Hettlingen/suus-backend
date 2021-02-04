@@ -1,10 +1,10 @@
 import {RoleUser} from "../../model/roles/role-user";
-import {Person} from "../../model/person";
+import {Partner} from "../../model/partner";
 
 export class PartnerDatabseService {
 
-    static async createPerson(person: Person): Promise<Person> {
-        return new Person();
+    static async createPerson(person: Partner): Promise<Partner> {
+        return new Partner();
     }
 
     static async readFriends(uuidUserAccount: string): Promise<Array<RoleUser>> {

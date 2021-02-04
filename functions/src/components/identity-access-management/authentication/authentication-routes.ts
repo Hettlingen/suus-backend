@@ -9,7 +9,7 @@
 import {AuthenticationService} from "./services/authentication-service";
 import {Request, Response} from "express";
 import {UserAccount} from "./model/user-account";
-import {Person} from "../partner/model/person";
+import {Partner} from "../partner/model/partner";
 
 export class AuthenticationRoutes {
 
@@ -17,7 +17,7 @@ export class AuthenticationRoutes {
 
         app.route('/user-account/login').post((request: Request, response: Response) => {
             AuthenticationService.login(request.body.userName, request.body.password)
-                .then(function(person: Person) {
+                .then(function(person: Partner) {
                     response.status(200).send(person);
                 }).catch(function(error: any){
                     response.status(401).send("User isn't authorized: " + error)

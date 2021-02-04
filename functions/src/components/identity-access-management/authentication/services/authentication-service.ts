@@ -5,7 +5,7 @@ import * as bcrypt from 'bcrypt';
 import * as jwt from 'jsonwebtoken';
 import {AuthenticationDatabseService} from "./database/authentication-databse-service";
 import {AuthenticationToken} from "../model/authenticationToken";
-import {Person} from "../../partner/model/person";
+import {Partner} from "../../partner/model/partner";
 import {RoleUser} from "../../partner/model/roles/role-user";
 import {UserSettings} from "../../partner/model/user-settings";
 import {Address} from "../../partner/model/address";
@@ -21,7 +21,7 @@ export class AuthenticationService {
 
     private static RSA_PRIVATE_KEY = fs.readFileSync('src/utils/authentication/private.key');
 
-    public static async login(userName: string, password: string): Promise<Person> {
+    public static async login(userName: string, password: string): Promise<Partner> {
         // because in the jwt token the value is milliseconds or you can use "2 days", "10h", "7d"
         const jwtExpiresIn = '1h';
 
@@ -55,10 +55,10 @@ export class AuthenticationService {
         userAccount.password = '';
 
         // TODO we have to read partner, roles, address from the database
-        const person: Person = new Person();
+        const person: Partner = new Partner();
         person.lastName = 'Braun';
         person.firstName = 'Martin';
-        person.age = 52;
+        person.birthdate = new Date();
         person.genderCode = GenderCode.MALE;
 
         const address: Address = new Address();
@@ -85,13 +85,13 @@ export class AuthenticationService {
 
         const roleProducer: RoleProducer = new RoleProducer();
         roleProducer.type = RoleType.ROLE_PRODUCER;
-        roleProducer.numberProducer = 222;
+        roleProducer.numberCompany = 222;
         roleProducer.address = address;
         person.listRole.push(roleProducer);
 
         const roleDeliverer: RoleDeliverer = new RoleDeliverer();
         roleDeliverer.type = RoleType.ROLE_DELIVERER;
-        roleDeliverer.numberDeliverer = 333;
+        roleDeliverer.numberCompany = 333;
         roleDeliverer.address = address;
         person.listRole.push(roleDeliverer);
 

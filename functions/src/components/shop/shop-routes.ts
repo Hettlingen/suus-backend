@@ -104,7 +104,7 @@ export class ShopRoutes {
                 .then(function(roleProducer: RoleProducer) {
                     response.status(200).send(roleProducer);
                 }).catch(function(error: any){
-                response.status(404).send("Delivery isn't found: " + error)
+                response.status(404).send("Producer isn't found: " + error)
             });
         })
 

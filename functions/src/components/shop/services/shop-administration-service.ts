@@ -15,7 +15,7 @@ export class ShopAdministrationService {
     }
 
     static async updateProducer(roleProducer: RoleProducer): Promise<RoleProducer> {
-        console.log('START: ShopAdministrationService.updateProducer: ' + roleProducer.numberProducer);
+        console.log('START: ShopAdministrationService.updateProducer: ' + roleProducer.numberCompany);
 
         try {
             return await ShopAdministrationDatabaseService.updateProducer(roleProducer);

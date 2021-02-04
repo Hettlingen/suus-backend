@@ -8,38 +8,48 @@ export class ShopAdministrationDatabaseService {
         console.log('START: ShopAdministrationDatabaseService.readProducer: ' + uuidRoleProducer);
         if (!uuidRoleProducer) throw new Error('[myfarmer] ShopAdministrationDatabaseService.readProducer - Wrong parameters');
 
-        const query = `SELECT RoleProducer.uuid, RoleProducer.numberProducer, RoleProducer.description, RoleProducer.uuidImageLogo, RoleProducer.uuidImageBackground,
-                              Role.uuid uuidOfRole, 
-                              Role.uuidPartner uuidPartnerOfRole, 
+        const query = `SELECT RoleProducer.uuidRole,
+                              RoleProducer.numberCompany,
+                              RoleProducer.description,
+                              RoleProducer.uuidImageLogo,
+                              RoleProducer.uuidImageBackground,
+                              Role.uuid uuidOfRole,
+                              Role.uuidPartner uuidPartnerOfRole,
                               Role.uuidAddress uuidAddressOfRole,
                               Partner.uuid uuidOfPartner,
-                              Partner.nameCompany nameCompanyOfPartner,
+                              Partner.companyName companyNameOfPartner,
                               Partner.firstName firstNameOfPartner,
                               Partner.lastName lastNameOfPartner,
                               Partner.nickname nicknameOfPartner,
+                              Partner.companyName companyNameOfPartner,
                               Partner.birthdate birthdateOfPartner,
                               Partner.genderCode genderCodeOfPartner,
-                              Partner.type typeOfPartner,
+                              Partner.languageCode languageCodeOfPartner,
                               Address.uuid uuidOfAddress,
                               Address.street streetOfAddress,
                               Address.streetNumber streetNumberOfAddress,
                               Address.city cityOfAddress,
                               Address.postalCode postalCodeOfAddress,
-                              Address.countryCode countryCodeOfAddress,
-                            FROM RoleProducer 
-                            LEFT JOIN Role 
-                                ON RoleProducer.uuidRole=Role.uuid
-                            WHERE RoleProducer.uuid='${uuidRoleProducer}';`;
+                              Address.countryCode countryCodeOfAddress
+                            FROM RoleProducer
+                            LEFT JOIN Role ON RoleProducer.uuidRole=Role.uuid
+                            LEFT JOIN Partner ON Role.uuidPartner=Partner.uuid
+                            LEFT JOIN Address ON Role.uuidAddress=Address.uuid
+                            WHERE RoleProducer.uuidRole='${uuidRoleProducer}';`;
 
         try {
             const producerFromDb = await database.query(query);
 
+            console.log('producerFromDb: ' + JSON.stringify(producerFromDb));
             if (producerFromDb === null || producerFromDb === undefined || producerFromDb.length === 0) {
-                throw new Error('[myfarmer] ShopAdministrationDatabaseService.readProducer - Producer doesnt exist on database');
+                const error = new Error('[myfarmer] ShopAdministrationDatabaseService.readProducer - Producer doesnt exist on database');
+                console.log(error);
+                throw error;
             }
 
             return mapProducerFromDbToProducer(producerFromDb);;
         } catch(error) {
+            console.log(error);
             throw new Error('[myfarmer] ShopAdministrationDatabaseService.readProducer - Error reading Producer from database: ' + error);
         }
     }

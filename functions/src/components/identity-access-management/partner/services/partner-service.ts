@@ -1,12 +1,12 @@
 import {PartnerDatabseService} from "./database/partner-databse-service";
 import {RoleUser} from "../model/roles/role-user";
-import {Person} from "../model/person";
+import {Partner} from "../model/partner";
 import * as uuidGenerator from "uuid/v4";
 
 export class PartnerService {
 
     // PERSON ---------------------------------------------
-    static async createPerson(person: Person): Promise<Person> {
+    static async createPerson(person: Partner): Promise<Partner> {
         console.log('START: PartnerService.addPerson: ' + person);
         person.uuid = uuidGenerator();
 

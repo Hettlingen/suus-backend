@@ -10,7 +10,9 @@
     "target": "es2017",
     "baseUrl": ".",
     "lib": [
-      "esnext.asynciterable"
+      "esnext.asynciterable",
+      "es6",
+      "dom"
     ]
   },
   "compileOnSave": true,
