@@ -9,6 +9,7 @@ import {OfferItem} from "./model/offer/offer-item";
 import {Delivery} from "./model/delivery/delivery";
 import {ShopAdministrationService} from "./services/shop-administration-service";
 import {RoleProducer} from "../identity-access-management/partner/model/roles/role-producer";
+import {RoleDeliverer} from "../identity-access-management/partner/model/roles/role-deliverer";
 
 export class ShopRoutes {
     public static routes(app: any): void {
@@ -98,7 +99,7 @@ export class ShopRoutes {
         // SHOP ADMINISTRATION
         // --------------------------------------------------
 
-        // Update Producer
+        // Get Producer
         app.route('/shop/producers/:uuidRoleProducer').get(AuthenticationService.checkIfAuthenticated, async (request: Request, response: Response) => {
             ShopAdministrationService.getProducer(request.params.uuidRoleProducer)
                 .then(function(roleProducer: RoleProducer) {
@@ -115,6 +116,26 @@ export class ShopRoutes {
                     response.status(200).send(roleProducer);
                 }).catch(function(error: any){
                 response.status(404).send("Producer isn't saved successfully: " + error)
+            });
+        })
+
+        // Get Deliverer
+        app.route('/shop/deliverers/:uuidRoleDeliverer').get(AuthenticationService.checkIfAuthenticated, async (request: Request, response: Response) => {
+            ShopAdministrationService.getDeliverer(request.params.uuidRoleDeliverer)
+                .then(function(roleDeliverer: RoleDeliverer) {
+                    response.status(200).send(roleDeliverer);
+                }).catch(function(error: any){
+                response.status(404).send("Deliverer isn't found: " + error)
+            });
+        })
+
+        // Update Deliverer
+        app.route('/shop/deliverers').post(async (request: Request, response: Response) => {
+            ShopAdministrationService.updateDeliverer(request.body)
+                .then(function(roleDeliverer: RoleDeliverer) {
+                    response.status(200).send(roleDeliverer);
+                }).catch(function(error: any){
+                response.status(404).send("Deliverer isn't saved successfully: " + error)
             });
         })
     }

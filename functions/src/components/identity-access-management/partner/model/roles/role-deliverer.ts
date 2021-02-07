@@ -1,10 +1,10 @@
 import {Role} from './role';
+import {MyFile} from "../../../../workplace/model/my-file";
 
 export class RoleDeliverer extends Role {
 
     public numberCompany!: number;
-    public nameCompany!: string;
     public description!: string;
-    public uuidImageLogo!: string;
-    public uuidImageBackground!: string;
+    public fileLogo!: MyFile;
+    public fileBackground!: MyFile;
 }
