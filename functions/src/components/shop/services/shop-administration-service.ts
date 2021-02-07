@@ -1,5 +1,7 @@
 import {RoleProducer} from "../../identity-access-management/partner/model/roles/role-producer";
 import {ShopAdministrationDatabaseService} from "./database/shop-administration-database-service";
+import {FileService} from "../../workplace/services/file-service";
+import {RoleType} from "../../identity-access-management/partner/model/roles/role-type";
 
 export class ShopAdministrationService {
 
@@ -8,7 +10,14 @@ export class ShopAdministrationService {
         if (!uuidRoleProducer) throw new Error('[myfarmer] UUID of producer is required');
 
         try {
-            return await ShopAdministrationDatabaseService.readProducer(uuidRoleProducer);
+            const roleProducer = await ShopAdministrationDatabaseService.readProducer(uuidRoleProducer);
+            FileService.readImageOfRole(roleProducer.fileLogo.uuid, RoleType.ROLE_PRODUCER)
+                .then(myFile => roleProducer.fileLogo = myFile)
+                .catch(error => console.log(error));
+            // FileService.readImageOfRole(roleProducer.fileBackground.uuid, RoleType.ROLE_PRODUCER)
+            //     .then(myFile => roleProducer.fileBackground = myFile)
+            //     .catch(error => console.log(error));
+            return roleProducer;
         } catch(error){
             throw new Error('[myfarmer] ShopAdministrationService.getProducer - Error reading Producer');
         }

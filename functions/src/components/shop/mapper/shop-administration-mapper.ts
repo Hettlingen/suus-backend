@@ -9,8 +9,12 @@ export const mapProducerFromDbToProducer = (producerFromDb: any) => {
     roleProducer.uuid = producerFromDb[0].uuid;
     roleProducer.numberCompany = producerFromDb[0].numberCompany;
     roleProducer.description = producerFromDb[0].description;
-    roleProducer.fileLogo = new MyFile();
-    roleProducer.fileBackground = new MyFile();
+    const fileLogo = new MyFile();
+    fileLogo.uuid = producerFromDb[0].uuidImageLogo;
+    roleProducer.fileLogo = fileLogo;
+    const fileBackground = new MyFile();
+    fileBackground.uuid = producerFromDb[0].uuidImageBackground;
+    roleProducer.fileBackground = fileBackground;
 
     const address = new Address();
     address.uuid = producerFromDb[0].uuidOfAddress;

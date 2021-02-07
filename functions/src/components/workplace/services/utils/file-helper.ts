@@ -13,7 +13,7 @@ export class FileHelper {
     }
 
     public static encodeBinaryToBase64Content(contentBinary: Buffer) {
-        let contentAsBase64 = contentBinary.toString('base64');
+        const contentAsBase64 = contentBinary.toString('base64');
         return contentAsBase64;
     }
 

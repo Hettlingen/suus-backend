@@ -1,11 +1,12 @@
 import {MyFile} from "../model/my-file";
 import {FileHelper} from "./utils/file-helper";
+import {RoleType} from "../../identity-access-management/partner/model/roles/role-type";
 
 const bucketName = 'myfarmer';
 
 export class FileService {
 
-    public static async saveFile(myFile: MyFile): Promise<MyFile> {
+    public static async saveImage(myFile: MyFile): Promise<MyFile> {
         const myBucket = FileHelper.getStorage().bucket(bucketName);
         const imageBuffer = FileHelper.decodeBase64ToBinaryContent(myFile.fileContent);
 
@@ -32,48 +33,45 @@ export class FileService {
      * URL to read a file: https://storage.googleapis.com/${bucketName}/${fileName}
      * exports.getPublicUrl = (bucketName, fileName) => `https://storage.googleapis.com/${bucketName}/${fileName}`;
      */
-    public static async readFile(uuidFile: string): Promise<MyFile> {
-        const options = {
-            // name of the folder within bucket
-            destination: "550e8400-e29b-11d6-a716-446655450001/egg.png",
-            // Support for HTTP requests made with `Accept-Encoding: gzip`
-            gzip: true,
-            // By setting the option `destination`, you can change the name of the
-            // object you are uploading to a bucket.
-            metadata: {
-                // Enable long-lived HTTP caching headers
-                // Use only if the contents of the file will never change
-                // (If the contents will change, use cacheControl: 'no-cache')
-                cacheControl: 'public, max-age=31536000',
-            },
-        }
+    public static async readImageOfRole(uuidFile: string, roleType: RoleType): Promise<MyFile> {
+        const fileName = uuidFile + '.png';
 
         FileHelper.getStorage()
             .bucket(bucketName)
-            .file('egg.png')
-            .download(options)
-            .then(() => {
-                console.log("Download Completed");
+            .file(fileName)
+            .download()
+            .then((file) => {
+                console.log('Download Completed: ' + file);
+                const myFile = new MyFile();
+                myFile.fileName = 'teeeeeessssst';
+                return myFile;
             })
             .catch((error: any) => {
-                throw new Error('[myfarmer] FileService.getFile - Error readgin file: ' + error);
+                throw new Error('[myfarmer] FileService.getFile - Error reading file: ' + error);
             });
 
-        return new MyFile();
+        throw new Error('[myfarmer] FileService.getFile - Error reading file');
     }
 
-    /**
-     * Creates a new bucket in the Asia region with the coldline default storage
-     * class. Leave the second argument blank for default settings.
-     * For default values see: https://cloud.google.com/storage/docs/locations and
-     * https://cloud.google.com/storage/docs/storage-classes
-     */
-    // private async createBucket() {
-    //      const bucket = await storage.createBucket(bucketName, {
-    //         location: 'ASIA',
-    //         storageClass: 'COLDLINE',
-    //     });
-    //
-    //     console.log('Neuer Bucket lautet: ' + bucket);
+    // TODO get this path from config of gcp variables
+    // private static evaluateFilePath(roleType: RoleType): string {
+    //     switch(roleType) {
+    //         case RoleType.ROLE_CUSTOMER: {
+    //             return 'administration/consumer/';
+    //             break;
+    //         }
+    //         case RoleType.ROLE_PRODUCER: {
+    //             return 'administration/producer/';
+    //             break;
+    //         }
+    //         case RoleType.ROLE_DELIVERER: {
+    //             return 'administration/deliverer/';
+    //             break;
+    //         }
+    //         default: {
+    //             return 'myfarmer/';
+    //             break;
+    //         }
+    //     }
     // }
 }
