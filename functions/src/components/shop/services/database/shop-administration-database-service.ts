@@ -1,9 +1,65 @@
 import {RoleProducer} from "../../../identity-access-management/partner/model/roles/role-producer";
 import {database} from "../../../../index";
-import {mapDelivererFromDbToDeliverer, mapProducerFromDbToProducer} from "../../mapper/shop-administration-mapper";
+import {
+    mapCustomerFromDbToCustomer,
+    mapDelivererFromDbToDeliverer,
+    mapProducerFromDbToProducer
+} from "../../mapper/shop-administration-mapper";
 import {RoleDeliverer} from "../../../identity-access-management/partner/model/roles/role-deliverer";
+import {RoleCustomer} from "../../../identity-access-management/partner/model/roles/role-customer";
 
 export class ShopAdministrationDatabaseService {
+
+    static async readCustomer(uuidRoleCustomer: string): Promise<RoleCustomer> {
+        console.log('START: ShopAdministrationDatabaseService.readCustomer: ' + uuidRoleCustomer);
+        if (!uuidRoleCustomer) throw new Error('[myfarmer] ShopAdministrationDatabaseService.readCustomer - Wrong parameters');
+
+        const query = `SELECT RoleCustomer.uuidRole,
+                              RoleCustomer.numberCustomer
+                              Role.uuid uuidOfRole,
+                              Role.uuidPartner uuidPartnerOfRole,
+                              Role.uuidAddress uuidAddressOfRole,
+                              Partner.uuid uuidOfPartner,
+                              Partner.companyName companyNameOfPartner,
+                              Partner.firstName firstNameOfPartner,
+                              Partner.lastName lastNameOfPartner,
+                              Partner.nickname nicknameOfPartner,
+                              Partner.companyName companyNameOfPartner,
+                              Partner.birthdate birthdateOfPartner,
+                              Partner.genderCode genderCodeOfPartner,
+                              Partner.languageCode languageCodeOfPartner,
+                              Address.uuid uuidOfAddress,
+                              Address.street streetOfAddress,
+                              Address.streetNumber streetNumberOfAddress,
+                              Address.city cityOfAddress,
+                              Address.postalCode postalCodeOfAddress,
+                              Address.countryCode countryCodeOfAddress
+                            FROM RoleCustomer
+                            LEFT JOIN Role ON RoleCustomer.uuidRole=Role.uuid
+                            LEFT JOIN Partner ON Role.uuidPartner=Partner.uuid
+                            LEFT JOIN Address ON Role.uuidAddress=Address.uuid
+                            WHERE RoleCustomer.uuidRole='${uuidRoleCustomer}';`;
+
+        try {
+            const customerFromDb = await database.query(query);
+
+            console.log('customerFromDb: ' + JSON.stringify(customerFromDb));
+            if (customerFromDb === null || customerFromDb === undefined || customerFromDb.length === 0) {
+                const error = new Error('[myfarmer] ShopAdministrationDatabaseService.readCustomer - Customer doesnt exist on database');
+                console.log(error);
+                throw error;
+            }
+
+            return mapCustomerFromDbToCustomer(customerFromDb);;
+        } catch(error) {
+            console.log(error);
+            throw new Error('[myfarmer] ShopAdministrationDatabaseService.readCustomer - Error reading customer from database: ' + error);
+        }
+    }
+
+    static async updateCustomer(roleCustomer: RoleCustomer): Promise<RoleCustomer> {
+        return new RoleCustomer();
+    }
 
     static async readProducer(uuidRoleProducer: string): Promise<RoleProducer> {
         console.log('START: ShopAdministrationDatabaseService.readProducer: ' + uuidRoleProducer);
@@ -86,11 +142,11 @@ export class ShopAdministrationDatabaseService {
                               Address.city cityOfAddress,
                               Address.postalCode postalCodeOfAddress,
                               Address.countryCode countryCodeOfAddress
-                            FROM RoleProducer
-                            LEFT JOIN Role ON RoleProducer.uuidRole=Role.uuid
+                            FROM RoleDeliverer
+                            LEFT JOIN Role ON RoleDeliverer.uuidRole=Role.uuid
                             LEFT JOIN Partner ON Role.uuidPartner=Partner.uuid
                             LEFT JOIN Address ON Role.uuidAddress=Address.uuid
-                            WHERE RoleProducer.uuidRole='${uuidRoleDeliverer}';`;
+                            WHERE RoleDeliverer.uuidRole='${uuidRoleDeliverer}';`;
 
         try {
             const delivererFromDb = await database.query(query);

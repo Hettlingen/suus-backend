@@ -10,6 +10,7 @@ import {Delivery} from "./model/delivery/delivery";
 import {ShopAdministrationService} from "./services/shop-administration-service";
 import {RoleProducer} from "../identity-access-management/partner/model/roles/role-producer";
 import {RoleDeliverer} from "../identity-access-management/partner/model/roles/role-deliverer";
+import {RoleCustomer} from "../identity-access-management/partner/model/roles/role-customer";
 
 export class ShopRoutes {
     public static routes(app: any): void {
@@ -98,6 +99,26 @@ export class ShopRoutes {
         // --------------------------------------------------
         // SHOP ADMINISTRATION
         // --------------------------------------------------
+
+        // Get Customer
+        app.route('/shop/customers/:uuidRoleCustomers').get(AuthenticationService.checkIfAuthenticated, async (request: Request, response: Response) => {
+            ShopAdministrationService.getCustomer(request.params.uuidRoleCustomers)
+                .then(function(roleCustomer: RoleCustomer) {
+                    response.status(200).send(roleCustomer);
+                }).catch(function(error: any){
+                response.status(404).send("Customer isn't found: " + error)
+            });
+        })
+
+        // Update Producer
+        app.route('/shop/customers').post(async (request: Request, response: Response) => {
+            ShopAdministrationService.updateCustomer(request.body)
+                .then(function(roleCustomer: RoleCustomer) {
+                    response.status(200).send(roleCustomer);
+                }).catch(function(error: any){
+                response.status(404).send("Customer isn't saved successfully: " + error)
+            });
+        })
 
         // Get Producer
         app.route('/shop/producers/:uuidRoleProducer').get(AuthenticationService.checkIfAuthenticated, async (request: Request, response: Response) => {
