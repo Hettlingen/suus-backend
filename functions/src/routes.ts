@@ -5,6 +5,7 @@ import {WorkplaceRoutes} from "./components/workplace/workplace-routes";
 import {PartnerRoutes} from "./components/identity-access-management/partner/partner-routes";
 import {NewsletterRoutes} from "./components/content-management-system/newsletter/newsletter-routes";
 import {NotificationRoutes} from "./components/content-management-system/notification/notification-routes";
+import {GalleryRoutes} from "./components/content-management-system/gallery/gallery-routes";
 
 export class Routes {
     public static routes(app: any): void {
@@ -15,5 +16,6 @@ export class Routes {
         NewsletterRoutes.routes(app);
         NotificationRoutes.routes(app);
         WorkplaceRoutes.routes(app);
+        GalleryRoutes.routes(app);
     }
 }
