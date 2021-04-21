@@ -1,7 +1,7 @@
 import {database} from "../../../../../index";
 import {Gallery} from "../../model/gallery";
 import {Image} from "../../model/image";
-import {mapGalleryFromDbToGallery, mapImageFromDbToImage} from "../gallery-mapper";
+import {mapGalleryFromDbToGallery, mapImageFromDbToImage} from "../../mapper/gallery-mapper";
 
 export class GalleryDatabseService {
 
