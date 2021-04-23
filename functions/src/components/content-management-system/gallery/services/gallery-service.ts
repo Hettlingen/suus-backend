@@ -20,17 +20,17 @@ export class GalleryService {
         console.log('START: GalleryService.getImage: ' + uuidImage);
         if (!uuidImage) throw new Error('Image-ID is required');
 
-        try {
-            const image = await GalleryDatabseService.readImage(uuidImage);
+        let image: Image;
 
-            FileService.readFileBytestream(image.fileUrl)
-                .then(myFile => image.fileContent = myFile.fileContent)
-                .catch(error => console.log(error));
-            return image;
+        try {
+            image = await GalleryDatabseService.readImage(uuidImage);
+            await FileService.readFileBytestream(image.fileUrl).then(buffer => image.fileContent = buffer.toString());
         } catch(error){
             throw new Error('[myfarmer] GalleryService.getImage - Error reading Image with uuid '
                 + uuidImage + ', error: ' +
                 + error);
         }
+
+        return image;
     }
 }
