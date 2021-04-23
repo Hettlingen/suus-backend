@@ -30,6 +30,29 @@ export class FileService {
     }
 
     /**
+     * Public URL on GCP: https://storage.googleapis.com/${bucketName}/${fileName}
+     * URL of Bucket on GCP: z.B. gs://myfarmer/administration/producer/1000.png
+     */
+    public static async readFileBytestream(urlBucket: string): Promise<MyFile> {
+        FileHelper.getStorage()
+            .bucket('myfarmer')
+            .file('1000.png')
+            .download()
+            .then((buffer) => {
+                console.log('Download Completed: ' + buffer);
+                const myFile = new MyFile();
+                myFile.fileName = 'teeeeeessssst';
+                myFile.fileContent = buffer.toString();
+                return myFile;
+            })
+            .catch((error: any) => {
+                throw new Error('[myfarmer] FileService.readImageBytestream - Error reading file from GCP Storage: ' + error);
+            });
+
+        throw new Error('[myfarmer] FileService.readImageBytestream - Error reading file from GCP Storage');
+    }
+
+    /**
      * URL to read a file: https://storage.googleapis.com/${bucketName}/${fileName}
      * exports.getPublicUrl = (bucketName, fileName) => `https://storage.googleapis.com/${bucketName}/${fileName}`;
      */
