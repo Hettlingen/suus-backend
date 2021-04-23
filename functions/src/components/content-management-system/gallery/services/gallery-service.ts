@@ -24,7 +24,7 @@ export class GalleryService {
 
         try {
             image = await GalleryDatabseService.readImage(uuidImage);
-            await FileService.readFileBytestream(image.fileUrl).then(buffer => image.fileContent = buffer.toString());
+            await FileService.readFileBytestream(image.fileUrl).then(buffer => image.fileContent = 'data:image/png;base64,' + buffer.toString());
         } catch(error){
             throw new Error('[myfarmer] GalleryService.getImage - Error reading Image with uuid '
                 + uuidImage + ', error: ' +
