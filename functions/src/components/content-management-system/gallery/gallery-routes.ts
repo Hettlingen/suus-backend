@@ -1,7 +1,6 @@
 import {Request, Response} from "express";
 import {GalleryService} from "./services/gallery-service";
 import {Gallery} from "./model/gallery";
-import {Image} from "./model/image";
 
 export class GalleryRoutes {
     public static routes(app: any): void {
@@ -19,8 +18,9 @@ export class GalleryRoutes {
         // Get an image
         app.route('/galleries/images/:uuidImage').get(async (request: Request, response: Response) => {
             GalleryService.getImage(request.params.uuidImage)
-                .then(function(image: Image) {
-                    response.status(200).send(image);
+                .then(function(imageByteArray: String) {
+                    response.setHeader('Content-Type', 'image/*');
+                    response.status(200).send(imageByteArray);
                 }).catch(function(error: any){
                 response.status(404).send("Image wasn't found: " + error)
             });
