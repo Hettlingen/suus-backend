@@ -1,4 +1,4 @@
-import {Storage} from "@google-cloud/storage";
+import {DownloadResponse, Storage} from "@google-cloud/storage";
 
 const path = require('path');
 const serviceKeyFileName = path.join(__dirname, '../config/service-key-google-cloud-storage.json');
@@ -12,12 +12,11 @@ export class FileHelper {
         })
     }
 
-    public static encodeBinaryToBase64Content(contentBinary: Buffer) {
-        const contentAsBase64 = contentBinary.toString('base64');
-        return contentAsBase64;
+    public static encodeBinaryToBase64(contentBinary: DownloadResponse) {
+        return contentBinary[0].toString('base64');
     }
 
-    public static decodeBase64ToBinaryContent(contentBase64: string): Buffer {
+    public static decodeBase64ToBinary(contentBase64: string): Buffer {
         return Buffer.from(contentBase64, 'base64');
     }
 }

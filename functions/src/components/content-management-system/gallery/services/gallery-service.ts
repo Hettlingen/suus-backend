@@ -1,6 +1,7 @@
 import {Gallery} from "../model/gallery";
 import {GalleryDatabseService} from "./database/gallery-databse-service";
 import {FileService} from "../../../workplace/services/file-service";
+import {Image} from "../model/image";
 
 export class GalleryService {
 
@@ -15,14 +16,14 @@ export class GalleryService {
         }
     }
 
-    static async getImage(uuidImage: string): Promise<String> {
+    static async getImage(uuidImage: string): Promise<Image> {
         console.log('START: GalleryService.getImage: ' + uuidImage);
         if (!uuidImage) throw new Error('Image-ID is required');
 
         try {
             const image = await GalleryDatabseService.readImage(uuidImage);
-            const imageByteArray = await FileService.readFileByteArray(image.fileUrl);
-            return imageByteArray[0].toString();
+            image.fileContent = await FileService.readFileAsBase64(image.fileUrl);
+            return image;
         } catch (error) {
             throw new Error('[myfarmer] GalleryService.getImage - Error reading Image with uuid '
                 + uuidImage + ', error: ' +

@@ -9,7 +9,7 @@ export class FileService {
 
     public static async saveImage(myFile: MyFile): Promise<MyFile> {
         const myBucket = FileHelper.getStorage().bucket(bucketName);
-        const imageBuffer = FileHelper.decodeBase64ToBinaryContent(myFile.fileContent);
+        const imageBuffer = FileHelper.decodeBase64ToBinary(myFile.fileContent);
 
         try {
             await myBucket.file(myFile.fileName).save(imageBuffer, {
@@ -39,6 +39,19 @@ export class FileService {
             .bucket('myfarmer')
             .file('1000.png')
             .download();
+    }
+
+    /**
+     * Public URL on GCP: https://storage.googleapis.com/${bucketName}/${fileName}
+     * URL of Bucket on GCP: z.B. gs://myfarmer/administration/producer/1000.png
+     */
+    public static async readFileAsBase64(urlBucket: string): Promise<string> {
+        const fileByteArray = await FileHelper.getStorage()
+            .bucket('myfarmer')
+            .file('1000.png')
+            .download();
+
+        return FileHelper.encodeBinaryToBase64(fileByteArray);
     }
 
     /**
