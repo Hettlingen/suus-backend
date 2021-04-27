@@ -22,7 +22,7 @@ export class GalleryService {
 
         try {
             const image = await GalleryDatabseService.readImage(uuidImage);
-            image.fileContent = await FileService.readFileAsBase64(image.fileUrl);
+            image.fileContent = await FileService.readImageAsBase64(image);
             return image;
         } catch (error) {
             throw new Error('[myfarmer] GalleryService.getImage - Error reading Image with uuid '

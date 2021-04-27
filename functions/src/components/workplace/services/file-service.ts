@@ -1,7 +1,7 @@
 import {MyFile} from "../model/my-file";
 import {FileHelper} from "./utils/file-helper";
 import {RoleType} from "../../identity-access-management/partner/model/roles/role-type";
-import {DownloadResponse} from "@google-cloud/storage";
+import {Image} from "../../content-management-system/gallery/model/image";
 
 const bucketName = 'myfarmer';
 
@@ -34,21 +34,10 @@ export class FileService {
      * Public URL on GCP: https://storage.googleapis.com/${bucketName}/${fileName}
      * URL of Bucket on GCP: z.B. gs://myfarmer/administration/producer/1000.png
      */
-    public static async readFileByteArray(urlBucket: string): Promise<DownloadResponse> {
-        return await FileHelper.getStorage()
-            .bucket('myfarmer')
-            .file('1000.png')
-            .download();
-    }
-
-    /**
-     * Public URL on GCP: https://storage.googleapis.com/${bucketName}/${fileName}
-     * URL of Bucket on GCP: z.B. gs://myfarmer/administration/producer/1000.png
-     */
-    public static async readFileAsBase64(urlBucket: string): Promise<string> {
+    public static async readImageAsBase64(image: Image): Promise<string> {
         const fileByteArray = await FileHelper.getStorage()
             .bucket('myfarmer')
-            .file('1000.png')
+            .file(image.fileName)
             .download();
 
         return FileHelper.encodeBinaryToBase64(fileByteArray);

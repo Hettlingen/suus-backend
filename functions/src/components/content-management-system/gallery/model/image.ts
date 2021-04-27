@@ -3,6 +3,7 @@ export class Image {
     public title!: string;
     public description!: string;
     public fileUrl!: string;
+    public bucketName!: string;
     public fileName!: string;
     public fileContent!: string;
     public dateCreated!: Date;

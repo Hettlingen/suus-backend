@@ -15,6 +15,7 @@ export const mapGalleryFromDbToGallery = (galleryFromDb: any) => {
         image.title = row.titleOfImage;
         image.description = row.descriptionOfImage;
         image.fileUrl = row.fileUrlOfImage;
+        image.bucketName = row.bucketNameOfImage;
         image.fileName = row.fileNameOfImage;
         image.dateCreated = row.dateCreatedOfImage;
         image.dateUpdated = row.dateUpdatedOfImage;
@@ -30,6 +31,7 @@ export const mapImageFromDbToImage = (imageFromDb: any) => {
     image.title = imageFromDb.title;
     image.description = imageFromDb.description;
     image.fileUrl = imageFromDb.fileUrl;
+    image.bucketName = imageFromDb.bucketName;
     image.fileName = imageFromDb.fileName;
     image.dateCreated = imageFromDb.dateCreated;
     image.dateUpdated = imageFromDb.dateUpdated;

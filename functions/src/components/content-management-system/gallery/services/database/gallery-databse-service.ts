@@ -18,6 +18,7 @@ export class GalleryDatabseService {
                               Image.title titleOfImage,
                               Image.description descriptionOfImage,
                               Image.fileUrl fileUrlOfImage,
+                              Image.bucketName bucketNameOfImage,
                               Image.fileName fileNameOfImage,
                               Image.dateCreated dateCreatedOfImage,
                               Image.dateUpdated dateUpdatedOfImage
