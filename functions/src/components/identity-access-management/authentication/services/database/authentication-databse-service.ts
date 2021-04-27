@@ -153,7 +153,7 @@ export class AuthenticationDatabseService {
                             LEFT JOIN Partner ON Role.uuidPartner=Partner.uuid
                             LEFT JOIN Address ON Role.uuidAddress=Address.uuid
                             LEFT JOIN UserAccount ON RoleUser.uuidUserAccount=UserAccount.uuid
-                            WHERE RoleUser.uuidRole='${uuidUserAccount}';`;
+                            WHERE UserAccount.uuid='${uuidUserAccount}';`;
 
         try {
             const userFromDb = await database.query(query);

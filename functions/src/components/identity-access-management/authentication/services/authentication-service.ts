@@ -24,6 +24,9 @@ export class AuthenticationService {
 
         const roleUser = await AuthenticationDatabseService.readUserByUserAccountUuid(userAccount.uuid);
         roleUser.userAccount.authenticationToken = authenticationToken;
+
+        console.log('RoleUser nach mapping: ' + JSON.stringify(roleUser));
+
         return roleUser.partner;
     };
 
