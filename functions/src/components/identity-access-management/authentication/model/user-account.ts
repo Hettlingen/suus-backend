@@ -1,4 +1,5 @@
 import {AuthenticationToken} from "./authenticationToken";
+import {RoleUser} from "../../partner/model/roles/role-user";
 
 export class UserAccount {
     public uuid!: string;
@@ -11,4 +12,6 @@ export class UserAccount {
     public amountOfLogonAttempts: number = 0;
     public dateCreated!: Date;
     public dateUpdatedAt!: Date;
+
+    public roleUser!: RoleUser;
 }

@@ -14,15 +14,6 @@ export const mapUserFromDbToUser = (userFromDb: any) => {
     userAccount.userName = userFromDb[0].userNameOfUserAccount;
     roleUser.userAccount = userAccount;
 
-    const address = new Address();
-    address.uuid = userFromDb[0].uuidOfAddress;
-    address.street = userFromDb[0].streetOfAddress;
-    address.streetNumber = userFromDb[0].streetNumberOfAddress;
-    address.postalCode = userFromDb[0].postalCodeOfAddress;
-    address.city = userFromDb[0].cityOfAddress;
-    address.countryCode = userFromDb[0].countryCodeOfAddress;
-    roleUser.address = address;
-
     const partner = new Partner();
     partner.firstName = userFromDb[0].firstNameOfPartner;
     partner.lastName = userFromDb[0].lastNameOfPartner;
@@ -32,6 +23,15 @@ export const mapUserFromDbToUser = (userFromDb: any) => {
     partner.genderCode = userFromDb[0].genderCodeOfPartner;
     partner.languageCode = userFromDb[0].languageCodeOfPartner;
     roleUser.partner = partner;
+
+    const address = new Address();
+    address.uuid = userFromDb[0].uuidOfAddress;
+    address.street = userFromDb[0].streetOfAddress;
+    address.streetNumber = userFromDb[0].streetNumberOfAddress;
+    address.postalCode = userFromDb[0].postalCodeOfAddress;
+    address.city = userFromDb[0].cityOfAddress;
+    address.countryCode = userFromDb[0].countryCodeOfAddress;
+    roleUser.address = address;
 
     return roleUser;
 }

@@ -5,14 +5,14 @@ import * as bcrypt from 'bcrypt';
 import * as jwt from 'jsonwebtoken';
 import {AuthenticationDatabseService} from "./database/authentication-databse-service";
 import {AuthenticationToken} from "../model/authenticationToken";
-import {Partner} from "../../partner/model/partner";
+import {RoleUser} from "../../partner/model/roles/role-user";
 
 
 export class AuthenticationService {
 
     private static RSA_PRIVATE_KEY = fs.readFileSync('src/utils/authentication/private.key');
 
-    public static async login(userName: string, password: string): Promise<Partner> {
+    public static async login(userName: string, password: string): Promise<RoleUser> {
         const userAccount = await AuthenticationDatabseService.readUserAccountByUserName(userName);
 
         if (userAccount === null || userAccount === undefined || userName !== userAccount.userName) {
@@ -27,7 +27,7 @@ export class AuthenticationService {
 
         console.log('RoleUser nach mapping: ' + JSON.stringify(roleUser));
 
-        return roleUser.partner;
+        return roleUser;
     };
 
     public static async register(userAccount: UserAccount): Promise<UserAccount> {
