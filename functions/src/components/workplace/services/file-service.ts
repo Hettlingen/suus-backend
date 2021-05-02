@@ -36,8 +36,8 @@ export class FileService {
      */
     public static async readImageAsBase64(image: Image): Promise<string> {
         const fileByteArray = await FileHelper.getStorage()
-            .bucket('myfarmer')
-            .file('administration/producer/' + image.fileName)
+            .bucket(image.bucketName)
+            .file(image.bucketDirectory + image.fileName)
             .download();
 
         return FileHelper.encodeBinaryToBase64(fileByteArray);
