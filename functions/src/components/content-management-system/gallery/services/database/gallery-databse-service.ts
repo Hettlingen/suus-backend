@@ -17,8 +17,8 @@ export class GalleryDatabseService {
                               Image.uuid uuidOfImage,
                               Image.title titleOfImage,
                               Image.description descriptionOfImage,
-                              Image.fileUrl fileUrlOfImage,
                               Image.bucketName bucketNameOfImage,
+                              Image.bucketDirectory fileBucketDirectoryOfImage,
                               Image.fileName fileNameOfImage,
                               Image.dateCreated dateCreatedOfImage,
                               Image.dateUpdated dateUpdatedOfImage
