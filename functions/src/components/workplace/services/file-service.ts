@@ -3,16 +3,14 @@ import {FileHelper} from "./utils/file-helper";
 import {RoleType} from "../../identity-access-management/partner/model/roles/role-type";
 import {Image} from "../../content-management-system/gallery/model/image";
 
-const bucketName = 'myfarmer';
-
 export class FileService {
 
     public static async saveImage(myFile: MyFile): Promise<MyFile> {
-        const myBucket = FileHelper.getStorage().bucket(bucketName);
-        const imageBuffer = FileHelper.decodeBase64ToBinary(myFile.fileContent);
+        const myBucket = FileHelper.getStorage().bucket(myFile.bucketName);
+        const imageBuffer = FileHelper.decodeBase64ToBinary(myFile.fileContentAsBase64);
 
         try {
-            await myBucket.file(myFile.fileName).save(imageBuffer, {
+            await myBucket.file(myFile.bucketDirectory + myFile.fileName).save(imageBuffer, {
                 public: true,
                 gzip: false,
                 resumable: false,
@@ -51,7 +49,7 @@ export class FileService {
         const fileName = uuidFile + '.png';
 
         FileHelper.getStorage()
-            .bucket(bucketName)
+            .bucket('myfarmer')
             .file(fileName)
             .download()
             .then((file) => {

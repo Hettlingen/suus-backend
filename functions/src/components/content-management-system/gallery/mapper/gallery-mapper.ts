@@ -6,6 +6,8 @@ export const mapGalleryFromDbToGallery = (galleryFromDb: any) => {
     gallery.uuid = galleryFromDb[0].uuid;
     gallery.title = galleryFromDb[0].title;
     gallery.description = galleryFromDb[0].description;
+    gallery.bucketName = galleryFromDb[0].bucketName;
+    gallery.bucketDirectory = galleryFromDb[0].bucketDirectory;
     gallery.dateCreated = galleryFromDb[0].dateCreated;
     gallery.dateUpdated = galleryFromDb[0].dateUpdated;
 
