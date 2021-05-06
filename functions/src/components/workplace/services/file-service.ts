@@ -2,16 +2,19 @@ import {MyFile} from "../model/my-file";
 import {FileHelper} from "./utils/file-helper";
 import {RoleType} from "../../identity-access-management/partner/model/roles/role-type";
 import {Image} from "../../content-management-system/gallery/model/image";
+import * as uuidGenerator from "uuid/v4";
 
 export class FileService {
 
     public static async saveImage(myFile: MyFile): Promise<MyFile> {
         const myBucket = FileHelper.getStorage().bucket(myFile.bucketName);
         const imageBuffer = FileHelper.decodeBase64ToBinary(myFile.fileContentAsBase64);
+        myFile.uuid = uuidGenerator();
+        myFile.fileName = FileHelper.createFileName(myFile);
 
         try {
             await myBucket.file(myFile.bucketDirectory + myFile.fileName).save(imageBuffer, {
-                public: true,
+                public: false,
                 gzip: false,
                 resumable: false,
                 metadata: {
@@ -23,7 +26,6 @@ export class FileService {
             throw error;
         }
 
-        // TODO generate uuid and save it in myFile
         // TODO save myFile to database (without the myFile.fileContent
         return myFile;
     }
@@ -64,26 +66,4 @@ export class FileService {
 
         throw new Error('[myfarmer] FileService.getFile - Error reading file');
     }
-
-    // TODO get this path from config of gcp variables
-    // private static evaluateFilePath(roleType: RoleType): string {
-    //     switch(roleType) {
-    //         case RoleType.ROLE_CUSTOMER: {
-    //             return 'administration/consumer/';
-    //             break;
-    //         }
-    //         case RoleType.ROLE_PRODUCER: {
-    //             return 'administration/producer/';
-    //             break;
-    //         }
-    //         case RoleType.ROLE_DELIVERER: {
-    //             return 'administration/deliverer/';
-    //             break;
-    //         }
-    //         default: {
-    //             return 'myfarmer/';
-    //             break;
-    //         }
-    //     }
-    // }
 }
