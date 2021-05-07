@@ -20,7 +20,9 @@ export class FileHelper {
     }
 
     public static decodeBase64ToBinary(contentBase64: string): Buffer {
-        return Buffer.from(contentBase64, 'base64');
+        const lastIndexOfHeader = contentBase64.lastIndexOf(",");
+        var contentBase64WithoutHeaderInfo = contentBase64.slice(lastIndexOfHeader + 1);
+        return Buffer.from(contentBase64WithoutHeaderInfo, 'base64');
     }
 
     public static createFileName(myFile: MyFile): string {
