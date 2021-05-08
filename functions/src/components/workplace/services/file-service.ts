@@ -2,15 +2,12 @@ import {MyFile} from "../model/my-file";
 import {FileHelper} from "./utils/file-helper";
 import {RoleType} from "../../identity-access-management/partner/model/roles/role-type";
 import {Image} from "../../content-management-system/gallery/model/image";
-import * as uuidGenerator from "uuid/v4";
 
 export class FileService {
 
-    public static async saveImage(myFile: MyFile): Promise<MyFile> {
+    public static async saveImage(myFile: MyFile): Promise<boolean> {
         const myBucket = FileHelper.getStorage().bucket(myFile.bucketName);
         const imageBuffer = FileHelper.decodeBase64ToBinary(myFile.fileContentAsBase64);
-        myFile.uuid = uuidGenerator();
-        myFile.fileName = FileHelper.createFileName(myFile);
 
         try {
             await myBucket.file(myFile.bucketDirectory + myFile.fileName).save(imageBuffer, {
@@ -26,8 +23,7 @@ export class FileService {
             throw error;
         }
 
-        // TODO save myFile to database (without the myFile.fileContent
-        return myFile;
+        return true;
     }
 
     /**

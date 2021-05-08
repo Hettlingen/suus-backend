@@ -2,6 +2,7 @@ import {database} from "../../../../../index";
 import {Gallery} from "../../model/gallery";
 import {Image} from "../../model/image";
 import {mapGalleryFromDbToGallery, mapImageFromDbToImage} from "../../mapper/gallery-mapper";
+import {MyFile} from "../../../../workplace/model/my-file";
 
 export class GalleryDatabseService {
 
@@ -21,9 +22,7 @@ export class GalleryDatabseService {
                               Image.description descriptionOfImage,
                               Image.bucketName bucketNameOfImage,
                               Image.bucketDirectory bucketDirectoryOfImage,
-                              Image.fileName fileNameOfImage,
-                              Image.dateCreated dateCreatedOfImage,
-                              Image.dateUpdated dateUpdatedOfImage
+                              Image.fileName fileNameOfImage
                             FROM Gallery 
                             LEFT JOIN Image 
                                 ON Gallery.uuid=Image.uuidGallery
@@ -58,6 +57,35 @@ export class GalleryDatabseService {
             return mapImageFromDbToImage(imageFromDb[0]);
         } catch(error) {
             throw new Error('[myfarmer] GalleryDatabseService.readImage - Error reading Image from database: ' + error);
+        }
+    }
+
+    static async saveImage(myFile: MyFile): Promise<boolean> {
+        console.log('START: GalleryDatabseService.saveImage: ' + myFile.uuid + ' to gallery: ' + myFile.uuidGallery);
+        if (!myFile) throw new Error('[myfarmer] GalleryDatabseService.saveImage - Wrong parameters');
+
+        const query = `INSERT INTO Image(
+                  uuid,
+                  uuidGallery,
+                  title,
+                  fileName,
+                  bucketName,
+                  bucketDirectory,
+                  mimeType)
+                  VALUES ('${myFile.uuid}',
+                          '${myFile.uuidGallery}',
+                          '${myFile.title}', 
+                          '${myFile.fileName}',
+                          '${myFile.bucketName}',
+                          '${myFile.bucketDirectory}',
+                          '${myFile.mimeType}')`;
+
+        try {
+            await database.query(query);
+            return true;
+        } catch(error) {
+            console.log('[myfarmer] GalleryDatabseService.saveImage - Error inserting Image to database: ' + error);
+            throw new Error('[myfarmer] GalleryDatabseService.saveImage - Error inserting Image to database: ' + error);
         }
     }
 }

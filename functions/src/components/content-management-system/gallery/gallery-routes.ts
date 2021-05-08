@@ -25,5 +25,15 @@ export class GalleryRoutes {
                 response.status(404).send("Image wasn't found: " + error)
             });
         })
+
+        // Save an image on gcp bucket
+        app.route('/galleries/:uuidGallery/images').post(async (request: Request, response: Response) => {
+            GalleryService.saveImage(request.params.uuidGallery, request.body)
+                .then(function(result: boolean) {
+                    response.status(200).send(result);
+                }).catch(function(error: any){
+                response.status(404).send("Files weren't saved successfully: " + error)
+            });
+        })
     }
 }

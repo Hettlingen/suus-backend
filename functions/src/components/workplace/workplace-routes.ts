@@ -1,8 +1,7 @@
 import {Request, Response} from "express";
 import {WorkplaceService} from "./services/workplace-service";
 import {Consent} from "./model/consent";
-import {FileService} from "./services/file-service";
-import {MyFile} from "./model/my-file";
+import {GalleryService} from "../content-management-system/gallery/services/gallery-service";
 
 export class WorkplaceRoutes {
 
@@ -18,21 +17,13 @@ export class WorkplaceRoutes {
         })
 
         app.route('/files').post(async (request: Request, response: Response) => {
-            FileService.saveImage(request.body)
-                .then(function(myFile: MyFile) {
-                    response.status(200).send(myFile);
+            // todo extract uuidGallery from request
+            GalleryService.saveImage('', request.body)
+                .then(function(result: boolean) {
+                    response.status(200).send(result);
                 }).catch(function(error: any){
                 response.status(404).send("Files weren't saved successfully: " + error)
             });
         })
-        //
-        // app.route('/files/:uuidFile').get(async (request: Request, response: Response) => {
-        //     FileService.readImage(request.params.uuidTermsOfUse)
-        //         .then(function(file: MyFile) {
-        //             response.status(200).send(file);
-        //         }).catch(function(error: any){
-        //         response.status(404).send("Terms-of-use wasn't found: " + error)
-        //     });
-        // })
     }
 }
