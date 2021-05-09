@@ -1,7 +1,6 @@
 export class MyFile {
 
   public uuid!: string;
-  public uuidGallery!: string;
   public title!: string;
   public description!: string;
   public bucketName!: string;

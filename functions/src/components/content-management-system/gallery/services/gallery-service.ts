@@ -2,7 +2,6 @@ import {Gallery} from "../model/gallery";
 import {GalleryDatabseService} from "./database/gallery-databse-service";
 import {FileService} from "../../../workplace/services/file-service";
 import {Image} from "../model/image";
-import {MyFile} from "../../../workplace/model/my-file";
 import * as uuidGenerator from "uuid/v4";
 import {FileHelper} from "../../../workplace/services/utils/file-helper";
 
@@ -36,19 +35,32 @@ export class GalleryService {
         throw new Error('[myfarmer] GalleryService.getImage - Error reading Image with uuid ' + uuidImage);
     }
 
-    public static async saveImage(uuidGallery: string, myFile: MyFile): Promise<boolean> {
+    public static async saveImage(uuidGallery: string, image: Image): Promise<boolean> {
         try {
-            myFile.uuid = uuidGenerator();
-            myFile.uuidGallery = uuidGallery;
-            myFile.fileName = FileHelper.createFileName(myFile);
+            image.uuid = uuidGenerator();
+            image.uuidGallery = uuidGallery;
+            image.fileName = FileHelper.createFileName(image);
 
             // save image to the google cloud storage
-            await FileService.saveImage(myFile);
-            return await GalleryDatabseService.saveImage(myFile);
+            await FileService.saveImage(image);
+            return await GalleryDatabseService.saveImage(image);
         } catch (error) {
             // todo in case of an error we have to delete the image in the gcp-bucket
             throw new Error('[myfarmer] GalleryService.saveImage - Error save Image with uuid '
-                + myFile.uuid + ', error: ' +
+                + image.uuid + ', error: ' +
+                + error);
+        }
+    }
+
+    public static async deleteImage(uuidImage: string): Promise<boolean> {
+        try {
+            const image = await GalleryDatabseService.readImage(uuidImage);
+            // delete image from the google cloud storage
+            await FileService.deleteImage(image);
+            return await GalleryDatabseService.deleteImage(uuidImage);
+        } catch (error) {
+            throw new Error('[myfarmer] GalleryService.deleteImage - Error deleting Image with uuid '
+                + uuidImage + ', error: ' +
                 + error);
         }
     }

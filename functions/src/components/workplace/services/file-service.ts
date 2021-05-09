@@ -5,7 +5,7 @@ import {Image} from "../../content-management-system/gallery/model/image";
 
 export class FileService {
 
-    public static async saveImage(myFile: MyFile): Promise<boolean> {
+    public static async saveFile(myFile: MyFile): Promise<boolean> {
         const myBucket = FileHelper.getStorage().bucket(myFile.bucketName);
         const imageBuffer = FileHelper.decodeBase64ToBinary(myFile.fileContentAsBase64);
 
@@ -19,6 +19,39 @@ export class FileService {
                     cacheControl: 'public, max-age=31536000',
                 }
             });
+        } catch(error) {
+            throw error;
+        }
+
+        return true;
+    }
+
+    public static async saveImage(image: Image): Promise<boolean> {
+        const myBucket = FileHelper.getStorage().bucket(image.bucketName);
+        const imageBuffer = FileHelper.decodeBase64ToBinary(image.fileContentAsBase64);
+
+        try {
+            await myBucket.file(image.bucketDirectory + image.fileName).save(imageBuffer, {
+                public: false,
+                gzip: false,
+                resumable: false,
+                metadata: {
+                    contentType: image.mimeType,
+                    cacheControl: 'public, max-age=31536000',
+                }
+            });
+        } catch(error) {
+            throw error;
+        }
+
+        return true;
+    }
+
+    public static async deleteImage(image: Image): Promise<boolean> {
+        const myBucket = FileHelper.getStorage().bucket(image.bucketName);
+
+        try {
+            await myBucket.file(image.bucketDirectory + image.fileName).delete();
         } catch(error) {
             throw error;
         }

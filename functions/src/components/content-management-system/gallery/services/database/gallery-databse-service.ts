@@ -2,7 +2,6 @@ import {database} from "../../../../../index";
 import {Gallery} from "../../model/gallery";
 import {Image} from "../../model/image";
 import {mapGalleryFromDbToGallery, mapImageFromDbToImage} from "../../mapper/gallery-mapper";
-import {MyFile} from "../../../../workplace/model/my-file";
 
 export class GalleryDatabseService {
 
@@ -60,9 +59,9 @@ export class GalleryDatabseService {
         }
     }
 
-    static async saveImage(myFile: MyFile): Promise<boolean> {
-        console.log('START: GalleryDatabseService.saveImage: ' + myFile.uuid + ' to gallery: ' + myFile.uuidGallery);
-        if (!myFile) throw new Error('[myfarmer] GalleryDatabseService.saveImage - Wrong parameters');
+    static async saveImage(image: Image): Promise<boolean> {
+        console.log('START: GalleryDatabseService.saveImage: ' + image.uuid + ' to gallery: ' + image.uuidGallery);
+        if (!image) throw new Error('[myfarmer] GalleryDatabseService.saveImage - Wrong parameters');
 
         const query = `INSERT INTO Image(
                   uuid,
@@ -72,13 +71,13 @@ export class GalleryDatabseService {
                   bucketName,
                   bucketDirectory,
                   mimeType)
-                  VALUES ('${myFile.uuid}',
-                          '${myFile.uuidGallery}',
-                          '${myFile.title}', 
-                          '${myFile.fileName}',
-                          '${myFile.bucketName}',
-                          '${myFile.bucketDirectory}',
-                          '${myFile.mimeType}')`;
+                  VALUES ('${image.uuid}',
+                          '${image.uuidGallery}',
+                          '${image.title}', 
+                          '${image.fileName}',
+                          '${image.bucketName}',
+                          '${image.bucketDirectory}',
+                          '${image.mimeType}')`;
 
         try {
             await database.query(query);
@@ -86,6 +85,21 @@ export class GalleryDatabseService {
         } catch(error) {
             console.log('[myfarmer] GalleryDatabseService.saveImage - Error inserting Image to database: ' + error);
             throw new Error('[myfarmer] GalleryDatabseService.saveImage - Error inserting Image to database: ' + error);
+        }
+    }
+
+    static async deleteImage(uuidImage: string): Promise<boolean> {
+        console.log('START: GalleryDatabseService.deleteImage: ' + uuidImage);
+        if (!uuidImage) throw new Error('[myfarmer] GalleryDatabseService.deleteImage - Wrong parameters');
+
+        const query = `DELETE FROM Image WHERE uuid = '${uuidImage}'`;
+
+        try {
+            await database.query(query);
+            return true;
+        } catch(error) {
+            console.log('[myfarmer] GalleryDatabseService.deleteImage - Error deleting Image from database: ' + error);
+            throw new Error('[myfarmer] GalleryDatabseService.deleteImage - Error deleting Image from database: ' + error);
         }
     }
 }

@@ -32,7 +32,17 @@ export class GalleryRoutes {
                 .then(function(result: boolean) {
                     response.status(200).send(result);
                 }).catch(function(error: any){
-                response.status(404).send("Files weren't saved successfully: " + error)
+                response.status(404).send("Image isn'tt saved successfully: " + error)
+            });
+        })
+
+        // Delete image on gcp bucket
+        app.route('/galleries/:uuidGallery/images/:uuidImage').delete(async (request: Request, response: Response) => {
+            GalleryService.deleteImage(request.params.uuidImage)
+                .then(function(result: boolean) {
+                    response.status(200).send(result);
+                }).catch(function(error: any){
+                response.status(404).send("Image couldn't deleted successfully: " + error)
             });
         })
     }
