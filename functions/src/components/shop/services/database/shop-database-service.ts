@@ -35,8 +35,6 @@ export class ShopDatabaseService {
                             WHERE Shop.uuid='${uuidShop}'
                             LIMIT ${offset},${limit};`;
 
-        console.log('SHOP QUERY: ' + query);
-
         try {
             const shopFromDb = await database.query(query);
 

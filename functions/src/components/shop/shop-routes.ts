@@ -16,9 +16,6 @@ export class ShopRoutes {
     public static routes(app: any): void {
 
         app.route('/shops/:uuidShop').get(async (request: Request, response: Response) => {
-
-            console.log('QUERY PARAMETER: ' + request.query.pageOnDatabase);
-
             ShopService.getShop(request.params.uuidShop, request.query.pageOnDatabase)
                 .then(function(shop: Shop) {
                     response.status(200).send(shop);
