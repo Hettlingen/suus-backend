@@ -16,7 +16,10 @@ export class ShopRoutes {
     public static routes(app: any): void {
 
         app.route('/shops/:uuidShop').get(async (request: Request, response: Response) => {
-            ShopService.getShop(request.params.uuidShop)
+
+            console.log('QUERY PARAMETER: ' + request.query.pageOnDatabase);
+
+            ShopService.getShop(request.params.uuidShop, request.query.pageOnDatabase)
                 .then(function(shop: Shop) {
                     response.status(200).send(shop);
                 }).catch(function(error: any){

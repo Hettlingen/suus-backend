@@ -17,7 +17,7 @@ import {RoleProducer} from "../../../identity-access-management/partner/model/ro
 
 export class ShopDatabaseService {
 
-    static async readShop(uuidShop: string): Promise<Shop> {
+    static async readShop(uuidShop: string, offset: number, limit: number): Promise<Shop> {
         console.log('START: ShopDatabaseService.readShop: ' + uuidShop);
         if (!uuidShop) throw new Error('[myfarmer] ShopDatabaseService.readShop - Wrong parameters');
 
@@ -29,10 +29,13 @@ export class ShopDatabaseService {
                               ShopItem.price priceOfShopItem,
                               ShopItem.currencyPrice currencyPriceOfShopItem,
                               ShopItem.imageName imageNameOfShopItem
-                            FROM Shop 
+                            FROM Shop
                             LEFT JOIN ShopItem 
                                 ON Shop.uuid=ShopItem.uuidShop
-                            WHERE Shop.uuid='${uuidShop}';`;
+                            WHERE Shop.uuid='${uuidShop}'
+                            LIMIT ${offset},${limit};`;
+
+        console.log('SHOP QUERY: ' + query);
 
         try {
             const shopFromDb = await database.query(query);
@@ -43,7 +46,7 @@ export class ShopDatabaseService {
 
             return mapShopFromDbToShop(shopFromDb);;
         } catch(error) {
-            throw new Error('[myfarmer] ShopDatabaseService.readShop - Error reading shop details from database: ' + error);
+            throw new Error('[myfarmer] ShopDatabaseService.readShop - Error reading shop items from database: ' + error);
         }
     }
 

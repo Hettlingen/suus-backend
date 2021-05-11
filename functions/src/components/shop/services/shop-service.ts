@@ -8,12 +8,17 @@ import {OfferItem} from "../model/offer/offer-item";
 
 export class ShopService {
 
-    static async getShop(uuidShop: string): Promise<Shop> {
+    private static LIMIT_ROWS_TO_READ = 6;
+
+    static async getShop(uuidShop: string, pageOnDatabase: number): Promise<Shop> {
         console.log('START: ShopService.getShop: ' + uuidShop);
         if (!uuidShop) throw new Error('[myfarmer] Shop-ID is required');
 
+        const limit = 2;
+        const offset = (pageOnDatabase - 1) * this.LIMIT_ROWS_TO_READ;
+
         try {
-            return await ShopDatabaseService.readShop(uuidShop);
+            return await ShopDatabaseService.readShop(uuidShop, offset, limit);
         } catch(error){
             throw new Error('[myfarmer] ShopService.getShop - Error reading Shop');
         }
