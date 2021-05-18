@@ -39,11 +39,13 @@ export class ShopDatabaseService {
             const shopFromDb = await database.query(query);
 
             if (shopFromDb === null || shopFromDb === undefined || shopFromDb.length === 0) {
+                console.log('[myfarmer] ShopDatabaseService.readShop - Shop doesnt exist on database');
                 throw new Error('[myfarmer] ShopDatabaseService.readShop - Shop doesnt exist on database');
             }
 
             return mapShopFromDbToShop(shopFromDb);;
         } catch(error) {
+            console.log('[myfarmer] ShopDatabaseService.readShop - Error reading shop items from database: ' + error);
             throw new Error('[myfarmer] ShopDatabaseService.readShop - Error reading shop items from database: ' + error);
         }
     }

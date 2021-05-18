@@ -21,7 +21,7 @@ export class FileHelper {
 
     public static decodeBase64ToBinary(contentBase64: string): Buffer {
         const lastIndexOfHeader = contentBase64.lastIndexOf(",");
-        var contentBase64WithoutHeaderInfo = contentBase64.slice(lastIndexOfHeader + 1);
+        const contentBase64WithoutHeaderInfo = contentBase64.slice(lastIndexOfHeader + 1);
         return Buffer.from(contentBase64WithoutHeaderInfo, 'base64');
     }
 

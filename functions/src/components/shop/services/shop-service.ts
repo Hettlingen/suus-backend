@@ -19,6 +19,7 @@ export class ShopService {
         try {
             return await ShopDatabaseService.readShop(uuidShop, offset, this.LIMIT_ROWS_TO_READ);
         } catch(error){
+            console.log('[myfarmer] ShopService.getShop - Error reading Shop: ' + error);
             throw new Error('[myfarmer] ShopService.getShop - Error reading Shop');
         }
     }
