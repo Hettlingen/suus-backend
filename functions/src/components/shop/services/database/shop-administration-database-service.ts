@@ -1,12 +1,9 @@
 import {RoleProducer} from "../../../identity-access-management/partner/model/roles/role-producer";
 import {database} from "../../../../index";
-import {
-    mapCustomerFromDbToCustomer,
-    mapDelivererFromDbToDeliverer,
-    mapProducerFromDbToProducer
-} from "../../mapper/shop-administration-mapper";
+import {mapCustomerFromDbToCustomer, mapDelivererFromDbToDeliverer} from "../../mapper/shop-administration-mapper";
 import {RoleDeliverer} from "../../../identity-access-management/partner/model/roles/role-deliverer";
 import {RoleCustomer} from "../../../identity-access-management/partner/model/roles/role-customer";
+import {ShopProducerMapper} from "../../mapper/shop-producer-mapper";
 
 export class ShopAdministrationDatabaseService {
 
@@ -97,17 +94,64 @@ export class ShopAdministrationDatabaseService {
         try {
             const producerFromDb = await database.query(query);
 
-            console.log('producerFromDb: ' + JSON.stringify(producerFromDb));
             if (producerFromDb === null || producerFromDb === undefined || producerFromDb.length === 0) {
                 const error = new Error('[myfarmer] ShopAdministrationDatabaseService.readProducer - Producer doesnt exist on database');
                 console.log(error);
                 throw error;
             }
 
-            return mapProducerFromDbToProducer(producerFromDb);;
+            return ShopProducerMapper.mapProducerFromDbToProducer(producerFromDb);;
         } catch(error) {
             console.log(error);
             throw new Error('[myfarmer] ShopAdministrationDatabaseService.readProducer - Error reading Producer from database: ' + error);
+        }
+    }
+
+    static async readProducers(): Promise<RoleProducer[]> {
+        console.log('START: ShopAdministrationDatabaseService.readProducers');
+
+        const query = `SELECT RoleProducer.uuidRole,
+                              RoleProducer.numberCompany,
+                              RoleProducer.description,
+                              RoleProducer.uuidImageLogo,
+                              RoleProducer.uuidImageBackground,
+                              Role.uuid uuidOfRole,
+                              Role.uuidPartner uuidPartnerOfRole,
+                              Role.uuidAddress uuidAddressOfRole,
+                              Partner.uuid uuidOfPartner,
+                              Partner.companyName companyNameOfPartner,
+                              Partner.firstName firstNameOfPartner,
+                              Partner.lastName lastNameOfPartner,
+                              Partner.nickname nicknameOfPartner,
+                              Partner.companyName companyNameOfPartner,
+                              Partner.birthdate birthdateOfPartner,
+                              Partner.genderCode genderCodeOfPartner,
+                              Partner.languageCode languageCodeOfPartner,
+                              Address.uuid uuidOfAddress,
+                              Address.street streetOfAddress,
+                              Address.streetNumber streetNumberOfAddress,
+                              Address.city cityOfAddress,
+                              Address.postalCode postalCodeOfAddress,
+                              Address.countryCode countryCodeOfAddress
+                            FROM RoleProducer
+                            LEFT JOIN Role ON RoleProducer.uuidRole=Role.uuid
+                            LEFT JOIN Partner ON Role.uuidPartner=Partner.uuid
+                            LEFT JOIN Address ON Role.uuidAddress=Address.uuid;`;
+
+        try {
+            const producersFromDb = await database.query(query);
+
+            console.log('allProducersFromDb: ' + JSON.stringify(producersFromDb));
+            if (producersFromDb === null || producersFromDb === undefined || producersFromDb.length === 0) {
+                const error = new Error('[myfarmer] ShopAdministrationDatabaseService.readProducers - Producers doesnt exist on database');
+                console.log(error);
+                throw error;
+            }
+
+            return ShopProducerMapper.mapProducersFromDbToProducers(producersFromDb);
+        } catch(error) {
+            console.log(error);
+            throw new Error('[myfarmer] ShopAdministrationDatabaseService.readProducers - Error reading all Producers from database: ' + error);
         }
     }
 

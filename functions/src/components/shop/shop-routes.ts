@@ -7,10 +7,12 @@ import {AuthenticationService} from "../identity-access-management/authenticatio
 import {Order} from "./model/order/order";
 import {OfferItem} from "./model/offer/offer-item";
 import {Delivery} from "./model/delivery/delivery";
-import {ShopAdministrationService} from "./services/shop-administration-service";
 import {RoleProducer} from "../identity-access-management/partner/model/roles/role-producer";
 import {RoleDeliverer} from "../identity-access-management/partner/model/roles/role-deliverer";
 import {RoleCustomer} from "../identity-access-management/partner/model/roles/role-customer";
+import {ShopCustomerService} from "./services/shop-customer-service";
+import {ShopProducerService} from "./services/shop-producer-service";
+import {ShopDelivererService} from "./services/shop-deliverer-service";
 
 export class ShopRoutes {
     public static routes(app: any): void {
@@ -102,7 +104,7 @@ export class ShopRoutes {
 
         // Get Customer
         app.route('/shop/customers/:uuidRoleCustomers').get(AuthenticationService.checkIfAuthenticated, async (request: Request, response: Response) => {
-            ShopAdministrationService.getCustomer(request.params.uuidRoleCustomers)
+            ShopCustomerService.getCustomer(request.params.uuidRoleCustomers)
                 .then(function(roleCustomer: RoleCustomer) {
                     response.status(200).send(roleCustomer);
                 }).catch(function(error: any){
@@ -110,9 +112,9 @@ export class ShopRoutes {
             });
         })
 
-        // Update Producer
+        // Update Customer
         app.route('/shop/customers').post(async (request: Request, response: Response) => {
-            ShopAdministrationService.updateCustomer(request.body)
+            ShopCustomerService.updateCustomer(request.body)
                 .then(function(roleCustomer: RoleCustomer) {
                     response.status(200).send(roleCustomer);
                 }).catch(function(error: any){
@@ -122,7 +124,7 @@ export class ShopRoutes {
 
         // Get Producer
         app.route('/shop/producers/:uuidRoleProducer').get(AuthenticationService.checkIfAuthenticated, async (request: Request, response: Response) => {
-            ShopAdministrationService.getProducer(request.params.uuidRoleProducer)
+            ShopProducerService.getProducer(request.params.uuidRoleProducer)
                 .then(function(roleProducer: RoleProducer) {
                     response.status(200).send(roleProducer);
                 }).catch(function(error: any){
@@ -130,9 +132,19 @@ export class ShopRoutes {
             });
         })
 
+        // Get all producers within an area
+        app.route('/shop/producers').get(async (request: Request, response: Response) => {
+            ShopProducerService.getProducersWithinArea(request.query.latitudeOfUserLocation, request.query.longitudeOfUserLocation, request.query.radiusOfProducerInKm)
+                .then(function(producersNearUsersLoaction: RoleProducer[]) {
+                    response.status(200).send(producersNearUsersLoaction);
+                }).catch(function(error: any){
+                response.status(404).send("Producers within area weren't found: " + error)
+            });
+        })
+
         // Update Producer
         app.route('/shop/producers').post(async (request: Request, response: Response) => {
-            ShopAdministrationService.updateProducer(request.body)
+            ShopProducerService.updateProducer(request.body)
                 .then(function(roleProducer: RoleProducer) {
                     response.status(200).send(roleProducer);
                 }).catch(function(error: any){
@@ -142,7 +154,7 @@ export class ShopRoutes {
 
         // Get Deliverer
         app.route('/shop/deliverers/:uuidRoleDeliverer').get(AuthenticationService.checkIfAuthenticated, async (request: Request, response: Response) => {
-            ShopAdministrationService.getDeliverer(request.params.uuidRoleDeliverer)
+            ShopDelivererService.getDeliverer(request.params.uuidRoleDeliverer)
                 .then(function(roleDeliverer: RoleDeliverer) {
                     response.status(200).send(roleDeliverer);
                 }).catch(function(error: any){
@@ -152,7 +164,7 @@ export class ShopRoutes {
 
         // Update Deliverer
         app.route('/shop/deliverers').post(async (request: Request, response: Response) => {
-            ShopAdministrationService.updateDeliverer(request.body)
+            ShopDelivererService.updateDeliverer(request.body)
                 .then(function(roleDeliverer: RoleDeliverer) {
                     response.status(200).send(roleDeliverer);
                 }).catch(function(error: any){
