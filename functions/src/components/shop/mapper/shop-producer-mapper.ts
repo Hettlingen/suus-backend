@@ -62,6 +62,8 @@ export class ShopProducerMapper {
             address.postalCode = producerFromDb.postalCodeOfAddress;
             address.city = producerFromDb.cityOfAddress;
             address.countryCode = producerFromDb.countryCodeOfAddress;
+            address.latitude = producerFromDb.latitudeOfAddress;
+            address.longitude = producerFromDb.longitudeOfAddress
             roleProducer.address = address;
 
             const partner = new Partner();

@@ -1,6 +1,4 @@
 import {Address} from "../../identity-access-management/partner/model/address";
-import {Client} from "@googlemaps/google-maps-services-js";
-import {RoleProducer} from "../../identity-access-management/partner/model/roles/role-producer";
 
 export class LocationService {
 
@@ -21,27 +19,28 @@ export class LocationService {
         return filteredAddressesWithinRadius;
     }
 
-    static async getAllProducersWithinRadius(listRoleProducers: RoleProducer[], latitudeOfCenter: number, longitudeOfCenter: number, radiusInKm: number): Promise<RoleProducer[]> {
-        console.log('START: LocationService.getAllProducersWithinRadius');
-        // const center = {latitude: latitudeOfCenter, longitude: longitudeOfCenter};
-
-        const googleMapsService = new Client({});
-
-        googleMapsService
-            .elevation({
-                params: {
-                    locations: [{ lat: 45, lng: -110 }],
-                    key: "asdf",
-                },
-                timeout: 1000, // milliseconds
-            })
-            .then((r) => {
-                console.log(r.data.results[0].elevation);
-            })
-            .catch((e) => {
-                console.log(e.response.data.error_message);
-            });
-
-        return [];
-    }
+    // static async getAllProducersWithinRadius(
+    //     listRoleProducers: RoleProducer[],
+    //     centerLocation: LatLng,
+    //     radiusInKm: number): Promise<RoleProducer[]> {
+    //
+    //     console.log('START: LocationService.getAllProducersWithinRadius');
+    //     const googleMapsService = new Client({});
+    //     const destinations = [47.5080623, 8.7571073];
+    //     const request = {
+    //         origins: centerLocation,
+    //         destinations: [destinations],
+    //         travelMode: TravelMode.driving,
+    //     };
+    //
+    //     googleMapsService.distancematrix(request)
+    //         .then((r) => {
+    //             console.log('Distanz ist: ');
+    //         })
+    //         .catch((e) => {
+    //             console.log('Fehler beim berechnen der Distanz');
+    //         });;
+    //
+    //     return [];
+    // }
 }

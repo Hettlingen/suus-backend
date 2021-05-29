@@ -132,7 +132,9 @@ export class ShopAdministrationDatabaseService {
                               Address.streetNumber streetNumberOfAddress,
                               Address.city cityOfAddress,
                               Address.postalCode postalCodeOfAddress,
-                              Address.countryCode countryCodeOfAddress
+                              Address.countryCode countryCodeOfAddress,
+                              Address.latitude latitudeOfAddress,
+                              Address.longitude longitudeOfAddress
                             FROM RoleProducer
                             LEFT JOIN Role ON RoleProducer.uuidRole=Role.uuid
                             LEFT JOIN Partner ON Role.uuidPartner=Partner.uuid
