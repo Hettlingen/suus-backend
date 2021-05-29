@@ -39,6 +39,7 @@ export class ShopProducerService {
 
         try {
             listRoleProducers = await ShopAdministrationDatabaseService.readProducers();
+            // todo at the moment we calculate this in the frontend
             // listRoleProducers = await LocationService.getAllProducersWithinRadius(listRoleProducers, latitudeOfUserLocation, longitudeOfUserLocation, 20);
         } catch(error){
             throw new Error('[myfarmer] ShopProducerService.getProducersWithinArea - Error reading all producer');
