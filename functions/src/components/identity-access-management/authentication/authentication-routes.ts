@@ -15,16 +15,16 @@ export class AuthenticationRoutes {
 
     public static routes(app: any): void {
 
-        app.route('/user-account/login').post((request: Request, response: Response) => {
+        app.route('/user/login').post((request: Request, response: Response) => {
             AuthenticationService.login(request.body.userName, request.body.password)
                 .then(function(roleUser: RoleUser) {
                     response.status(200).send(roleUser);
                 }).catch(function(error: any){
-                    response.status(401).send("User isn't authorized: " + error)
+                    response.status(401).send("User isn't logged in: " + error)
             });
         })
 
-        app.route('/user-account/register').post(async (request: Request, response: Response) => {
+        app.route('/user/register').post(async (request: Request, response: Response) => {
             AuthenticationService.register(request.body)
                 .then(function(userAccount: UserAccount) {
                     response.status(200).send(userAccount);
@@ -33,12 +33,12 @@ export class AuthenticationRoutes {
             });
         })
 
-        app.route('/user-account/:uuidUserAccount').get(AuthenticationService.checkIfAuthenticated, (request: Request, response: Response) => {
-            AuthenticationService.getUserAccount(request.params.uuidUserAccount)
-                .then(function(userAccount: UserAccount) {
-                    response.status(200).send(userAccount);
+        app.route('/user/:uuidRoleUser').get(AuthenticationService.checkIfAuthenticated, (request: Request, response: Response) => {
+            AuthenticationService.getUser(request.params.uuidRoleUser)
+                .then(function(roleUser: RoleUser) {
+                    response.status(200).send(roleUser);
                 }).catch(function(error: any){
-                response.status(404).send("User-Account wasn't found: " + error)
+                response.status(404).send("User wasn't found: " + error)
             });
         })
     }

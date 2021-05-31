@@ -6,7 +6,7 @@ import {UserAccount} from "../model/user-account";
 export const mapUserFromDbToUser = (userFromDb: any) => {
     const roleUser = new RoleUser();
 
-    roleUser.uuid = userFromDb[0].uuid;
+    roleUser.uuid = userFromDb[0].uuidRole;
     roleUser.uuidAvatar = userFromDb[0].uuidAvatar;
 
     const userAccount = new UserAccount();

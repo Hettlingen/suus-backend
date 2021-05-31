@@ -59,6 +59,18 @@ export class AuthenticationService {
         return userAccount;
     }
 
+    public static async getUser(uuidRoleUser: string): Promise<RoleUser> {
+        console.log('START AuthenticationService.getUser: ' + uuidRoleUser);
+
+        const roleUser = await AuthenticationDatabseService.readUserByUuid(uuidRoleUser);
+
+        if (roleUser === null || roleUser === undefined) {
+            throw new Error('[myfarmer] AuthenticationService.getUser - User not found');
+        }
+
+        return roleUser;
+    }
+
     private static async isUserAccountExisting(userName: string): Promise<boolean> {
         const userAccount = await AuthenticationDatabseService.readUserAccountByUserName(userName);
 
