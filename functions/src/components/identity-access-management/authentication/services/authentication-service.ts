@@ -20,14 +20,15 @@ export class AuthenticationService {
             throw new Error('[AuthenticationService] Bad Username or Password');
         }
 
-        const authenticationToken = this.verifyPassword(password, userAccount.password, userAccount.uuid);
-
-        const roleUser = await AuthenticationDatabseService.readUserByUserAccountUuid(userAccount.uuid);
-        roleUser.userAccount.authenticationToken = authenticationToken;
-
-        console.log('RoleUser nach mapping: ' + JSON.stringify(roleUser));
-
-        return roleUser;
+        try {
+            const authenticationToken = this.verifyPassword(password, userAccount.password, userAccount.uuid);
+            const roleUser = await AuthenticationDatabseService.readUserByUserAccountUuid(userAccount.uuid);
+            roleUser.userAccount.authenticationToken = authenticationToken;
+            return roleUser;
+        } catch (error) {
+            console.log('[myfarmer] AuthenticationService.login - Error login user: ' + error);
+            throw new Error('[myfarmer] AuthenticationService.register - Error login user: ' + error);
+        }
     };
 
     public static async register(userAccount: UserAccount): Promise<UserAccount> {
