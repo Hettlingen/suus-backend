@@ -5,7 +5,6 @@ import {PaymentService} from "./services/payment-service";
 import {ShopItem} from "./model/shop-item";
 import {AuthenticationService} from "../identity-access-management/authentication/services/authentication-service";
 import {Order} from "./model/order/order";
-import {OfferItem} from "./model/offer/offer-item";
 import {Delivery} from "./model/delivery/delivery";
 import {RoleProducer} from "../identity-access-management/partner/model/roles/role-producer";
 import {RoleDeliverer} from "../identity-access-management/partner/model/roles/role-deliverer";
@@ -59,24 +58,6 @@ export class ShopRoutes {
                     response.status(200).send(successful);
                 }).catch(function(error: any){
                 response.status(404).send("Payment wasn't executed: " + error)
-            });
-        })
-
-        app.route('/offer-items/user/:uuidUserAccount').get(AuthenticationService.checkIfAuthenticated, async (request: Request, response: Response) => {
-            ShopService.getOfferItems(request.params.uuidUserAccount)
-                .then(function(offerItems: Array<OfferItem>) {
-                    response.status(200).send(offerItems);
-                }).catch(function(error: any){
-                response.status(404).send("Offer-items weren't found: " + error)
-            });
-        })
-
-        app.route('/offer-items/:uuidOffer').get(AuthenticationService.checkIfAuthenticated, async (request: Request, response: Response) => {
-            ShopService.getOfferItem(request.params.uuidOffer)
-                .then(function(offerItem: OfferItem) {
-                    response.status(200).send(offerItem);
-                }).catch(function(error: any){
-                response.status(404).send("Offer-item isn't found: " + error)
             });
         })
 

@@ -1,8 +1,8 @@
 import {database} from "../../../../index";
 import {Shop} from "../../model/shop";
 import {
-    mapDeliveriesFromDbToDeliveries, mapDeliveryFromDbToDelivery,
-    mapOfferItemFromDbToOfferItem, mapOfferItemsFromDbToOfferItems,
+    mapDeliveriesFromDbToDeliveries,
+    mapDeliveryFromDbToDelivery,
     mapOrderFromDbToOrder,
     mapOrdersFromDbToOrders,
     mapShopFromDbToShop,
@@ -11,7 +11,6 @@ import {
 import {ShopItem} from "../../model/shop-item";
 import {Order} from "../../model/order/order";
 import {OrderState} from "../../model/order/order-state";
-import {OfferItem} from "../../model/offer/offer-item";
 import {Delivery} from "../../model/delivery/delivery";
 import {RoleProducer} from "../../../identity-access-management/partner/model/roles/role-producer";
 
@@ -166,74 +165,6 @@ export class ShopDatabaseService {
             return mapOrderFromDbToOrder(orderFromDb);
         } catch(error) {
             throw new Error('[myfarmer] ShopDatabaseService.readOrder - Error reading order from database: ' + error);
-        }
-    }
-
-    static async readOfferItems(uuidUserAccount: string): Promise<Array<OfferItem>> {
-        console.log('START: ShopDatabaseService.readOfferItems: ' + JSON.stringify(uuidUserAccount));
-        if (!uuidUserAccount) throw new Error('[myfarmer] ShopDatabaseService.readOfferItems - Wrong parameters');
-
-        const query = `SELECT OfferItem.uuid,
-                              OfferItem.number,
-                              OfferItem.state,
-                              ShopItem.uuid uuidOfShopItem,
-                              ShopItem.name nameOfShopItem,
-                              ShopItem.description descriptionOfShopItem,
-                              ShopItem.category categoryOfShopItem,
-                              ShopItem.price priceOfShopItem,
-                              ShopItem.currencyPrice currencyPriceOfShopItem
-                            FROM Orders
-                            LEFT JOIN ShopItem
-                                ON OfferItem.uuidShopItem=ShopItem.uuid
-                            WHERE OfferItem.uuidUserAccount='${uuidUserAccount}';`;
-
-        try {
-            const offerItemsFromDb = await database.query(query);
-
-            console.log('OfferItems with Shopitem: ' + JSON.stringify(offerItemsFromDb));
-
-            if (offerItemsFromDb === null || offerItemsFromDb === undefined) {
-                throw new Error('[myfarmer] ShopDatabaseService.readOrders - Orders dont exist on database');
-            }
-
-            return mapOfferItemsFromDbToOfferItems(offerItemsFromDb);
-        } catch(error) {
-            console.log('[myfarmer] ShopDatabaseService.readOfferItems - Error reading orders from database: ' + error);
-            throw new Error('[myfarmer] ShopDatabaseService.readOfferItems - Error reading orders from database: ' + error);
-        }
-    }
-
-    static async readOfferItem(uuidOfferItem: string): Promise<OfferItem> {
-        console.log('START: ShopDatabaseService.readOfferItem: ' + JSON.stringify(uuidOfferItem));
-        if (!uuidOfferItem) throw new Error('[myfarmer] ShopDatabaseService.readOfferItem - Wrong parameters');
-
-        const query = `SELECT OfferItem.uuid,
-                              OfferItem.number,
-                              OfferItem.state,
-                              OfferItem.quantity,
-                              ShopItem.uuid uuidOfShopItem,
-                              ShopItem.name nameOfShopItem,
-                              ShopItem.description descriptionOfShopItem,
-                              ShopItem.category categoryOfShopItem,
-                              ShopItem.price priceOfShopItem,
-                              ShopItem.currencyPrice currencyPriceOfShopItem
-                            FROM OfferItem
-                            LEFT JOIN ShopItem
-                                ON OfferItem.uuidShopItem=ShopItem.uuid
-                            WHERE OfferItem.uuid='${uuidOfferItem}';`;
-
-        try {
-            const offerItemFromDb = await database.query(query);
-
-            console.log('OfferItem with Shopitem: ' + JSON.stringify(offerItemFromDb));
-
-            if (offerItemFromDb === null || offerItemFromDb === undefined) {
-                throw new Error('[myfarmer] ShopDatabaseService.readOfferItem - Offer-item doesnt exist on database');
-            }
-
-            return mapOfferItemFromDbToOfferItem(offerItemFromDb[0]);
-        } catch(error) {
-            throw new Error('[myfarmer] ShopDatabaseService.readOfferItem - Error reading offer-item from database: ' + error);
         }
     }
 

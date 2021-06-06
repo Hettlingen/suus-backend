@@ -4,7 +4,6 @@ import {ShopItem} from "../model/shop-item";
 import {Order} from "../model/order/order";
 import {OrderState} from "../model/order/order-state";
 import {Delivery} from "../model/delivery/delivery";
-import {OfferItem} from "../model/offer/offer-item";
 
 export class ShopService {
 
@@ -65,25 +64,6 @@ export class ShopService {
         }
     }
 
-    static async getOfferItems(uuidUserAccount: string): Promise<Array<OfferItem>> {
-        console.log('START: ShopService.getOfferItems: ' + JSON.stringify(uuidUserAccount));
-
-        try {
-            return await ShopDatabaseService.readOfferItems(uuidUserAccount);
-        } catch(error){
-            throw new Error('[myfarmer] ShopService.getOfferItems - Error reading offer-items of user: ' + uuidUserAccount);
-        }
-    }
-
-    static async getOfferItem(uuidOfferItem: string): Promise<OfferItem> {
-        console.log('START: ShopService.getOfferItem: ' + JSON.stringify(uuidOfferItem));
-
-        try {
-            return await ShopDatabaseService.readOfferItem(uuidOfferItem);
-        } catch(error){
-            throw new Error('[myfarmer] ShopService.getOfferItem - Error reading offer-item with uuid: ' + uuidOfferItem);
-        }
-    }
     static async getDeliveries(uuidUserAccount: string): Promise<Array<Delivery>> {
         console.log('START: ShopService.getDeliveries: ' + JSON.stringify(uuidUserAccount));
 
