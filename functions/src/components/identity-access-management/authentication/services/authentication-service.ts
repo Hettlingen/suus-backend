@@ -21,13 +21,13 @@ export class AuthenticationService {
         }
 
         try {
-            const authenticationToken = this.verifyPassword(password, userAccount.password, userAccount.uuid);
+            const authenticationToken = await this.verifyPassword(password, userAccount.password, userAccount.uuid);
             const roleUser = await AuthenticationDatabseService.readUserByUserAccountUuid(userAccount.uuid);
             roleUser.userAccount.authenticationToken = authenticationToken;
             return roleUser;
         } catch (error) {
             console.log('[myfarmer] AuthenticationService.login - Error login user: ' + error);
-            throw new Error('[myfarmer] AuthenticationService.register - Error login user: ' + error);
+            throw new Error('[myfarmer] AuthenticationService.login - Error login user: ' + error);
         }
     };
 
@@ -43,8 +43,8 @@ export class AuthenticationService {
         try {
             return AuthenticationDatabseService.createUserAccount(userAccount);
         } catch (error) {
-            console.log('[myfarmer] AuthenticationService.register - Error create new user-account: ' + error);
-            throw new Error('[myfarmer] AuthenticationService.register - Error create new user-account: ' + error);
+            console.log('[myfarmer] AuthenticationService.register - Error register user: ' + error);
+            throw new Error('[myfarmer] AuthenticationService.register - Error register user: ' + error);
         }
     }
 
@@ -114,10 +114,10 @@ export class AuthenticationService {
         });
     };
 
-    private static verifyPassword(passwordInput: string, passwordUserAccount: string, uuidUserAccount: string): AuthenticationToken {
+    private static  async verifyPassword(passwordInput: string, passwordUserAccount: string, uuidUserAccount: string): Promise<AuthenticationToken> {
         // because in the jwt token the value is milliseconds or you can use "2 days", "10h", "7d"
         const jwtExpiresIn = '1h';
-        const match = bcrypt.compare(passwordInput, passwordUserAccount);
+        const match = await bcrypt.compare(passwordInput, passwordUserAccount);
 
         if (!match) {
             console.log('[AuthenticationService] Bad Username or Password');
