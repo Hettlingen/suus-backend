@@ -60,6 +60,13 @@ export class AuthenticationService {
         return userAccount;
     }
 
+    public static async updateUser(roleUser: RoleUser): Promise<RoleUser> {
+        console.log('START AuthenticationService.updateUser');
+
+        // TODO Update user on database
+        return new RoleUser();
+    }
+
     public static async getUser(uuidRoleUser: string): Promise<RoleUser> {
         console.log('START AuthenticationService.getUser: ' + uuidRoleUser);
 

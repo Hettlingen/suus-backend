@@ -33,6 +33,15 @@ export class AuthenticationRoutes {
             });
         })
 
+        app.route('/user').put(AuthenticationService.checkIfAuthenticated, (request: Request, response: Response) => {
+            AuthenticationService.updateUser(request.body)
+                .then(function(roleUser: RoleUser) {
+                    response.status(200).send(roleUser);
+                }).catch(function(error: any){
+                response.status(404).send("User wasn't found: " + error)
+            });
+        })
+
         app.route('/user/:uuidRoleUser').get(AuthenticationService.checkIfAuthenticated, (request: Request, response: Response) => {
             AuthenticationService.getUser(request.params.uuidRoleUser)
                 .then(function(roleUser: RoleUser) {
