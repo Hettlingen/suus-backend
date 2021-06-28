@@ -188,8 +188,6 @@ export class ShopDatabaseService {
         try {
             const deliveriesFromDb = await database.query(query);
 
-            console.log('Deliveries with Order: ' + JSON.stringify(deliveriesFromDb));
-
             if (deliveriesFromDb === null || deliveriesFromDb === undefined) {
                 throw new Error('[myfarmer] ShopDatabaseService.readDeliveries - Deliveries dont exist on database');
             }
@@ -221,8 +219,6 @@ export class ShopDatabaseService {
 
         try {
             const deliveryFromDb = await database.query(query);
-
-            console.log('Delivery with Order: ' + JSON.stringify(deliveryFromDb));
 
             if (deliveryFromDb === null || deliveryFromDb === undefined) {
                 throw new Error('[myfarmer] ShopDatabaseService.readDelivery - Delivery doesnt exist on database');

@@ -42,7 +42,6 @@ export class ShopProducerMapper {
 
     static async mapProducersFromDbToProducers(producersFromDb: any): Promise<RoleProducer[]> {
         const listRoleProducers = [];
-        console.log('Start mapping producers');
         for (const producerFromDb of producersFromDb) {
             const roleProducer = new RoleProducer();
             roleProducer.uuid = producerFromDb.uuid;

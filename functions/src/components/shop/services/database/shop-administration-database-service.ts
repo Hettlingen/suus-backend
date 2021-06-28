@@ -143,7 +143,6 @@ export class ShopAdministrationDatabaseService {
         try {
             const producersFromDb = await database.query(query);
 
-            console.log('allProducersFromDb: ' + JSON.stringify(producersFromDb));
             if (producersFromDb === null || producersFromDb === undefined || producersFromDb.length === 0) {
                 const error = new Error('[myfarmer] ShopAdministrationDatabaseService.readProducers - Producers doesnt exist on database');
                 console.log(error);
@@ -197,7 +196,6 @@ export class ShopAdministrationDatabaseService {
         try {
             const delivererFromDb = await database.query(query);
 
-            console.log('delivererFromDb: ' + JSON.stringify(delivererFromDb));
             if (delivererFromDb === null || delivererFromDb === undefined || delivererFromDb.length === 0) {
                 const error = new Error('[myfarmer] ShopAdministrationDatabaseService.readDeliverer - Deliverer doesnt exist on database');
                 throw error;
