@@ -15,7 +15,7 @@ export class BotService {
         const sessionPath = client.projectLocationAgentSessionPath(
             'scoop-backend-3000',
             location,
-            'myfarmer-dialogflow',
+            'c08f919c-0164-4610-bf4e-677ab284e70c',
             sessionId
         );
 
