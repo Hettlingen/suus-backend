@@ -5,7 +5,7 @@ const {SessionsClient} = require('@google-cloud/dialogflow-cx');
 
 export class BotService {
 
-    static async sendMessage(message: Message) {
+    static async sendMessage(message: Message): Promise<Message> {
         // A unique identifier for the given session
         const sessionId = uuid.v4();
         const location = 'global';
@@ -35,16 +35,21 @@ export class BotService {
         };
 
         // Send request and log result
-        const responses = await client.detectIntent(request);
+        const [response] = await client.detectIntent(request);
+        const responseMessage = new Message();
+        responseMessage.avatar = 'farmy.svg';
 
-        console.log('Detected intent');
-        const result = responses[0].queryResult;
-        console.log(`  Query: ${result.queryText}`);
-        console.log(`  Response: ${result.fulfillmentText}`);
-        if (result.intent) {
-            console.log(`  Intent: ${result.intent.displayName}`);
-        } else {
-            console.log(`  No intent matched.`);
+        for (const messageOfResponse of response.queryResult.responseMessages) {
+            if (messageOfResponse.text) {
+                responseMessage.content = responseMessage.content.concat(messageOfResponse.text.text);
+            }
         }
+
+        if (response.queryResult.match.intent) {
+            console.log(`>>>>> Matched Intent: ${response.queryResult.match.intent.displayName}`);
+        }
+        console.log(`>>>>> Current Page: ${response.queryResult.currentPage.displayName}`);
+
+        return responseMessage;
     }
 }

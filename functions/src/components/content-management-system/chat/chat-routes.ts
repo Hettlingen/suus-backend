@@ -1,5 +1,6 @@
 import {Request, Response} from "express";
 import {BotService} from "./services/bot-service";
+import {Message} from "./model/message";
 
 export class ChatRoutes {
     public static routes(app: any): void {
@@ -7,10 +8,10 @@ export class ChatRoutes {
         // Send a message to dialogflow
         app.route('/chats').post(async (request: Request, response: Response) => {
             BotService.sendMessage(request.body)
-                .then(function() {
-                    response.status(200).send('Message translated successful in dialogflow');
+                .then(function(responseMessage: Message) {
+                    response.status(200).send(responseMessage);
                 }).catch(function(error: any){
-                    console.log('Error sendMessage: ' + error);
+                    console.log('Message not successful translated: ' + error);
                     response.status(404).send("Message not successful translated: " + error)
             });
         })
