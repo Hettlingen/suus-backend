@@ -2,8 +2,9 @@ import {Shop} from "../model/shop";
 import {ShopDatabaseService} from "./database/shop-database-service";
 import {ShopItem} from "../model/shop-item";
 import {Order} from "../model/order/order";
-import {OrderState} from "../model/order/order-state";
 import {Delivery} from "../model/delivery/delivery";
+import {ShoppingCart} from "../model/order/shopping-cart";
+import {OrderState} from "../model/order/order-state";
 
 export class ShopService {
 
@@ -34,6 +35,9 @@ export class ShopService {
         }
     }
 
+    /**************************************************/
+    /* ORDERS                                         */
+    /**************************************************/
     static async getOrders(uuidUserAccount: string): Promise<Array<Order>> {
         console.log('START: ShopService.getOrders: ' + JSON.stringify(uuidUserAccount));
 
@@ -54,16 +58,9 @@ export class ShopService {
         }
     }
 
-    static async getShoppingCart(uuidUserAccount: string): Promise<Order> {
-        console.log('START: ShopService.getShoppingCart: ' + JSON.stringify(uuidUserAccount));
-
-        try {
-            return await ShopDatabaseService.readOrderByUserAccountUuidAndState(uuidUserAccount, OrderState.SHOPPING_CART);
-        } catch(error){
-            throw new Error('[myfarmer] ShopService.getShoppingCart - Error reading Orders of user: ' + uuidUserAccount);
-        }
-    }
-
+    /**************************************************/
+    /* DELIVERIES                                     */
+    /**************************************************/
     static async getDeliveries(uuidUserAccount: string): Promise<Array<Delivery>> {
         console.log('START: ShopService.getDeliveries: ' + JSON.stringify(uuidUserAccount));
 
@@ -82,5 +79,30 @@ export class ShopService {
         } catch(error){
             throw new Error('[myfarmer] ShopService.getDelivery - Error reading delivery with uuid: ' + uuidDelivery);
         }
+    }
+
+    /**************************************************/
+    /* SHOPPING CART                                  */
+    /**************************************************/
+    static async createShoppingCart(uuidUserAccount: string): Promise<ShoppingCart> {
+        return new ShoppingCart();
+    }
+
+    static async getShoppingCart(uuidUserAccount: string): Promise<ShoppingCart> {
+        console.log('START: ShopService.getShoppingCart: ' + JSON.stringify(uuidUserAccount));
+
+        try {
+            return await ShopDatabaseService.readOrderByUserAccountUuidAndState(uuidUserAccount, OrderState.SHOPPING_CART);
+        } catch(error){
+            throw new Error('[myfarmer] ShopService.getShoppingCart - Error reading Orders of user: ' + uuidUserAccount);
+        }
+    }
+
+    static async saveShoppingCart(shoppingCart: ShoppingCart): Promise<ShoppingCart> {
+        return new ShoppingCart();
+    }
+
+    static async deleteShoppingCart(uuidUserAccount: string): Promise<ShoppingCart> {
+        return new ShoppingCart();
     }
 }

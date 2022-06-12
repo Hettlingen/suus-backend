@@ -28,7 +28,7 @@ export class GalleryService {
             return image;
         } catch (error) {
             throw new Error('[myfarmer] GalleryService.getImage - Error reading Image with uuid '
-                + uuidImage + ', error: ' +
+                + uuidImage + ', error: '
                 + error);
         }
 
@@ -47,7 +47,7 @@ export class GalleryService {
         } catch (error) {
             // todo in case of an error we have to delete the image in the gcp-bucket
             throw new Error('[myfarmer] GalleryService.saveImage - Error save Image with uuid '
-                + image.uuid + ', error: ' +
+                + image.uuid + ', error: '
                 + error);
         }
     }
@@ -60,7 +60,7 @@ export class GalleryService {
             return await GalleryDatabseService.deleteImage(uuidImage);
         } catch (error) {
             throw new Error('[myfarmer] GalleryService.deleteImage - Error deleting Image with uuid '
-                + uuidImage + ', error: ' +
+                + uuidImage + ', error: '
                 + error);
         }
     }

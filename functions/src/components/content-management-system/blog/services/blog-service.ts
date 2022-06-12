@@ -11,7 +11,7 @@ export class BlogService {
 
         try {
             return await BlogDatabseService.readBlog(uuidBlog);
-        } catch(error){
+        } catch(error) {
             throw new Error('[myfarmer] BlogService.getBlog - Error reading Blog' + error);
         }
     }
@@ -22,9 +22,9 @@ export class BlogService {
 
         try {
             return await BlogDatabseService.readPost(uuidPost);
-        } catch(error){
+        } catch(error) {
             throw new Error('[myfarmer] BlogService.getPost - Error reading Post with uuid '
-                + uuidPost + ', error: ' +
+                + uuidPost + ', error: '
                 + error);
         }
     }
@@ -39,7 +39,7 @@ export class BlogService {
                 post);
         } catch(error){
             throw new Error('[myfarmer] BlogService.createPost - Error creating Post for Blog: '
-                + post.blog.uuid + ', error: ' +
+                + post.blog.uuid + ', error: '
                 + error);
         }
     }
@@ -51,7 +51,7 @@ export class BlogService {
             return await BlogDatabseService.updatePost(post);
         } catch(error){
             throw new Error('[myfarmer] BlogService.updatePost - Error creating Post for Blog: '
-                + post.blog.uuid + ', error: ' +
+                + post.blog.uuid + ', error: '
                 + error);
         }
     }
@@ -63,7 +63,7 @@ export class BlogService {
             return await BlogDatabseService.deletePost(uuidPost);
         } catch(error){
             throw new Error('[myfarmer] BlogService.updatePost - Error deleting Post: '
-                + uuidPost + ', error: ' +
+                + uuidPost + ', error: '
                 + error);
         }
     }

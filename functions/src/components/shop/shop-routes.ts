@@ -16,8 +16,11 @@ import {ShopDelivererService} from "./services/shop-deliverer-service";
 export class ShopRoutes {
     public static routes(app: any): void {
 
+        // --------------------------------------------------
+        // SHOP / SHOPITEM
+        // --------------------------------------------------
         app.route('/shops/:uuidShop').get(async (request: Request, response: Response) => {
-            ShopService.getShop(request.params.uuidShop, request.query.pageOnDatabase)
+            ShopService.getShop(request.params.uuidShop, Number(request.query.pageOnDatabase))
                 .then(function(shop: Shop) {
                     response.status(200).send(shop);
                 }).catch(function(error: any){
@@ -34,6 +37,15 @@ export class ShopRoutes {
             });
         })
 
+        // --------------------------------------------------
+        // SHOPPING CART
+        // --------------------------------------------------
+
+
+
+        // --------------------------------------------------
+        // ORDERS
+        // --------------------------------------------------
         app.route('/orders/user/:uuidUserAccount').get(AuthenticationService.checkIfAuthenticated, async (request: Request, response: Response) => {
             ShopService.getOrders(request.params.uuidUserAccount)
                 .then(function(orders: Array<Order>) {
@@ -52,6 +64,9 @@ export class ShopRoutes {
             });
         })
 
+        // --------------------------------------------------
+        // CHECKOUT
+        // --------------------------------------------------
         app.route('/checkout').post(async (request: Request, response: Response) => {
             PaymentService.pay(request.body)
                 .then(function(successful: boolean) {
@@ -61,6 +76,9 @@ export class ShopRoutes {
             });
         })
 
+        // --------------------------------------------------
+        // DELIVERIES
+        // --------------------------------------------------
         app.route('/deliveries/user/:uuidUserAccount').get(AuthenticationService.checkIfAuthenticated, async (request: Request, response: Response) => {
             ShopService.getDeliveries(request.params.uuidUserAccount)
                 .then(function(deliveries: Array<Delivery>) {
@@ -80,10 +98,9 @@ export class ShopRoutes {
         })
 
         // --------------------------------------------------
-        // SHOP ADMINISTRATION
+        // CUSTOMERS
         // --------------------------------------------------
 
-        // Get Customer
         app.route('/shop/customers/:uuidRoleCustomers').get(AuthenticationService.checkIfAuthenticated, async (request: Request, response: Response) => {
             ShopCustomerService.getCustomer(request.params.uuidRoleCustomers)
                 .then(function(roleCustomer: RoleCustomer) {
@@ -93,7 +110,6 @@ export class ShopRoutes {
             });
         })
 
-        // Update Customer
         app.route('/shop/customers').post(async (request: Request, response: Response) => {
             ShopCustomerService.updateCustomer(request.body)
                 .then(function(roleCustomer: RoleCustomer) {
@@ -103,7 +119,9 @@ export class ShopRoutes {
             });
         })
 
-        // Get Producer
+        // --------------------------------------------------
+        // PRODUCERS
+        // --------------------------------------------------
         app.route('/shop/producers/:uuidRoleProducer').get(AuthenticationService.checkIfAuthenticated, async (request: Request, response: Response) => {
             ShopProducerService.getProducer(request.params.uuidRoleProducer)
                 .then(function(roleProducer: RoleProducer) {
@@ -115,7 +133,7 @@ export class ShopRoutes {
 
         // Get all producers within an area
         app.route('/shop/producers').get(async (request: Request, response: Response) => {
-            ShopProducerService.getProducersWithinArea(request.query.latitudeOfUserLocation, request.query.longitudeOfUserLocation, request.query.radiusOfProducerInKm)
+            ShopProducerService.getProducersWithinArea(Number(request.query.latitudeOfUserLocation), Number(request.query.longitudeOfUserLocation), Number(request.query.radiusOfProducerInKm))
                 .then(function(producersNearUsersLoaction: RoleProducer[]) {
                     response.status(200).send(producersNearUsersLoaction);
                 }).catch(function(error: any){
@@ -123,7 +141,6 @@ export class ShopRoutes {
             });
         })
 
-        // Update Producer
         app.route('/shop/producers').post(async (request: Request, response: Response) => {
             ShopProducerService.updateProducer(request.body)
                 .then(function(roleProducer: RoleProducer) {
@@ -133,7 +150,10 @@ export class ShopRoutes {
             });
         })
 
-        // Get Deliverer
+        // --------------------------------------------------
+        // DELIVERERS
+        // --------------------------------------------------
+
         app.route('/shop/deliverers/:uuidRoleDeliverer').get(AuthenticationService.checkIfAuthenticated, async (request: Request, response: Response) => {
             ShopDelivererService.getDeliverer(request.params.uuidRoleDeliverer)
                 .then(function(roleDeliverer: RoleDeliverer) {
@@ -143,7 +163,6 @@ export class ShopRoutes {
             });
         })
 
-        // Update Deliverer
         app.route('/shop/deliverers').post(async (request: Request, response: Response) => {
             ShopDelivererService.updateDeliverer(request.body)
                 .then(function(roleDeliverer: RoleDeliverer) {

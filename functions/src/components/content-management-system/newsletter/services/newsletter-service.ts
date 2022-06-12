@@ -18,7 +18,7 @@ export class NewsletterService {
                 newsletterOrder);
         } catch(error){
             throw new Error('[myfarmer] NewsletterService.subscribeNewsletter - Error subscribe NewsletterOrder: '
-                + newsletterOrder.email + ', error: ' +
+                + newsletterOrder.email + ', error: '
                 + error);
         }
 
@@ -41,7 +41,7 @@ export class NewsletterService {
             return await NewsletterDatabseService.deleteNewsletterOrder(newsletterOrder.email);
         } catch(error){
             throw new Error('[myfarmer] NewsletterService.unsubscribeNewsletter - Error unsubscribe NewsletterOrder vor user: '
-                + newsletterOrder.email + ', error: ' +
+                + newsletterOrder.email + ', error: '
                 + error);
         }
     }

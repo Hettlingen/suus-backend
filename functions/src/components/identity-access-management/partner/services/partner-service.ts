@@ -14,7 +14,7 @@ export class PartnerService {
             return await PartnerDatabseService.createPerson(person);
         } catch(error){
             throw new Error('[myfarmer] PartnerService.createPerson - Error creating person: '
-                + person.uuid + ', error: ' +
+                + person.uuid + ', error: '
                 + error);
         }
     }
@@ -37,7 +37,7 @@ export class PartnerService {
             return await PartnerDatabseService.createFriend(uuidPerson);
         } catch(error){
             throw new Error('[myfarmer] PartnerService.addFriend - Error creating Post for Blog: '
-                + uuidPerson + ', error: ' +
+                + uuidPerson + ', error: '
                 + error);
         }
     }
@@ -49,7 +49,7 @@ export class PartnerService {
             return await PartnerDatabseService.deleteFriend(uuidPerson);
         } catch(error){
             throw new Error('[myfarmer] PartnerService.removeFriend - Error deleting Post: '
-                + uuidPerson + ', error: ' +
+                + uuidPerson + ', error: '
                 + error);
         }
     }

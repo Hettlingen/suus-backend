@@ -55,7 +55,7 @@ export class NotificationService {
             return await NotificationDatabseService.deactivateNotifications(uuidRoleUser);
         } catch(error){
             throw new Error('[myfarmer] NotificationService.deactivateNotifications - Error deactivating notifications vor user: '
-                + uuidRoleUser + ', error: ' +
+                + uuidRoleUser + ', error: '
                 + error);
         }
     }
