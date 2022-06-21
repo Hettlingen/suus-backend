@@ -38,6 +38,10 @@ export class ShopService {
     /**************************************************/
     /* ORDERS                                         */
     /**************************************************/
+    static async createOrder(order: Order): Promise<Order> {
+        return new Order();
+    }
+
     static async getOrders(uuidUserAccount: string): Promise<Array<Order>> {
         console.log('START: ShopService.getOrders: ' + JSON.stringify(uuidUserAccount));
 
@@ -61,6 +65,10 @@ export class ShopService {
     /**************************************************/
     /* DELIVERIES                                     */
     /**************************************************/
+    static async createDelivery(delivery: Delivery): Promise<Delivery> {
+        return new Delivery();
+    }
+
     static async getDeliveries(uuidUserAccount: string): Promise<Array<Delivery>> {
         console.log('START: ShopService.getDeliveries: ' + JSON.stringify(uuidUserAccount));
 
@@ -98,11 +106,20 @@ export class ShopService {
         }
     }
 
-    static async saveShoppingCart(shoppingCart: ShoppingCart): Promise<ShoppingCart> {
+    static async updateShoppingCart(shoppingCart: ShoppingCart): Promise<ShoppingCart> {
         return new ShoppingCart();
     }
 
-    static async deleteShoppingCart(uuidUserAccount: string): Promise<ShoppingCart> {
-        return new ShoppingCart();
+    static async deleteShoppingCart(uuidUserAccount: string): Promise<boolean> {
+        console.log('START: BlogService.deletePost: ' + uuidUserAccount);
+
+        try {
+            // return await BlogDatabseService.deletePost(uuidPost);
+            return true;
+        } catch(error){
+            throw new Error('ShopService.deleteShoppingCart - Error deleting shopping-cart with user-account-uuid: '
+                + uuidUserAccount + ', error: '
+                + error);
+        }
     }
 }

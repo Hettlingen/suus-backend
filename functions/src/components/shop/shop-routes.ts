@@ -12,6 +12,7 @@ import {RoleCustomer} from "../identity-access-management/partner/model/roles/ro
 import {ShopCustomerService} from "./services/shop-customer-service";
 import {ShopProducerService} from "./services/shop-producer-service";
 import {ShopDelivererService} from "./services/shop-deliverer-service";
+import {ShoppingCart} from "./model/order/shopping-cart";
 
 export class ShopRoutes {
     public static routes(app: any): void {
@@ -40,8 +41,42 @@ export class ShopRoutes {
         // --------------------------------------------------
         // SHOPPING CART
         // --------------------------------------------------
+        app.route('/users/:uuidUserAccount/shopping-cart').post(async (request: Request, response: Response) => {
+            ShopService.createShoppingCart(request.body)
+                .then(function(shoppingCart: ShoppingCart) {
+                    response.status(200).send(shoppingCart);
+                }).catch(function(error: any){
+                response.status(404).send("Shopping-cart wasn't created: " + error)
+            });
+        })
 
+        app.route('/users/:uuidUserAccount/shopping-cart').get(async (request: Request, response: Response) => {
+            ShopService.getShoppingCart(request.params.uuidUserAccount)
+                .then(function(shoppingCart: ShoppingCart) {
+                    response.status(200).send(shoppingCart);
+                }).catch(function(error: any){
+                response.status(404).send("Shopping-cart wasn't found: " + error)
+            });
+        })
 
+        app.route('/users/:uuidUserAccount/shopping-cart').patch(async (request: Request, response: Response) => {
+            ShopService.updateShoppingCart(request.body)
+                .then(function(shoppingCart: ShoppingCart) {
+                    response.status(200).send(shoppingCart);
+                }).catch(function(error: any){
+                response.status(404).send("Shopping-cart wasn't updated: " + error)
+            });
+        })
+
+        // Delete a shopping-cart
+        app.route('/users/:uuidUserAccount/shopping-cart').delete(async (request: Request, response: Response) => {
+            ShopService.deleteShoppingCart(request.params.uuidUserAccount)
+                .then(function (successful) {
+                    response.status(200).send(successful);
+                }).catch(function (error) {
+                response.status(404).send("Shopping-cart wasn't deleted successful: " + error);
+            });
+        });
 
         // --------------------------------------------------
         // ORDERS
@@ -131,6 +166,15 @@ export class ShopRoutes {
             });
         })
 
+        app.route('/shop/producers').post(async (request: Request, response: Response) => {
+            ShopProducerService.updateProducer(request.body)
+                .then(function(roleProducer: RoleProducer) {
+                    response.status(200).send(roleProducer);
+                }).catch(function(error: any){
+                response.status(404).send("Producer isn't saved successfully: " + error)
+            });
+        })
+
         // Get all producers within an area
         app.route('/shop/producers').get(async (request: Request, response: Response) => {
             ShopProducerService.getProducersWithinArea(Number(request.query.latitudeOfUserLocation), Number(request.query.longitudeOfUserLocation), Number(request.query.radiusOfProducerInKm))
@@ -138,15 +182,6 @@ export class ShopRoutes {
                     response.status(200).send(producersNearUsersLoaction);
                 }).catch(function(error: any){
                 response.status(404).send("Producers within area weren't found: " + error)
-            });
-        })
-
-        app.route('/shop/producers').post(async (request: Request, response: Response) => {
-            ShopProducerService.updateProducer(request.body)
-                .then(function(roleProducer: RoleProducer) {
-                    response.status(200).send(roleProducer);
-                }).catch(function(error: any){
-                response.status(404).send("Producer isn't saved successfully: " + error)
             });
         })
 
