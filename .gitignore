@@ -8,7 +8,7 @@ node_modules/
 
 # Ignores all environement files
 *.env
-google-storage-keys.json
+/functions/configuration/firebase-admin-private-key-for-suus-backend.json
 
 /functions/firebase-debug.log
 service-key-google-cloud-storage.json

@@ -1,14 +1,24 @@
 import * as functions from 'firebase-functions';
-import * as admin from 'firebase-admin';
+import {initializeApp} from 'firebase-admin';
 import * as express from 'express';
 import * as bodyParser from "body-parser";
 import * as mysql from 'promise-mysql';
 import {Routes} from "./routes";
 import * as dotenv from 'dotenv';
 
-// Configuration
-dotenv.config(); // config the *.env files
-admin.initializeApp(functions.config().firebase);
+// read configuration files
+if (process.env.NODE_ENV !== 'production') {
+    dotenv.config(); // config the *.env files
+}
+
+// initialize firebase
+const admin = require("firebase-admin");
+// const serviceAccount = require('../configuration/firebase-admin-private-key-for-suus-backend.json');
+// initializeApp({
+//     credential: admin.credential.cert(serviceAccount),
+//     databaseURL: "https://scoop-backend-3000.firebaseio.com"
+// });
+initializeApp();
 
 const app = express();
 const main = express();

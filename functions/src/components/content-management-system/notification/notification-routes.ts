@@ -4,7 +4,7 @@ import {NotificationService} from "./services/notification-service";
 export class NotificationRoutes {
     public static routes(app: any): void {
 
-        // activate to notifications
+        // activate notifications
         app.route('/notifications/activate/:uuidUserAccount').post(async (request: Request, response: Response) => {
             console.log('[NotificationRoutes] Notifications activated: ' + request.params.uuidUserAccount);
             NotificationService.activateNotifications(request.params.uuidUserAccount, request.body)
