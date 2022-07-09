@@ -4,7 +4,7 @@ import {MimeType} from "./mime-type";
 import {FileExtension} from "./file-extension";
 
 const path = require('path');
-const serviceKeyFileName = path.join(__dirname, '../config/service-key-google-cloud-storage.json');
+const serviceKeyFileName = path.join(__dirname, '../configuration/firebase-private-key-for-storage.json');
 
 export class FileHelper {
 

@@ -8,8 +8,9 @@ node_modules/
 
 # Ignores all environement files
 *.env
-/functions/configuration/firebase-admin-private-key-for-suus-backend.json
+/functions/configuration/firebase-private-key-for-suus-backend.json
+/functions/configuration/firebase-private-key-for-storage.json
+service-key-google-cloud-storage.json
 
 /functions/firebase-debug.log
-service-key-google-cloud-storage.json
 /.idea/shelf/Uncommitted_changes_before_Update_at_03_08_20,_07_52_[Default_Changelist]/

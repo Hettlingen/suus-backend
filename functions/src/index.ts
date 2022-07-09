@@ -13,12 +13,11 @@ if (process.env.NODE_ENV !== 'production') {
 
 // initialize firebase
 const admin = require("firebase-admin");
-// const serviceAccount = require('../configuration/firebase-admin-private-key-for-suus-backend.json');
-// initializeApp({
-//     credential: admin.credential.cert(serviceAccount),
-//     databaseURL: "https://scoop-backend-3000.firebaseio.com"
-// });
-initializeApp();
+const serviceAccount = require('../configuration/firebase-private-key-for-suus-backend.json');
+initializeApp({
+    credential: admin.credential.cert(serviceAccount),
+    databaseURL: "https://scoop-backend-3000.firebaseio.com"
+});
 
 const app = express();
 const main = express();
