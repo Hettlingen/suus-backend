@@ -10,6 +10,7 @@ export class Order {
   public state!: OrderState;
   public dateOrder!: Date;
   public dateDelivery!: Date;
+  public dateCreated!: Date;
   public listOrderItem!: Array<OrderItem>;
   public deliveryAddress!: Address;
   public invoice!: Invoice;

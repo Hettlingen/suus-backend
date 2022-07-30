@@ -41,8 +41,10 @@ export class ShopRoutes {
         // --------------------------------------------------
         // SHOPPING CART
         // --------------------------------------------------
+
+        // create shopping-cart
         app.route('/users/:uuidUserAccount/shopping-cart').post(async (request: Request, response: Response) => {
-            ShopService.createShoppingCart(request.body)
+            ShopService.createShoppingCart(request.params.uuidUserAccount)
                 .then(function(shoppingCart: ShoppingCart) {
                     response.status(200).send(shoppingCart);
                 }).catch(function(error: any){
@@ -50,21 +52,23 @@ export class ShopRoutes {
             });
         })
 
+        // update shopping-cart
+        app.route('/users/:uuidUserAccount/shopping-cart').patch(async (request: Request, response: Response) => {
+            ShopService.saveShoppingCart(request.params.uuidUserAccount, request.body)
+                .then(function(shoppingCart: ShoppingCart) {
+                    response.status(200).send(shoppingCart);
+                }).catch(function(error: any){
+                response.status(404).send("Shopping-cart wasn't updated: " + error)
+            });
+        })
+
+        // get shopping-cart
         app.route('/users/:uuidUserAccount/shopping-cart').get(async (request: Request, response: Response) => {
             ShopService.getShoppingCart(request.params.uuidUserAccount)
                 .then(function(shoppingCart: ShoppingCart) {
                     response.status(200).send(shoppingCart);
                 }).catch(function(error: any){
                 response.status(404).send("Shopping-cart wasn't found: " + error)
-            });
-        })
-
-        app.route('/users/:uuidUserAccount/shopping-cart').patch(async (request: Request, response: Response) => {
-            ShopService.updateShoppingCart(request.body)
-                .then(function(shoppingCart: ShoppingCart) {
-                    response.status(200).send(shoppingCart);
-                }).catch(function(error: any){
-                response.status(404).send("Shopping-cart wasn't updated: " + error)
             });
         })
 
@@ -77,6 +81,26 @@ export class ShopRoutes {
                 response.status(404).send("Shopping-cart wasn't deleted successful: " + error);
             });
         });
+
+        // add order-item to shopping-cart
+        app.route('/users/:uuidUserAccount/shopping-cart/order-item').post(async (request: Request, response: Response) => {
+            ShopService.addOrderItemToShoppingCart(request.params.uuidUserAccount, request.body)
+                .then(function(shoppingCart: ShoppingCart) {
+                    response.status(200).send(shoppingCart);
+                }).catch(function(error: any){
+                response.status(404).send("Shopping-cart wasn't updated: " + error)
+            });
+        })
+
+        // remove order-item from shopping-cart
+        app.route('/users/:uuidUserAccount/shopping-cart/order-item').delete(async (request: Request, response: Response) => {
+            ShopService.removeOrderItemFromShoppingCart(request.params.uuidUserAccount, request.body)
+                .then(function(shoppingCart: ShoppingCart) {
+                    response.status(200).send(shoppingCart);
+                }).catch(function(error: any){
+                response.status(404).send("Shopping-cart wasn't updated: " + error)
+            });
+        })
 
         // --------------------------------------------------
         // ORDERS

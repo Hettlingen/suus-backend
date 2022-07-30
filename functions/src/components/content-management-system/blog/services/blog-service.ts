@@ -30,7 +30,6 @@ export class BlogService {
     }
 
     static async createPost(post: Post): Promise<Post> {
-        console.log('Post: ' + JSON.stringify(post));
         console.log('START: BlogService.createPost');
 
         try {
@@ -50,7 +49,7 @@ export class BlogService {
         try {
             return await BlogDatabseService.updatePost(post);
         } catch(error){
-            throw new Error('[myfarmer] BlogService.updatePost - Error creating Post for Blog: '
+            throw new Error('BlogService.updatePost - Error creating Post for Blog: '
                 + post.blog.uuid + ', error: '
                 + error);
         }

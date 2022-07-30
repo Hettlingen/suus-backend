@@ -1,18 +1,20 @@
 import {database} from "../../../../index";
 import {Shop} from "../../model/shop";
 import {
+    mapShopFromDbToShop,
+    mapShoppingCartFromDbToShoppingCart,
+    mapShopItemFromDbToShopItem,
+    mapOrdersFromDbToOrders,
     mapDeliveriesFromDbToDeliveries,
     mapDeliveryFromDbToDelivery,
-    mapOrderFromDbToOrder,
-    mapOrdersFromDbToOrders,
-    mapShopFromDbToShop,
-    mapShopItemFromDbToShopItem
+    mapOrderFromDbToOrder
 } from "../../mapper/shop-mapper";
 import {ShopItem} from "../../model/shop-item";
-import {Order} from "../../model/order/order";
-import {OrderState} from "../../model/order/order-state";
 import {Delivery} from "../../model/delivery/delivery";
+import {ShoppingCart} from "../../model/order/shopping-cart";
+import {Order} from "../../model/order/order";
 import {RoleProducer} from "../../../identity-access-management/partner/model/roles/role-producer";
+import {OrderState} from "../../model/order/order-state";
 
 export class ShopDatabaseService {
 
@@ -68,14 +70,131 @@ export class ShopDatabaseService {
         }
     }
 
+    /**************************************************/
+    /* START: SHOPPING CART                           */
+    /**************************************************/
+    static async createShoppingCart(shoppingCart: ShoppingCart): Promise<ShoppingCart> {
+        console.log('START: ShopDatabaseService.createShoppingCart');
+
+        const queryShppingCart = `INSERT INTO ShoppingCart(uuid, uuidUserAccount, dateCreated) VALUES ('${shoppingCart.uuid}', '${shoppingCart.uuidUserAccount}', '${shoppingCart.dateCreated}')`;
+
+        database.query(queryShppingCart, function (error: any, result: any) {
+            if (error) throw error;
+
+
+            let listOrderItems = shoppingCart.listOrderItem;
+            var queryOrderItems = `INSERT INTO OrderItem(uuid, uuidUserAccount, dateCreated) VALUES ('${shoppingCart.uuid}', '${shoppingCart.uuidUserAccount}', '${shoppingCart.dateCreated}')`;
+
+            database.query(queryOrderItems, [listOrderItems] , function (err: any, resultOrderItem: any) {
+                if (err) throw err;
+                console.log(result.affectedRows + " record inserted");
+            });
+        });
+
+        return new ShoppingCart();
+    }
+
+    static async saveShoppingCart(shoppingCart: ShoppingCart): Promise<ShoppingCart> {
+        console.log('START: ShopDatabaseService.saveShoppingCart');
+        const query = `UPDATE ShoppingCart SET 'uuid' = '${shoppingCart.uuid}', 'uuidUserAccount' = '${shoppingCart.uuidUserAccount}'`;
+
+        try {
+            const uuidFromDb = await database.query(query);
+            if (!uuidFromDb) throw new Error('[myfarmer] Error inserting post in database.');
+        } catch(error) {
+            throw new Error('[myfarmer] Error execute insert-query post: ' + error);
+        }
+
+        return this.readShoppingCartByUuid(shoppingCart.uuid);
+    }
+
+    static async readShoppingCartByUuid(uuidShoppingCart: string): Promise<ShoppingCart> {
+        console.log('START: ShopDatabaseService.readShoppingCartByUuid: ' + uuidShoppingCart);
+        if (!uuidShoppingCart) throw new Error('ShopDatabaseService.readShoppingCartByUuid - Wrong parameters');
+
+        const query = `SELECT ShoppingCart.uuid,
+                              ShoppingCart.uuidUserAccount,
+                              ShoppingCart.dateCreated,
+                              OrderItems.uuid uuidOfOrderItem,
+                              OrderItems.quantity quantityOfOrderItem,
+                              ShopItem.uuid uuidOfShopItem,
+                              ShopItem.name nameOfShopItem,
+                              ShopItem.description describtionOfShopItem,
+                              ShopItem.category categoryOfShopItem,
+                              ShopItem.price priceOfShopItem,
+                              ShopItem.currencyPrice currencyPriceOfShopItem,
+                              ShopItem.quantity quantityOfShopItem,
+                              ShopItem.imageName imageNameOfShopItem,
+                              ShopItem.dateCreated dateCreatedOfShopItem,
+                              ShopItem.dateUpdated dateUpdatedOfShopItem,
+                              ShopItem.datePublished datePublishedOfShopItem
+                            FROM ShoppingCart
+                            LEFT JOIN OrderItem
+                                ON OrderItem.uuidShoppingCart=ShoppingCart.uuid
+                            WHERE ShoppingCart.uuid='${uuidShoppingCart}';`;
+
+        try {
+            const shoppingCartFromDb = await database.query(query);
+
+            if (shoppingCartFromDb === null || shoppingCartFromDb === undefined) {
+                throw new Error('ShopDatabaseService.readShoppingCartByUuid - Shopping cart doesnt exist on database');
+            }
+
+            return mapShoppingCartFromDbToShoppingCart(shoppingCartFromDb[0]);
+        } catch(error) {
+            throw new Error('ShopDatabaseService.readDelivery - Error reading delivery from database: ' + error);
+        }
+    }
+            
+    static async readShoppingCartByUuidUserAccount(uuidUserAccount: string): Promise<ShoppingCart> {
+        return new ShoppingCart();
+    }
+
+    static async deleteShoppingCart(uuidUserAccount: string): Promise<boolean> {
+        return true;
+    }
+
+    /**************************************************/
+    /* START: ORDER                                   */
+    /**************************************************/
+    static async createOrder(order: Order): Promise<Order> {
+        console.log('START: ShopDatabaseService.createOrder');
+
+        let uuidFromDb;
+        const query = `INSERT INTO Order(
+                  uuid, 
+                  uuidUserAccount, 
+                  number, 
+                  state, 
+                  dateCreated, 
+                  dateOrder, 
+                  dateDelivery) 
+                    VALUES ('${order.uuid}',
+                            '${order.uuidUserAccount}',
+                            '${order.number}',
+                            '${order.state}', 
+                            '${order.dateCreated}', 
+                            '${order.dateOrder}',
+                            '${order.dateDelivery}');`;
+
+        try {
+            uuidFromDb = await database.query(query);
+            if (!uuidFromDb) throw new Error('Error inserting order in database.');
+        } catch(error) {
+            throw new Error('Error execute insert-query order: ' + error);
+        }
+
+        return this.readOrderByUuid(order.uuid);
+    }
+
     static async readOrders(uuidUserAccount: string): Promise<Array<Order>> {
-        console.log('START: ShopDatabaseService.readOrders: ' + JSON.stringify(uuidUserAccount));
+        console.log('START: ShopDatabaseService.readOrders: ' + uuidUserAccount);
         if (!uuidUserAccount) throw new Error('[myfarmer] ShopDatabaseService.readOrders - Wrong parameters');
 
-        const query = `SELECT Orders.uuid,
-                              Orders.number,
-                              Orders.state,
-                              Orders.dateDelivery,
+        const query = `SELECT Order.uuid,
+                              Order.number,
+                              Order.state,
+                              Order.dateDelivery,
                               Invoice. uuid uuidOfInvoice,
                               Invoice.type typeOfInvoice,
                               Invoice.state stateOfInvoice,
@@ -85,9 +204,9 @@ export class ShopDatabaseService {
                               Invoice.currencyAmountTax currencyAmountTaxOfInvoice,
                               Invoice.dateInvoiceDeadline dateInvoiceDeadlineOfInvoice,
                               Invoice.dateInvoice dateInvoiceOfInvoice
-                            FROM Orders
+                            FROM Order
                             LEFT JOIN Invoice
-                                ON Orders.uuid=Invoice.uuidOrder
+                                ON Order.uuid=Invoice.uuidOrder
                             WHERE Order.uuidUserAccount='${uuidUserAccount}';`;
 
         try {
@@ -104,14 +223,14 @@ export class ShopDatabaseService {
         }
     }
 
-    static async readOrder(uuidOrder: string): Promise<Order> {
+    static async readOrderByUuid(uuidOrder: string): Promise<Order> {
         console.log('START: ShopDatabaseService.readOrder: ' + JSON.stringify(uuidOrder));
         if (!uuidOrder) throw new Error('[myfarmer] ShopDatabaseService.readOrder - Wrong parameters');
 
-        const query = `SELECT Orders.uuid,
-                              Orders.number,
-                              Orders.state,
-                              Orders.dateDelivery,
+        const query = `SELECT Order.uuid,
+                              Order.number,
+                              Order.state,
+                              Order.dateDelivery,
                               OrderItem.uuid uuidOfOrderItem,
                               OrderItem.quantity quantityOfOrderItem,
                               ShopItem.uuid uuidOfShopItem,
@@ -129,12 +248,12 @@ export class ShopDatabaseService {
                               Invoice.dateInvoice dateInvoiceOfInvoice
                             FROM Orders
                             LEFT JOIN OrderItem
-                                ON Orders.uuid=OrderItem.uuidOrder
+                                ON Order.uuid=OrderItem.uuidOrder
                             LEFT JOIN ShopItem
                                 ON OrderItem.uuidShopItem=ShopItem.uuid
                             LEFT JOIN Invoice
-                                ON Orders.uuid=Invoice.uuidOrder
-                            WHERE Orders.uuid='${uuidOrder}';`;
+                                ON Order.uuid=Invoice.uuidOrder
+                            WHERE Order.uuid='${uuidOrder}';`;
 
         try {
             const orderFromDb = await database.query(query);
@@ -153,7 +272,7 @@ export class ShopDatabaseService {
         console.log('START: ShopDatabaseService.readOrder with user-account-uuid: ' + JSON.stringify(uuidUserAccount));
         if (!uuidUserAccount) throw new Error('[myfarmer] ShopDatabaseService.readOrder - Wrong parameters');
 
-        const query = `SELECT * FROM Orders WHERE Orders.uuidUserAccount='${uuidUserAccount}'`;
+        const query = `SELECT * FROM Order WHERE Order.uuidUserAccount='${uuidUserAccount}'`;
 
         try {
             const orderFromDb = await database.query(query);
@@ -168,6 +287,9 @@ export class ShopDatabaseService {
         }
     }
 
+    /**************************************************/
+    /* START: DELIVERIES                              */
+    /**************************************************/
     static async readDeliveries(uuidUserAccount: string): Promise<Array<Delivery>> {
         console.log('START: ShopDatabaseService.readDeliveries: ' + JSON.stringify(uuidUserAccount));
         if (!uuidUserAccount) throw new Error('[myfarmer] ShopDatabaseService.readDeliveries - Wrong parameters');
@@ -176,13 +298,13 @@ export class ShopDatabaseService {
                               Delivery.number,
                               Delivery.state,
                               Delivery.dateDelivery,
-                              Orders.uuid uuidOfOrder,
-                              Orders.name nameOfOrder,
-                              Orders.state stateOfOrder,
-                              Orders.dateDelivery dateDeliveryOfOrder
+                              Order.uuid uuidOfOrder,
+                              Order.name nameOfOrder,
+                              Order.state stateOfOrder,
+                              Order.dateDelivery dateDeliveryOfOrder
                             FROM Delivery
-                            LEFT JOIN Orders
-                                ON Orders.uuidDelivery=Delivery.uuid
+                            LEFT JOIN Order
+                                ON Order.uuidDelivery=Delivery.uuid
                             WHERE Delivery.uuidUserAccount='${uuidUserAccount}';`;
 
         try {
@@ -207,14 +329,14 @@ export class ShopDatabaseService {
                               Delivery.number,
                               Delivery.state,
                               Delivery.dateDelivery,
-                              Orders.uuid uuidOfOrder,
-                              Orders.number numberOfOrder,
-                              Orders.state stateOfOrder,
-                              Orders.dateOrder dateOrderOfOrder,
-                              Orders.dateDelivery dateDeliveryOfOrder
+                              Order.uuid uuidOfOrder,
+                              Order.number numberOfOrder,
+                              Order.state stateOfOrder,
+                              Order.dateOrder dateOrderOfOrder,
+                              Order.dateDelivery dateDeliveryOfOrder
                             FROM Delivery
-                            LEFT JOIN Orders
-                                ON Orders.uuidDelivery=Delivery.uuid
+                            LEFT JOIN Order
+                                ON Order.uuidDelivery=Delivery.uuid
                             WHERE Delivery.uuid='${uuidDelivery}';`;
 
         try {

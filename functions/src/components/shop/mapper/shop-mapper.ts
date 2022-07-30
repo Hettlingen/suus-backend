@@ -10,6 +10,8 @@ import {OfferItem} from "../model/offer/offer-item";
 import {getOfferItemState} from "../model/offer/offer-item-state";
 import {Delivery} from "../model/delivery/delivery";
 import {getDeliveryState} from "../model/delivery/delivery-state";
+import {ShoppingCart} from "../model/order/shopping-cart";
+import {OrderItem} from "../model/order/order-item";
 
 export const mapShopFromDbToShop = (shopFromDb: any) => {
     const shop = new Shop();
@@ -35,7 +37,6 @@ export const mapShopFromDbToShop = (shopFromDb: any) => {
 
 export const mapShopItemFromDbToShopItem = (shopItemFromDb: any) => {
     const shopItem = new ShopItem();
-
     shopItem.uuid = shopItemFromDb.uuid;
     shopItem.name = shopItemFromDb.name;
     shopItem.description = shopItemFromDb.description;
@@ -43,8 +44,20 @@ export const mapShopItemFromDbToShopItem = (shopItemFromDb: any) => {
     shopItem.price = shopItemFromDb.price;
     shopItem.currencyPrice = shopItemFromDb.currencyPrice;
     shopItem.imageName = shopItemFromDb.imageName;
-
     return shopItem;
+}
+
+export const mapShoppingCartFromDbToShoppingCart = (shoppingCartFromDb: any) => {
+    const shoppingCart = new ShoppingCart();
+    shoppingCart.uuid = shoppingCartFromDb[0].uuid;
+
+    for (const orderItemFromDb of shoppingCartFromDb) {
+        const orderItem = new OrderItem();
+        orderItem.uuid = orderItemFromDb.uuidOfOrderItem;
+        shoppingCart.listOrderItem.push(orderItem);
+    }
+
+    return shoppingCart;
 }
 
 export const mapOrdersFromDbToOrders = (ordersFromDb: any) => {

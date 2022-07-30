@@ -4,7 +4,8 @@ import {ShopItem} from "../model/shop-item";
 import {Order} from "../model/order/order";
 import {Delivery} from "../model/delivery/delivery";
 import {ShoppingCart} from "../model/order/shopping-cart";
-import {OrderState} from "../model/order/order-state";
+import {OrderItem} from "../model/order/order-item";
+import * as uuidGenerator from "uuid/v4";
 
 export class ShopService {
 
@@ -39,7 +40,14 @@ export class ShopService {
     /* ORDERS                                         */
     /**************************************************/
     static async createOrder(order: Order): Promise<Order> {
-        return new Order();
+        console.log('START: ShopService.createOrder: ' + order.uuidUserAccount);
+        order.uuid = uuidGenerator();
+
+        try {
+            return await ShopDatabaseService.createOrder(order);
+        } catch(error){
+            throw new Error('ShopService.createOrders - Error create order of user: ' + order.uuidUserAccount);
+        }
     }
 
     static async getOrders(uuidUserAccount: string): Promise<Array<Order>> {
@@ -56,7 +64,7 @@ export class ShopService {
         console.log('START: ShopService.getOrder: ' + JSON.stringify(uuidOrder));
 
         try {
-            return await ShopDatabaseService.readOrder(uuidOrder);
+            return await ShopDatabaseService.readOrderByUuid(uuidOrder);
         } catch(error){
             throw new Error('[myfarmer] ShopService.getOrder - Error reading order with uuid: ' + uuidOrder);
         }
@@ -90,23 +98,86 @@ export class ShopService {
     }
 
     /**************************************************/
-    /* SHOPPING CART                                  */
+    /* START: SHOPPING CART                           */
     /**************************************************/
     static async createShoppingCart(uuidUserAccount: string): Promise<ShoppingCart> {
-        return new ShoppingCart();
-    }
+        console.log('START: ShopService.createShoppingCart: ' + uuidUserAccount);
 
-    static async getShoppingCart(uuidUserAccount: string): Promise<ShoppingCart> {
-        console.log('START: ShopService.getShoppingCart: ' + JSON.stringify(uuidUserAccount));
+        let shoppingCart: ShoppingCart = new ShoppingCart();
+        shoppingCart.uuid = uuidGenerator();
+        shoppingCart.uuidUserAccount = uuidUserAccount;
+        shoppingCart.dateCreated = new Date();
 
         try {
-            return await ShopDatabaseService.readOrderByUserAccountUuidAndState(uuidUserAccount, OrderState.SHOPPING_CART);
+            return await ShopDatabaseService.createShoppingCart(shoppingCart);
         } catch(error){
-            throw new Error('[myfarmer] ShopService.getShoppingCart - Error reading Orders of user: ' + uuidUserAccount);
+            throw new Error('ShopService.createShoppingCart - Error create shopping-cart of user: ' + uuidUserAccount);
         }
     }
 
-    static async updateShoppingCart(shoppingCart: ShoppingCart): Promise<ShoppingCart> {
+    static async saveShoppingCart(uuidUserAccount: string, shoppingCart: ShoppingCart): Promise<ShoppingCart> {
+        console.log('START: ShopService.createShoppingCart: ' + uuidUserAccount);
+
+        shoppingCart.uuid = uuidGenerator();
+        shoppingCart.uuidUserAccount = uuidUserAccount;
+
+        try {
+            return await ShopDatabaseService.saveShoppingCart(shoppingCart);
+        } catch(error){
+            throw new Error('ShopService.createShoppingCart - Error create shopping-cart of user: ' + uuidUserAccount);
+        }
+    }
+
+    static async getShoppingCart(uuidUserAccount: string): Promise<ShoppingCart> {
+        console.log('START: ShopService.getShoppingCart: ' + uuidUserAccount);
+
+        try {
+            return await ShopDatabaseService.readShoppingCartByUuidUserAccount(uuidUserAccount);
+        } catch(error){
+            throw new Error('ShopService.getShoppingCart - Error reading Orders of user: ' + uuidUserAccount);
+        }
+    }
+
+    static async addOrderItemToShoppingCart(uuidUserAccount: string, orderItem: OrderItem): Promise<ShoppingCart> {
+        let shoppingCart: ShoppingCart = await this.getShoppingCart(uuidUserAccount);
+
+        if (shoppingCart == null) {
+            this.createShoppingCart(uuidUserAccount)
+                .then(function (shoppingCartFromDb) {
+                    shoppingCart = shoppingCartFromDb;
+                }).catch(function (error) {
+                console.log('Shoppingcart not created');
+                throw error;
+            });
+        }
+
+        // TODO check if this kind of order-item already exist in shopping-cart
+        if (shoppingCart.hasOrderItem(orderItem)) {
+            let orderItemOfShppingCart = shoppingCart.getOrderItem(orderItem);
+            orderItemOfShppingCart!.quantity = orderItemOfShppingCart!.quantity + orderItem.quantity;
+        } else {
+            // TODO in case there is no order-item in the shopping-cart, create a new one
+
+        }
+
+        return new ShoppingCart();
+    }
+
+    static async removeOrderItemFromShoppingCart(uuidUserAccount: string, orderItem: OrderItem): Promise<ShoppingCart> {
+        let shoppingCart: ShoppingCart = await this.getShoppingCart(uuidUserAccount);
+
+        if (shoppingCart == null) {
+            shoppingCart = new ShoppingCart();
+            shoppingCart.uuid = uuidGenerator();
+            shoppingCart.uuidUserAccount = uuidUserAccount;
+            try {
+                shoppingCart = await ShopDatabaseService.saveShoppingCart(shoppingCart);
+            } catch(error){
+                throw new Error('ShopService.createShoppingCart - Error create shopping-cart of user: ' + uuidUserAccount);
+            }
+        }
+
+        // TODO remove order-item
         return new ShoppingCart();
     }
 
