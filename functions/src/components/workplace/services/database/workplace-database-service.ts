@@ -1,8 +1,8 @@
-import {databaseFirestore} from "../../../../index";
 import {Consent} from "../../model/consent";
 import {DocumentSnapshot} from "firebase-functions/lib/providers/firestore";
+import {databaseFirestore} from "../../../../config/firebase";
 
-export class WorkplaceDatabseService {
+export class WorkplaceDatabaseService {
 
     static async readTermsOfUse(uuidTermsOfUse: string): Promise<Consent> {
         console.log('START: WorkplaceDatabseService.readTermsOfUse: ' + uuidTermsOfUse);

@@ -6,11 +6,9 @@ import * as jwt from 'jsonwebtoken';
 import {AuthenticationDatabseService} from "./database/authentication-databse-service";
 import {AuthenticationToken} from "../model/authenticationToken";
 import {RoleUser} from "../../partner/model/roles/role-user";
-
+const path = require('path');
 
 export class AuthenticationService {
-
-    private static RSA_PRIVATE_KEY = fs.readFileSync('src/utils/authentication/private.key');
 
     public static async login(userName: string, password: string): Promise<RoleUser> {
         const userAccount = await AuthenticationDatabseService.readUserAccountByUserName(userName);
@@ -90,7 +88,8 @@ export class AuthenticationService {
     }
 
     public static checkIfAuthenticated(request: any, response: any, next: any) {
-        const RSA_PUBLIC_KEY = fs.readFileSync('src/utils/authentication/public.key');
+        const pathPublicKey = path.join(process.cwd(), 'src/configuration/json-web-token-keys/public.key');
+        const PUBLIC_KEY = fs.readFileSync(pathPublicKey);
 
         let token = '';
         // Express headers are auto converted to lowercase
@@ -110,7 +109,7 @@ export class AuthenticationService {
             return request.status(401).json({ message: '[myfarmer] Missing authorization header' });
         }
 
-        jwt.verify(token, RSA_PUBLIC_KEY, { algorithms: ['RS256']}, (err, payload) => {
+        jwt.verify(token, PUBLIC_KEY, { algorithms: ['RS256']}, (err, payload) => {
             if (err) {
                 console.error('[myfarmer] Couldnt verify the authorization header');
                 response.status(401).json({ message: '[myfarmer] Couldnt verify the authorization header' });
@@ -122,6 +121,9 @@ export class AuthenticationService {
     };
 
     private static  async verifyPassword(passwordInput: string, passwordUserAccount: string, uuidUserAccount: string): Promise<AuthenticationToken> {
+        const pathPrivateKey = path.join(process.cwd(), 'src/configuration/json-web-token-keys/private.key');
+        const PRIVATE_KEY = fs.readFileSync(pathPrivateKey);
+
         // because in the jwt token the value is milliseconds or you can use "2 days", "10h", "7d"
         const jwtExpiresIn = '1h';
         const match = await bcrypt.compare(passwordInput, passwordUserAccount);
@@ -131,7 +133,7 @@ export class AuthenticationService {
             throw new Error('[AuthenticationService] Bad Username or Password');
         }
 
-        const jwtBearerToken = jwt.sign({}, this.RSA_PRIVATE_KEY, {
+        const jwtBearerToken = jwt.sign({}, PRIVATE_KEY, {
             algorithm: 'RS256',
             expiresIn: jwtExpiresIn,
             subject: uuidUserAccount

@@ -1,4 +1,4 @@
-import {WorkplaceDatabseService} from "./database/workplace-databse-service";
+import {WorkplaceDatabaseService} from "./database/workplace-database-service";
 import {Consent} from "../model/consent";
 
 
@@ -9,7 +9,7 @@ export class WorkplaceService {
         if (!uuidTermsOfUse) throw new Error('[myfarmer] Terms-Of-Use-ID is required');
 
         try {
-            return await WorkplaceDatabseService.readTermsOfUse(uuidTermsOfUse);
+            return await WorkplaceDatabaseService.readTermsOfUse(uuidTermsOfUse);
         } catch(error) {
             throw new Error('[myfarmer] Error reading terms-of-use from database: ' + error);
         }

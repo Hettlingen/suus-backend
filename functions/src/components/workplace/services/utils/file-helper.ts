@@ -4,7 +4,10 @@ import {MimeType} from "./mime-type";
 import {FileExtension} from "./file-extension";
 
 const path = require('path');
+// --dirname delivers the absolute path of the actual file location. Here of the file 'file-helper.ts'
 const serviceKeyFileName = path.join(__dirname, '../configuration/firebase-private-key-for-storage.json');
+// cwd is a method of global object process, returns a string value which is the current working directory of the Node.js process.
+// const rootProjectDirectory = process.cwd();
 
 export class FileHelper {
 

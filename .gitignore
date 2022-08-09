@@ -10,7 +10,8 @@ node_modules/
 *.env
 /functions/configuration/firebase-private-key-for-suus-backend.json
 /functions/configuration/firebase-private-key-for-storage.json
-service-key-google-cloud-storage.json
+/functions/configuration/json-web-token-keys/pirvate.key
+/functions/configuration/json-web-token-keys/public.key
 
 /functions/firebase-debug.log
 /.idea/shelf/Uncommitted_changes_before_Update_at_03_08_20,_07_52_[Default_Changelist]/

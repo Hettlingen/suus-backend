@@ -1,23 +1,15 @@
 import * as functions from 'firebase-functions';
-import {initializeApp} from 'firebase-admin';
 import * as express from 'express';
 import * as bodyParser from "body-parser";
 import * as mysql from 'promise-mysql';
 import {Routes} from "./routes";
 import * as dotenv from 'dotenv';
+import * as cors from 'cors';
 
-// read configuration files
+// read configuration files if environment is not production
 if (process.env.NODE_ENV !== 'production') {
     dotenv.config(); // config the *.env files
 }
-
-// initialize firebase
-const admin = require("firebase-admin");
-const serviceAccount = require('../configuration/firebase-private-key-for-suus-backend.json');
-initializeApp({
-    credential: admin.credential.cert(serviceAccount),
-    databaseURL: "https://scoop-backend-3000.firebaseio.com"
-});
 
 const app = express();
 const main = express();
@@ -28,19 +20,14 @@ main.use(bodyParser.json());
 export const webApi = functions.https.onRequest(main);
 
 // Initialize CORS ------------------------------------------------
-app.use(function (req, res, next) {
-    res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-    res.header("Access-Control-Allow-Headers", 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
-    res.header('Access-Control-Allow-Credentials', 'true');
-    res.header('Access-Control-Allow-Origin', '*');
-    next();
-});
-
+const allowedOrigins = ['http://localhost:4200', 'https://www.myfarmer.ch', 'https://www.suus.ch'];
+const allowedMethodes = ['GET','POST','DELETE','UPDATE','PUT','PATCH', 'OPTIONS'];
+const options: cors.CorsOptions = {
+    origin: allowedOrigins,
+    methods: allowedMethodes
+};
+app.use(cors(options));
 Routes.routes(app);
-
-// Initialize Database GOOGLE FIRESTORE ------------------------------------------
-export const databaseFirestore = admin.firestore();
-// END Database GOOGLE FIRESTORE -------------------------------------------------
 
 // Initialize Database GOOGLE CLOUD MYSQL ----------------------------------------
 export let database: any;
@@ -106,13 +93,7 @@ const createPool = async () => {
 createPool()
     .then((value) => {console.log('[myFarmer] Database pool erstellt')})
     .catch((error) => {console.log('[myFarmer] Fehler beim Erstellen des Pools')});
-
 // END Database GOOGLE CLOUD MYSQL ----------------------------------------
-
-// Initialize STRIPE PAYMENT ----------------------------------------------
-// const secret = process.env.STRIPE_KEY!;
-// export const stripe = new Stripe(secret, null);
-// END Database STRIPE PAYMENT --------------------------------------------
 
 // we need that for the handling with google cloud storage
 const multer = require('multer')

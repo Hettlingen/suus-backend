@@ -1,9 +1,9 @@
 {
   "functions": {
     "predeploy": [
-      "npm --prefix \"$RESOURCE_DIR\" run lint",
-      "npm --prefix \"$RESOURCE_DIR\" run build"
-    ]
+      "npm --prefix functions run build"
+    ],
+    "source": "functions"
   },
   "hosting": {
     "public": "public",
@@ -18,5 +18,34 @@
         "function": "webApi"
       }
     ]
+  },
+  "emulators": {
+    "functions": {
+      "port": 5001
+    },
+    "firestore": {
+      "port": 8080
+    },
+    "hosting": {
+      "port": 5002
+    },
+    "storage": {
+      "port": 9199
+    },
+    "ui": {
+      "enabled": true
+    },
+    "auth": {
+      "port": 9099
+    },
+    "database": {
+      "port": 9000
+    },
+    "pubsub": {
+      "port": 8085
+    }
+  },
+  "storage": {
+    "rules": "firebase-storage-security-rules"
   }
 }

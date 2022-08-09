@@ -2,6 +2,7 @@ import {MyFile} from "../model/my-file";
 import {FileHelper} from "./utils/file-helper";
 import {RoleType} from "../../identity-access-management/partner/model/roles/role-type";
 import {Image} from "../../content-management-system/gallery/model/image";
+import * as fs from 'fs';
 
 export class FileService {
 
@@ -94,5 +95,9 @@ export class FileService {
             });
 
         throw new Error('[myfarmer] FileService.getFile - Error reading file');
+    }
+
+    public static async readFile(pathAndFileName: string) {
+        return fs.readFileSync(pathAndFileName, 'utf8');
     }
 }

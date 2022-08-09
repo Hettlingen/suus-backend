@@ -1,11 +1,3 @@
-// import * as fs from "fs";
-// import {expressJwt} from 'express-jwt';
-
-//const RSA_PUBLIC_KEY = fs.readFileSync(require('path').resolve(__dirname, './utils/public.key'));
-// const checkIfAuthenticated = expressJwt({
-//     secret: RSA_PUBLIC_KEY
-// });
-
 import {AuthenticationService} from "./services/authentication-service";
 import {Request, Response} from "express";
 import {UserAccount} from "./model/user-account";

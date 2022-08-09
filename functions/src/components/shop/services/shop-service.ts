@@ -153,7 +153,7 @@ export class ShopService {
 
         // TODO check if this kind of order-item already exist in shopping-cart
         if (shoppingCart.hasOrderItem(orderItem)) {
-            let orderItemOfShppingCart = shoppingCart.getOrderItem(orderItem);
+            const orderItemOfShppingCart = shoppingCart.getOrderItem(orderItem);
             orderItemOfShppingCart!.quantity = orderItemOfShppingCart!.quantity + orderItem.quantity;
         } else {
             // TODO in case there is no order-item in the shopping-cart, create a new one
@@ -166,7 +166,7 @@ export class ShopService {
     static async removeOrderItemFromShoppingCart(uuidUserAccount: string, orderItem: OrderItem): Promise<ShoppingCart> {
         let shoppingCart: ShoppingCart = await this.getShoppingCart(uuidUserAccount);
 
-        if (shoppingCart == null) {
+        if (shoppingCart === null) {
             shoppingCart = new ShoppingCart();
             shoppingCart.uuid = uuidGenerator();
             shoppingCart.uuidUserAccount = uuidUserAccount;
