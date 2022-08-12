@@ -1,4 +1,3 @@
-import * as fs from 'fs';
 import {UserAccount} from '../model/user-account';
 import * as uuidGenerator from 'uuid/v4';
 import * as bcrypt from 'bcrypt';
@@ -6,7 +5,7 @@ import * as jwt from 'jsonwebtoken';
 import {AuthenticationDatabseService} from "./database/authentication-databse-service";
 import {AuthenticationToken} from "../model/authenticationToken";
 import {RoleUser} from "../../partner/model/roles/role-user";
-const path = require('path');
+import * as functions from 'firebase-functions'
 
 export class AuthenticationService {
 
@@ -88,8 +87,7 @@ export class AuthenticationService {
     }
 
     public static checkIfAuthenticated(request: any, response: any, next: any) {
-        const pathPublicKey = path.join(process.cwd(), 'src/configuration/json-web-token-keys/public.key');
-        const PUBLIC_KEY = fs.readFileSync(pathPublicKey);
+        const PUBLIC_KEY = functions.config().jwt.publickey;
 
         let token = '';
         // Express headers are auto converted to lowercase
@@ -121,8 +119,7 @@ export class AuthenticationService {
     };
 
     private static  async verifyPassword(passwordInput: string, passwordUserAccount: string, uuidUserAccount: string): Promise<AuthenticationToken> {
-        const pathPrivateKey = path.join(process.cwd(), 'src/configuration/json-web-token-keys/private.key');
-        const PRIVATE_KEY = fs.readFileSync(pathPrivateKey);
+        const PRIVATE_KEY = functions.config().jwt.privatekey;
 
         // because in the jwt token the value is milliseconds or you can use "2 days", "10h", "7d"
         const jwtExpiresIn = '1h';
