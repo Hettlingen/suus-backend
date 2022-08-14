@@ -1,4 +1,4 @@
-import {LocationService} from '../../../../src/components/workplace/services/location-service';
+// import {LocationService} from '../../../../src/components/workplace/services/location-service';
 
 describe("Test location-service.ts", () => {
 

@@ -13,6 +13,7 @@ import {ShopCustomerService} from "./services/shop-customer-service";
 import {ShopProducerService} from "./services/shop-producer-service";
 import {ShopDelivererService} from "./services/shop-deliverer-service";
 import {ShoppingCart} from "./model/order/shopping-cart";
+import {ShoppingCartService} from "./services/shopping-cart-service";
 
 export class ShopRoutes {
     public static routes(app: any): void {
@@ -44,7 +45,7 @@ export class ShopRoutes {
 
         // create shopping-cart
         app.route('/users/:uuidUserAccount/shopping-cart').post(async (request: Request, response: Response) => {
-            ShopService.createShoppingCart(request.params.uuidUserAccount)
+            ShoppingCartService.createShoppingCart(request.params.uuidUserAccount)
                 .then(function(shoppingCart: ShoppingCart) {
                     response.status(200).send(shoppingCart);
                 }).catch(function(error: any){
@@ -54,7 +55,7 @@ export class ShopRoutes {
 
         // update shopping-cart
         app.route('/users/:uuidUserAccount/shopping-cart').patch(async (request: Request, response: Response) => {
-            ShopService.saveShoppingCart(request.params.uuidUserAccount, request.body)
+            ShoppingCartService.saveShoppingCart(request.params.uuidUserAccount, request.body)
                 .then(function(shoppingCart: ShoppingCart) {
                     response.status(200).send(shoppingCart);
                 }).catch(function(error: any){
@@ -64,7 +65,7 @@ export class ShopRoutes {
 
         // get shopping-cart
         app.route('/users/:uuidUserAccount/shopping-cart').get(async (request: Request, response: Response) => {
-            ShopService.getShoppingCart(request.params.uuidUserAccount)
+            ShoppingCartService.getShoppingCart(request.params.uuidUserAccount)
                 .then(function(shoppingCart: ShoppingCart) {
                     response.status(200).send(shoppingCart);
                 }).catch(function(error: any){
@@ -74,7 +75,7 @@ export class ShopRoutes {
 
         // Delete a shopping-cart
         app.route('/users/:uuidUserAccount/shopping-cart').delete(async (request: Request, response: Response) => {
-            ShopService.deleteShoppingCart(request.params.uuidUserAccount)
+            ShoppingCartService.deleteShoppingCart(request.params.uuidUserAccount)
                 .then(function (successful) {
                     response.status(200).send(successful);
                 }).catch(function (error) {
@@ -84,7 +85,7 @@ export class ShopRoutes {
 
         // add order-item to shopping-cart
         app.route('/users/:uuidUserAccount/shopping-cart/order-item').post(async (request: Request, response: Response) => {
-            ShopService.addOrderItemToShoppingCart(request.params.uuidUserAccount, request.body)
+            ShoppingCartService.addOrderItemToShoppingCart(request.params.uuidUserAccount, request.body)
                 .then(function(shoppingCart: ShoppingCart) {
                     response.status(200).send(shoppingCart);
                 }).catch(function(error: any){
@@ -94,7 +95,7 @@ export class ShopRoutes {
 
         // remove order-item from shopping-cart
         app.route('/users/:uuidUserAccount/shopping-cart/order-item').delete(async (request: Request, response: Response) => {
-            ShopService.removeOrderItemFromShoppingCart(request.params.uuidUserAccount, request.body)
+            ShoppingCartService.removeOrderItemFromShoppingCart(request.params.uuidUserAccount, request.body)
                 .then(function(shoppingCart: ShoppingCart) {
                     response.status(200).send(shoppingCart);
                 }).catch(function(error: any){
