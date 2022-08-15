@@ -6,15 +6,20 @@ import {AuthenticationDatabseService} from "./database/authentication-databse-se
 import {AuthenticationToken} from "../model/authenticationToken";
 import {RoleUser} from "../../partner/model/roles/role-user";
 import * as functions from 'firebase-functions'
+import {ErrorService} from "../../../../utils/error/error-service";
+import {ErrorServiceCodes, getErrorCode} from "../../../../utils/error/error-service-codes";
 
 export class AuthenticationService {
 
     public static async login(userName: string, password: string): Promise<RoleUser> {
+        console.log('START AuthenticationService.login with user-name: ' + userName);
         const userAccount = await AuthenticationDatabseService.readUserAccountByUserName(userName);
 
         if (userAccount === null || userAccount === undefined || userName !== userAccount.userName) {
-            console.log('[AuthenticationService] Bad Username or Password');
-            throw new Error('[AuthenticationService] Bad Username or Password');
+            console.log('[AuthenticationService] Bad Username');
+            throw new ErrorService(
+                '[AuthenticationService.login] Bad Username',
+                getErrorCode(ErrorServiceCodes.BAD_USERNAME), null);
         }
 
         try {
@@ -23,15 +28,21 @@ export class AuthenticationService {
             roleUser.userAccount.authenticationToken = authenticationToken;
             return roleUser;
         } catch (error) {
-            console.log('[myfarmer] AuthenticationService.login - Error login user: ' + error);
-            throw new Error('[myfarmer] AuthenticationService.login - Error login user: ' + error);
+            console.log('[AuthenticationService.login] Error login user: ' + error);
+            throw new ErrorService(
+                '[AuthenticationService.login] Not authorized',
+                getErrorCode(ErrorServiceCodes.NOT_AUTHORIZED),
+                error);
         }
     };
 
     public static async register(userAccount: UserAccount): Promise<UserAccount> {
+        console.log('START AuthenticationService.register with user-account-uuid: ' + userAccount.uuid);
         if (await this.isUserAccountExisting(userAccount.userName)) {
-            console.info('[myfarmer] AuthenticationService.register - UserAccount is already existing');
-            throw new Error('[myfarmer] AuthenticationService.register - UserAccount is already existing');
+            console.info('[AuthenticationService.register] UserAccount is already existing');
+            throw new ErrorService(
+                '[AuthenticationService.register] UserAccount is already existing with user-name: ' + userAccount.userName,
+                getErrorCode(ErrorServiceCodes.USER_ACCOUNT_ALREADY_EXISTING), null);
         }
 
         userAccount.uuid = uuidGenerator();
@@ -40,13 +51,16 @@ export class AuthenticationService {
         try {
             return AuthenticationDatabseService.createUserAccount(userAccount);
         } catch (error) {
-            console.log('[myfarmer] AuthenticationService.register - Error register user: ' + error);
-            throw new Error('[myfarmer] AuthenticationService.register - Error register user: ' + error);
+            console.log('[AuthenticationService.register] Error register user: ' + error);
+            throw new ErrorService(
+                '[AuthenticationService.register] Error register new user with user-name: ' + userAccount.userName,
+                getErrorCode(ErrorServiceCodes.USER_ACCOUNT_NOT_CREATED),
+                error);
         }
     }
 
     public static async getUserAccount(uuidUserAccount: string): Promise<UserAccount> {
-        console.log('START AuthenticationService.getUserAccount: ' + uuidUserAccount);
+        console.log('START AuthenticationService.getUserAccount with uuid: ' + uuidUserAccount);
 
         const userAccount = await AuthenticationDatabseService.readUserAccountByUuid(uuidUserAccount);
 
@@ -77,6 +91,7 @@ export class AuthenticationService {
     }
 
     private static async isUserAccountExisting(userName: string): Promise<boolean> {
+        console.log('START AuthenticationService.isUserAccountExisting: ' + userName);
         const userAccount = await AuthenticationDatabseService.readUserAccountByUserName(userName);
 
         if (userAccount === null || userAccount === undefined) {
@@ -87,6 +102,7 @@ export class AuthenticationService {
     }
 
     public static checkIfAuthenticated(request: any, response: any, next: any) {
+        console.log('START AuthenticationService.checkIfAuthenticated');
         const PUBLIC_KEY = functions.config().jwt.publickey;
 
         let token = '';

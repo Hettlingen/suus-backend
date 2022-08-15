@@ -13,7 +13,7 @@ export class StringUtils {
     }
 
     /**
-     * Trims the string and rmoves all accents of characters
+     * Trims the string and rmoves all accents/diacritics of characters
      * @param text string
      */
     public static stripAccents(text: string): string {
