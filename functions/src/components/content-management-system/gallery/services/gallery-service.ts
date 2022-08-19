@@ -2,7 +2,7 @@ import {Gallery} from "../model/gallery";
 import {GalleryDatabseService} from "./database/gallery-databse-service";
 import {FileService} from "../../../workplace/services/file-service";
 import {Image} from "../model/image";
-import * as uuidGenerator from "uuid/v4";
+import { v4 as uuidGenerator } from 'uuid';
 import {FileHelper} from "../../../workplace/services/utils/file-helper";
 
 export class GalleryService {

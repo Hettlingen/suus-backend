@@ -1,4 +1,4 @@
-import * as uuidGenerator from "uuid/v4";
+import { v4 as uuidGenerator } from 'uuid';
 import {NewsletterOrder} from "../model/newsletter-order";
 import {NewsletterDatabseService} from "./database/newsletter-databse-service";
 import * as nodemailer from 'nodemailer';

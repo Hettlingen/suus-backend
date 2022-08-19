@@ -1,5 +1,5 @@
 import {UserAccount} from '../model/user-account';
-import * as uuidGenerator from 'uuid/v4';
+import { v4 as uuidGenerator } from 'uuid';
 import * as bcrypt from 'bcrypt';
 import * as jwt from 'jsonwebtoken';
 import {AuthenticationDatabseService} from "./database/authentication-databse-service";
@@ -37,7 +37,7 @@ export class AuthenticationService {
     };
 
     public static async register(userAccount: UserAccount): Promise<UserAccount> {
-        console.log('START AuthenticationService.register with user-account-uuid: ' + userAccount.uuid);
+        console.log('START AuthenticationService.register for user: ' + userAccount.userName);
         if (await this.isUserAccountExisting(userAccount.userName)) {
             console.info('[AuthenticationService.register] UserAccount is already existing');
             throw new ErrorService(

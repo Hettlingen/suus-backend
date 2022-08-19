@@ -6,6 +6,11 @@ import {ErrorService} from "../../../utils/error/error-service";
 import {ErrorServiceCodes} from "../../../utils/error/error-service-codes";
 import {ErrorHttpCodes} from "../../../utils/error/error-http-codes";
 
+/**
+ * Curl URL's
+ * - LOGIN        => curl -X "POST" --data '{"userName":"John","password":"Dada"}' http://localhost:5001/api/v1/user/login
+ * - REGISTRATION => curl -X "POST" --data '{"userName":"John","password":"Doe"}' http://localhost:5001/api/v1/user/register
+ */
 export class AuthenticationRoutes {
 
     public static routes(app: any): void {

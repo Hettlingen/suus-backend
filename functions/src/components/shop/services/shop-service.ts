@@ -3,7 +3,7 @@ import {ShopDatabaseService} from "./database/shop-database-service";
 import {ShopItem} from "../model/shop-item";
 import {Order} from "../model/order/order";
 import {Delivery} from "../model/delivery/delivery";
-import * as uuidGenerator from "uuid/v4";
+import { v4 as uuidGenerator } from 'uuid';
 
 export class ShopService {
 

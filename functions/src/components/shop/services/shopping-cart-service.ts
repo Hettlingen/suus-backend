@@ -1,7 +1,7 @@
 import {ShopDatabaseService} from "./database/shop-database-service";
 import {ShoppingCart} from "../model/order/shopping-cart";
 import {OrderItem} from "../model/order/order-item";
-import * as uuidGenerator from "uuid/v4";
+import { v4 as uuidGenerator } from 'uuid';
 
 export class ShoppingCartService {
 

@@ -1,7 +1,7 @@
 import {PartnerDatabseService} from "./database/partner-databse-service";
 import {RoleUser} from "../model/roles/role-user";
 import {Partner} from "../model/partner";
-import * as uuidGenerator from "uuid/v4";
+import { v4 as uuidGenerator } from 'uuid';
 
 export class PartnerService {
 

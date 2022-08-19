@@ -2,7 +2,7 @@ import {UserAccount} from "../../model/user-account";
 import {MysqlError} from "mysql";
 import {database} from "../../../../../index";
 import {RoleUser} from "../../../partner/model/roles/role-user";
-import {mapUserFromDbToUser} from "../../mapper/authentication-mapper";
+import {mapRoleUserFromDbToRoleUser} from "../../mapper/authentication-mapper";
 
 export class AuthenticationDatabseService {
 
@@ -114,7 +114,7 @@ export class AuthenticationDatabseService {
                 throw error;
             }
 
-            return mapUserFromDbToUser(userFromDb);
+            return mapRoleUserFromDbToRoleUser(userFromDb);
         } catch(error) {
             console.log(error);
             throw new Error('[myfarmer] AuthenticationDatabseService.readUserByUuid - Error reading user from database: ' + error);
@@ -165,7 +165,7 @@ export class AuthenticationDatabseService {
                 throw error;
             }
 
-            return mapUserFromDbToUser(userFromDb);;
+            return mapRoleUserFromDbToRoleUser(userFromDb);;
         } catch(error) {
             console.log(error);
             throw new Error('[myfarmer] AuthenticationDatabseService.readUser - Error reading user from database: ' + error);

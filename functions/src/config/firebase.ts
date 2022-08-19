@@ -10,5 +10,7 @@ admin.initializeApp({
     databaseURL: 'https://[your_project_id].firebaseio.com'
 })
 
+// admin.database().useEmulator('127.0.0.1', 5001);
+
 const databaseFirestore = admin.firestore()
 export { admin, databaseFirestore }

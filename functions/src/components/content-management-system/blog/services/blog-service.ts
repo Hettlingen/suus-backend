@@ -1,7 +1,7 @@
 import {Blog} from "../model/blog";
 import {BlogDatabseService} from "./database/blog-databse-service";
 import {Post} from "../model/post";
-import * as uuidGenerator from "uuid/v4";
+import { v4 as uuidGenerator } from 'uuid';
 
 export class BlogService {
 

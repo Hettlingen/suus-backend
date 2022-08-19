@@ -3,7 +3,7 @@ import {RoleUser} from "../../partner/model/roles/role-user";
 import {Partner} from "../../partner/model/partner";
 import {UserAccount} from "../model/user-account";
 
-export const mapUserFromDbToUser = (userFromDb: any) => {
+export const mapRoleUserFromDbToRoleUser = (userFromDb: any) => {
     const roleUser = new RoleUser();
 
     roleUser.uuid = userFromDb[0].uuidRole;
