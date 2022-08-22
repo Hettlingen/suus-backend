@@ -2,7 +2,6 @@ import {OrderItem} from './order-item';
 
 export class ShoppingCart {
   public uuid!: string;
-  public uuidUserAccount!: string;
   public dateCreated!: Date;
   public listOrderItem: Array<OrderItem> = [];
 
@@ -36,5 +35,9 @@ export class ShoppingCart {
         this.listOrderItem.splice(index,1);
       }
     });
+  }
+
+  public getAmountOfOrderItems(): number {
+    return this.listOrderItem.length;
   }
 }

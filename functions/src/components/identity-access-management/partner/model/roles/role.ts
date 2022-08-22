@@ -8,4 +8,5 @@ export class Role {
     public address!: Address;
     public partner!: Partner;
     public type!: RoleType;
+    public dateCreated!: Date;
 }

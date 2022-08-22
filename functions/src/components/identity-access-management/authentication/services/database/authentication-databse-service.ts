@@ -1,8 +1,8 @@
 import {UserAccount} from "../../model/user-account";
-import {MysqlError} from "mysql";
 import {database} from "../../../../../index";
 import {RoleUser} from "../../../partner/model/roles/role-user";
 import {mapRoleUserFromDbToRoleUser} from "../../mapper/authentication-mapper";
+import {promisify} from 'util';
 
 export class AuthenticationDatabseService {
 
@@ -10,33 +10,48 @@ export class AuthenticationDatabseService {
      * See: https://codeburst.io/node-js-mysql-and-async-await-6fb25b01b628
      */
     static async createUserAccount(userAccount: UserAccount): Promise<UserAccount> {
-        try {
-            await database.beginTransaction();
+        console.info('AuthenticationDatabseService.createUserAccount] START');
+        const rollback = promisify(database.rollback).bind(database);
+        const commit = promisify(database.commit).bind(database);
+        const query = promisify(database.query).bind(database);
+        console.info('INITIALIZE Promisify');
 
+        try {
             // INSERT UserAccount
+            console.info('INSERT UserAccount');
             const queryUserAccount = `INSERT INTO UserAccount(uuid, userName, password, email) VALUES ('${userAccount.uuid}', '${userAccount.userName}', '${userAccount.hashedPassword}', '${userAccount.email}')`;
-            await database.query(queryUserAccount);
+            await query(queryUserAccount);
+
+            // INSERT Role
+            console.info('INSERT Role');
+            const roleUser = userAccount.roleUser
+            const queryRole = `INSERT INTO Role(uuid, type) VALUES ('${roleUser.uuid}', '${roleUser.type}')`;
+            await query(queryRole);
 
             // INSERT RoleUser
-            // const queryRoleUser = `INSERT INTO UserAccount(uuid, userName, password, email) VALUES ('${uuidUserAccount}', '${userName}', '${hashedPassword}', '${email}')`;
-            // await database.query(queryRoleUser);
+            console.info('INSERT RoleUser');
+            const queryRoleUser = `INSERT INTO RoleUser(uuidRole, uuidUserAccount) VALUES ('${roleUser.uuid}', '${userAccount.uuid}')`;
+            await query(queryRoleUser);
 
-            await database.commit((commitError: MysqlError) => {
-                if (commitError !== null) {
-                    throw new Error('[myfarmer] Error commit insert-query user-account: ' + commitError.message);
-                }
-                return this.readUserAccountByUuid(userAccount.uuid);
-            });
-        } catch ( err ) {
-            await database.rollback((rollbackError: MysqlError) => {
-                if (rollbackError !== null) {
-                    throw new Error('[myfarmer] Error rollback insert-query user-account: ' + rollbackError.message);
-                }
-            });
-        } finally {
-            await database.close();
+            // INSERT Settings
+            console.info('INSERT Settings');
+            const settings = userAccount.roleUser.userSettings;
+            const querySettings = `INSERT INTO SettingsUser(uuid, languageApplicationCode, notificationYesNo ) VALUES ('${settings.uuid}', '${settings.languageApplicationCode}', '${settings.notificationsYesNo}')`;
+            await query(querySettings);
+
+            // INSERT ShoppingCart
+            console.info('INSERT ShoppingCart');
+            const shoppingCart = userAccount.roleUser.shoppingCart;
+            const queryShoppingCart = `INSERT INTO ShoppingCart(uuid, uuidRoleUser) VALUES ('${shoppingCart.uuid}', '${roleUser.uuid}')`;
+            await query(queryShoppingCart);
+
+            await commit();
+        } catch ( error ) {
+            console.error('[AuthenticationDatabseService.createUserAccount] Rollback register user-account for: ', userAccount.userName, error);
+            await rollback();
         }
 
+        // return this.readUserAccountByUuid(userAccount.uuid);
         return new UserAccount();
     }
 

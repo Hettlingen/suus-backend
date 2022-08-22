@@ -1,5 +1,6 @@
 export class UserSettings {
   public uuid!: string;
   public languageApplicationCode!: string;
-  public notificationsYesNo!: number;
+  public notificationsYesNo!: boolean;
+  public newsletterYesNo!: boolean;
 }

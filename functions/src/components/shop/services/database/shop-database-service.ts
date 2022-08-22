@@ -40,14 +40,14 @@ export class ShopDatabaseService {
             const shopFromDb = await database.query(query);
 
             if (shopFromDb === null || shopFromDb === undefined || shopFromDb.length === 0) {
-                console.log('[myfarmer] ShopDatabaseService.readShop - Shop doesnt exist on database');
-                throw new Error('[myfarmer] ShopDatabaseService.readShop - Shop doesnt exist on database');
+                console.log('[ShopDatabaseService.readShop] Shop doesnt exist on database');
+                throw new Error('[ShopDatabaseService.readShop] Shop doesnt exist on database');
             }
 
             return mapShopFromDbToShop(shopFromDb);;
         } catch(error) {
-            console.log('[myfarmer] ShopDatabaseService.readShop - Error reading shop items from database: ' + error);
-            throw new Error('[myfarmer] ShopDatabaseService.readShop - Error reading shop items from database: ' + error);
+            console.error('[ShopDatabaseService.readShop] Error reading shop items from database: %1', error);
+            throw new Error('[ShopDatabaseService.readShop] Error reading shop items from database: ' + error);
         }
     }
 
@@ -76,14 +76,13 @@ export class ShopDatabaseService {
     static async createShoppingCart(shoppingCart: ShoppingCart): Promise<ShoppingCart> {
         console.log('START: ShopDatabaseService.createShoppingCart');
 
-        const queryShppingCart = `INSERT INTO ShoppingCart(uuid, uuidUserAccount, dateCreated) VALUES ('${shoppingCart.uuid}', '${shoppingCart.uuidUserAccount}', '${shoppingCart.dateCreated}')`;
+        const queryShppingCart = `INSERT INTO ShoppingCart(uuid, dateCreated) VALUES ('${shoppingCart.uuid}', '${shoppingCart.dateCreated}')`;
 
         database.query(queryShppingCart, function (error: any, result: any) {
             if (error) throw error;
 
-
             let listOrderItems = shoppingCart.listOrderItem;
-            var queryOrderItems = `INSERT INTO OrderItem(uuid, uuidUserAccount, dateCreated) VALUES ('${shoppingCart.uuid}', '${shoppingCart.uuidUserAccount}', '${shoppingCart.dateCreated}')`;
+            var queryOrderItems = `INSERT INTO OrderItem(uuid, dateCreated) VALUES ('${shoppingCart.uuid}', '${shoppingCart.dateCreated}')`;
 
             database.query(queryOrderItems, [listOrderItems] , function (err: any, resultOrderItem: any) {
                 if (err) throw err;
@@ -96,13 +95,13 @@ export class ShopDatabaseService {
 
     static async saveShoppingCart(shoppingCart: ShoppingCart): Promise<ShoppingCart> {
         console.log('START: ShopDatabaseService.saveShoppingCart');
-        const query = `UPDATE ShoppingCart SET 'uuid' = '${shoppingCart.uuid}', 'uuidUserAccount' = '${shoppingCart.uuidUserAccount}'`;
+        const query = `UPDATE ShoppingCart SET 'uuid' = '${shoppingCart.uuid}'`;
 
         try {
             const uuidFromDb = await database.query(query);
-            if (!uuidFromDb) throw new Error('[myfarmer] Error inserting post in database.');
+            if (!uuidFromDb) throw new Error('[ShopDatabaseService.saveShoppingCart] Error updating shopping-cart in database.');
         } catch(error) {
-            throw new Error('[myfarmer] Error execute insert-query post: ' + error);
+            throw new Error('[ShopDatabaseService.saveShoppingCart] Error updating shopping-cart in database: ' + error);
         }
 
         return this.readShoppingCartByUuid(shoppingCart.uuid);

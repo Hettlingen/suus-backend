@@ -1,4 +1,4 @@
-export enum Country {
+export enum CountryCode {
     SWITZERLAND = 1,
     GERMANY
 }

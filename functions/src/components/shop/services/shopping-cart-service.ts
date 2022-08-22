@@ -10,7 +10,6 @@ export class ShoppingCartService {
 
         let shoppingCart: ShoppingCart = new ShoppingCart();
         shoppingCart.uuid = uuidGenerator();
-        shoppingCart.uuidUserAccount = uuidUserAccount;
         shoppingCart.dateCreated = new Date();
 
         try {
@@ -24,7 +23,6 @@ export class ShoppingCartService {
         console.log('START: ShopService.createShoppingCart: ' + uuidUserAccount);
 
         shoppingCart.uuid = uuidGenerator();
-        shoppingCart.uuidUserAccount = uuidUserAccount;
 
         try {
             return await ShopDatabaseService.saveShoppingCart(shoppingCart);
@@ -74,7 +72,6 @@ export class ShoppingCartService {
         if (shoppingCart === null) {
             shoppingCart = new ShoppingCart();
             shoppingCart.uuid = uuidGenerator();
-            shoppingCart.uuidUserAccount = uuidUserAccount;
             try {
                 shoppingCart = await ShopDatabaseService.saveShoppingCart(shoppingCart);
             } catch(error){

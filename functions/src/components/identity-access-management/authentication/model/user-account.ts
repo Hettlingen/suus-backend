@@ -11,7 +11,7 @@ export class UserAccount {
     public authenticationToken: AuthenticationToken = new AuthenticationToken();
     public amountOfLogonAttempts: number = 0;
     public dateCreated!: Date;
-    public dateUpdatedAt!: Date;
+    public dateUpdated!: Date;
 
     public roleUser!: RoleUser;
 }

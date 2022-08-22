@@ -1,4 +1,4 @@
-export enum Months {
+export enum MonthCode {
     JANUARY = 1,
     FEBRUARY = 2,
     MARCH = 3,
