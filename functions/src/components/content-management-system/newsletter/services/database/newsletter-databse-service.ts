@@ -1,4 +1,4 @@
-import {database} from "../../../../../index";
+import {databaseConnectionPool} from "../../../../../index";
 import {NewsletterOrder} from "../../model/newsletter-order";
 import {
     mapNewsletterOrderFromDbToNewsletterOrder,
@@ -16,7 +16,7 @@ export class NewsletterDatabseService {
         const query = `INSERT INTO NewsletterOrder(uuid, email, infoForCustomer, infoForProducer, infoForDeliverer) VALUES ('${uuid}', '${newsletterOrder.email}', ${infoForCustomer}, ${infoForProducer}, ${infoForDeliverer})`;
 
         try {
-            const uuidFromDb = await database.query(query);
+            const uuidFromDb = await databaseConnectionPool.query(query);
 
             if (!uuidFromDb) throw new Error('[myfarmer] Error create newsletter-order in database.');
 
@@ -33,7 +33,7 @@ export class NewsletterDatabseService {
         const query = `DELETE FROM NewsletterOrder WHERE email = '${email}'`;
 
         try {
-            await database.query(query);
+            await databaseConnectionPool.query(query);
             return true;
         } catch(error) {
             throw new Error('[myfarmer] Error execute delete newsletter: ' + error);
@@ -53,7 +53,7 @@ export class NewsletterDatabseService {
                             WHERE NewsletterOrder.uuidRoleUser='${uuidRoleUser}';`;
 
         try {
-            const newsletterOrderFromDb = await database.query(query);
+            const newsletterOrderFromDb = await databaseConnectionPool.query(query);
 
             if (newsletterOrderFromDb === null || newsletterOrderFromDb === undefined) {
                 throw new Error('[myfarmer] NewsletterDatabseService.readNewsletter - Newsletter-order doesnt exist on database');
@@ -71,7 +71,7 @@ export class NewsletterDatabseService {
         const query = 'SELECT * FROM NewsletterOrder;';
 
         try {
-            const newsletterOrdersFromDb = await database.query(query);
+            const newsletterOrdersFromDb = await databaseConnectionPool.query(query);
 
             if (newsletterOrdersFromDb === null || newsletterOrdersFromDb === undefined) {
                 throw new Error('[myfarmer] NewsletterDatabseService.readNewsletters - Newsletter-orders dont exist on database');

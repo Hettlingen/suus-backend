@@ -1,4 +1,4 @@
-import {database} from "../../../../../index";
+import {databaseConnectionPool} from "../../../../../index";
 import {Gallery} from "../../model/gallery";
 import {Image} from "../../model/image";
 import {mapGalleryFromDbToGallery, mapImageFromDbToImage} from "../../mapper/gallery-mapper";
@@ -28,7 +28,7 @@ export class GalleryDatabseService {
                                 WHERE Gallery.uuid='${uuidGallery}';`;
 
         try {
-            const galleryFromDb = await database.query(query);
+            const galleryFromDb = await databaseConnectionPool.query(query);
 
             if (galleryFromDb === null || galleryFromDb === undefined) {
                 throw new Error('[myfarmer] GalleryDatabseService.readGallery - Gallery doesnt exist on database');
@@ -47,7 +47,7 @@ export class GalleryDatabseService {
         const query = `SELECT * FROM Image WHERE Image.uuid='${uuidImage}'`;
 
         try {
-            const imageFromDb = await database.query(query);
+            const imageFromDb = await databaseConnectionPool.query(query);
 
             if (imageFromDb === null || imageFromDb === undefined) {
                 throw new Error('[myfarmer] GalleryDatabseService.readImage - Image doesnt exist on database');
@@ -80,7 +80,7 @@ export class GalleryDatabseService {
                           '${image.mimeType}')`;
 
         try {
-            await database.query(query);
+            await databaseConnectionPool.query(query);
             return true;
         } catch(error) {
             console.log('[myfarmer] GalleryDatabseService.saveImage - Error inserting Image to database: ' + error);
@@ -95,7 +95,7 @@ export class GalleryDatabseService {
         const query = `DELETE FROM Image WHERE uuid = '${uuidImage}'`;
 
         try {
-            await database.query(query);
+            await databaseConnectionPool.query(query);
             return true;
         } catch(error) {
             console.log('[myfarmer] GalleryDatabseService.deleteImage - Error deleting Image from database: ' + error);

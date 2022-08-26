@@ -30,13 +30,13 @@ app.use(cors(options));
 Routes.routes(app);
 
 // Initialize Database GOOGLE CLOUD MYSQL ----------------------------------------
-export let database: any;
+export let databaseConnectionPool: any;
 
 const databaseLocation = 'remote';
 const createPool = async () => {
     // @ts-ignore
     if (databaseLocation === 'remote') {
-        database = await mysql.createPool({
+        databaseConnectionPool = await mysql.createPool({
             user: 'root',
             password: 'scoop',
             database: 'SCOOP-SCHEMA',
@@ -73,7 +73,7 @@ const createPool = async () => {
             //[END_EXCLUDE]
         });
     } else {
-        database = await mysql.createPool({
+        databaseConnectionPool = await mysql.createPool({
             user: 'root',
             password: 'scoop',
             database: 'SCOOP-SCHEMA',

@@ -1,5 +1,5 @@
 import {RoleProducer} from "../../../identity-access-management/partner/model/roles/role-producer";
-import {database} from "../../../../index";
+import {databaseConnectionPool} from "../../../../index";
 import {mapCustomerFromDbToCustomer, mapDelivererFromDbToDeliverer} from "../../mapper/shop-administration-mapper";
 import {RoleDeliverer} from "../../../identity-access-management/partner/model/roles/role-deliverer";
 import {RoleCustomer} from "../../../identity-access-management/partner/model/roles/role-customer";
@@ -38,7 +38,7 @@ export class ShopAdministrationDatabaseService {
                             WHERE RoleCustomer.uuidRole='${uuidRoleCustomer}';`;
 
         try {
-            const customerFromDb = await database.query(query);
+            const customerFromDb = await databaseConnectionPool.query(query);
 
             console.log('customerFromDb: ' + JSON.stringify(customerFromDb));
             if (customerFromDb === null || customerFromDb === undefined || customerFromDb.length === 0) {
@@ -92,7 +92,7 @@ export class ShopAdministrationDatabaseService {
                             WHERE RoleProducer.uuidRole='${uuidRoleProducer}';`;
 
         try {
-            const producerFromDb = await database.query(query);
+            const producerFromDb = await databaseConnectionPool.query(query);
 
             if (producerFromDb === null || producerFromDb === undefined || producerFromDb.length === 0) {
                 const error = new Error('[myfarmer] ShopAdministrationDatabaseService.readProducer - Producer doesnt exist on database');
@@ -141,7 +141,7 @@ export class ShopAdministrationDatabaseService {
                             LEFT JOIN Address ON Role.uuidAddress=Address.uuid;`;
 
         try {
-            const producersFromDb = await database.query(query);
+            const producersFromDb = await databaseConnectionPool.query(query);
 
             if (producersFromDb === null || producersFromDb === undefined || producersFromDb.length === 0) {
                 const error = new Error('[myfarmer] ShopAdministrationDatabaseService.readProducers - Producers doesnt exist on database');
@@ -194,7 +194,7 @@ export class ShopAdministrationDatabaseService {
                             WHERE RoleDeliverer.uuidRole='${uuidRoleDeliverer}';`;
 
         try {
-            const delivererFromDb = await database.query(query);
+            const delivererFromDb = await databaseConnectionPool.query(query);
 
             if (delivererFromDb === null || delivererFromDb === undefined || delivererFromDb.length === 0) {
                 const error = new Error('[myfarmer] ShopAdministrationDatabaseService.readDeliverer - Deliverer doesnt exist on database');

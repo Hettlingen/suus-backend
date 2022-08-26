@@ -1,8 +1,7 @@
 import {UserAccount} from "../../model/user-account";
-import {database} from "../../../../../index";
+import {databaseConnectionPool} from "../../../../../index";
 import {RoleUser} from "../../../partner/model/roles/role-user";
 import {mapRoleUserFromDbToRoleUser} from "../../mapper/authentication-mapper";
-import {promisify} from 'util';
 
 export class AuthenticationDatabseService {
 
@@ -11,45 +10,50 @@ export class AuthenticationDatabseService {
      */
     static async createUserAccount(userAccount: UserAccount): Promise<UserAccount> {
         console.info('AuthenticationDatabseService.createUserAccount] START');
-        const rollback = promisify(database.rollback).bind(database);
-        const commit = promisify(database.commit).bind(database);
-        const query = promisify(database.query).bind(database);
-        console.info('INITIALIZE Promisify');
+
+        const connection = await databaseConnectionPool.getConnection()
+        await connection.beginTransaction();
 
         try {
-            // INSERT UserAccount
-            console.info('INSERT UserAccount');
+            console.info('INSERT Role');
             const queryUserAccount = `INSERT INTO UserAccount(uuid, userName, password, email) VALUES ('${userAccount.uuid}', '${userAccount.userName}', '${userAccount.hashedPassword}', '${userAccount.email}')`;
-            await query(queryUserAccount);
+            await connection.query(queryUserAccount);
 
-            // INSERT Role
             console.info('INSERT Role');
             const roleUser = userAccount.roleUser
             const queryRole = `INSERT INTO Role(uuid, type) VALUES ('${roleUser.uuid}', '${roleUser.type}')`;
-            await query(queryRole);
+            await connection.query(queryRole);
 
-            // INSERT RoleUser
-            console.info('INSERT RoleUser');
-            const queryRoleUser = `INSERT INTO RoleUser(uuidRole, uuidUserAccount) VALUES ('${roleUser.uuid}', '${userAccount.uuid}')`;
-            await query(queryRoleUser);
-
-            // INSERT Settings
-            console.info('INSERT Settings');
-            const settings = userAccount.roleUser.userSettings;
-            const querySettings = `INSERT INTO SettingsUser(uuid, languageApplicationCode, notificationYesNo ) VALUES ('${settings.uuid}', '${settings.languageApplicationCode}', '${settings.notificationsYesNo}')`;
-            await query(querySettings);
-
-            // INSERT ShoppingCart
-            console.info('INSERT ShoppingCart');
-            const shoppingCart = userAccount.roleUser.shoppingCart;
-            const queryShoppingCart = `INSERT INTO ShoppingCart(uuid, uuidRoleUser) VALUES ('${shoppingCart.uuid}', '${roleUser.uuid}')`;
-            await query(queryShoppingCart);
-
-            await commit();
-        } catch ( error ) {
-            console.error('[AuthenticationDatabseService.createUserAccount] Rollback register user-account for: ', userAccount.userName, error);
-            await rollback();
+            await connection.commit();
+        } catch (error) {
+            console.info('AuthenticationDatabseService.createUserAccount] ROLLBACK');
+            await connection.rollback();
         }
+
+        connection.release();
+
+        //     // INSERT RoleUser
+        //     console.info('INSERT RoleUser');
+        //     const queryRoleUser = `INSERT INTO RoleUser(uuidRole, uuidUserAccount) VALUES ('${roleUser.uuid}', '${userAccount.uuid}')`;
+        //     await query(queryRoleUser);
+        //
+        //     // INSERT Settings
+        //     console.info('INSERT Settings');
+        //     const settings = userAccount.roleUser.userSettings;
+        //     const querySettings = `INSERT INTO SettingsUser(uuid, languageApplicationCode, notificationYesNo ) VALUES ('${settings.uuid}', '${settings.languageApplicationCode}', '${settings.notificationsYesNo}')`;
+        //     await query(querySettings);
+        //
+        //     // INSERT ShoppingCart
+        //     console.info('INSERT ShoppingCart');
+        //     const shoppingCart = userAccount.roleUser.shoppingCart;
+        //     const queryShoppingCart = `INSERT INTO ShoppingCart(uuid, uuidRoleUser) VALUES ('${shoppingCart.uuid}', '${roleUser.uuid}')`;
+        //     await query(queryShoppingCart);
+        //
+        //     await commit();
+        // } catch ( error ) {
+        //     console.error('[AuthenticationDatabseService.createUserAccount] Rollback register user-account for: ', userAccount.userName, error);
+        //     await rollback();
+        // }
 
         // return this.readUserAccountByUuid(userAccount.uuid);
         return new UserAccount();
@@ -61,7 +65,7 @@ export class AuthenticationDatabseService {
         const query = `SELECT * FROM UserAccount WHERE uuid='${uuidUserAccount}'`;
 
         try {
-            const userAccountFromDb = await database.query(query);
+            const userAccountFromDb = await databaseConnectionPool.query(query);
             return userAccountFromDb[0];
         } catch(error) {
             throw new Error('[myfarmer] AuthenticationDatabseService.readUserAccountByUuid - Error reading user-account from database: ' + error);
@@ -74,7 +78,7 @@ export class AuthenticationDatabseService {
         const query = `SELECT * FROM UserAccount WHERE userName='${userName}'`;
 
         try {
-            const userAccountFromDb = await database.query(query);
+            const userAccountFromDb = await databaseConnectionPool.query(query);
             return userAccountFromDb[0];
         } catch(error) {
             throw new Error('[myfarmer] AuthenticationDatabseService.readUserAccountByUserName - Error reading user-account from database: ' + error);
@@ -120,7 +124,7 @@ export class AuthenticationDatabseService {
                             WHERE RoleUser.uuidRole='${uuidRoleUser}';`;
 
         try {
-            const userFromDb = await database.query(query);
+            const userFromDb = await databaseConnectionPool.query(query);
 
             console.log('userFromDb: ' + JSON.stringify(userFromDb));
             if (userFromDb === null || userFromDb === undefined || userFromDb.length === 0) {
@@ -171,7 +175,7 @@ export class AuthenticationDatabseService {
                             WHERE UserAccount.uuid='${uuidUserAccount}';`;
 
         try {
-            const userFromDb = await database.query(query);
+            const userFromDb = await databaseConnectionPool.query(query);
 
             console.log('userFromDb: ' + JSON.stringify(userFromDb));
             if (userFromDb === null || userFromDb === undefined || userFromDb.length === 0) {
