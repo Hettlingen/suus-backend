@@ -12,6 +12,10 @@ export class AuthenticationDatabseService {
     static async createUserAccount(userAccount: UserAccount): Promise<UserAccount> {
         console.info('AuthenticationDatabseService.createUserAccount] START');
 
+        const roleUser = userAccount.roleUser
+        const partner = roleUser.partner;
+        // const address = roleUser.address;
+
         const dateCreated = DateUtils.toSqlDatetime(new Date());
         console.log('Date created: ', dateCreated);
 
@@ -19,26 +23,23 @@ export class AuthenticationDatabseService {
         await connection.beginTransaction();
 
         try {
-            console.info('INSERT User-Account 5');
+            console.info('INSERT User-Account 6');
             const queryUserAccount = `INSERT INTO UserAccount(uuid, userName, password, email) VALUES ('${userAccount.uuid}', '${userAccount.userName}', '${userAccount.hashedPassword}', '${userAccount.email}')`;
             await connection.query(queryUserAccount);
 
             console.info('INSERT Role');
-            const roleUser = userAccount.roleUser
-            const queryRole = `INSERT INTO Role(uuid, type) VALUES ('${roleUser.uuid}', '${roleUser.type}')`;
+            const queryRole = `INSERT INTO Role(uuid, type, uuidPartner) VALUES ('${roleUser.uuid}', '${roleUser.type}', '${partner.uuid}')`;
             await connection.query(queryRole);
 
             console.info('INSERT RoleUser');
             const queryRoleUser = `INSERT INTO RoleUser(uuidRole, uuidUserAccount) VALUES ('${roleUser.uuid}', '${userAccount.uuid}')`;
             await connection.query(queryRoleUser);
 
-            // console.info('INSERT Partner');
-            // const person = roleUser.partner;
-            // const queryPartner = `INSERT INTO Partner(uuid, languageApplicationCode, notificationYesNo ) VALUES ('${settings.uuid}', '${settings.languageApplicationCode}', '${settings.notificationsYesNo}')`;
-            // await connection.query(queryPartner);
+            console.info('INSERT Partner');
+            const queryPartner = `INSERT INTO Partner(uuid, nickname ) VALUES ('${partner.uuid}', '${partner.nickname}')`;
+            await connection.query(queryPartner);
 
             // console.info('INSERT Address');
-            // const address = roleUser.address;
             // const queryAddress = `INSERT INTO Address(uuid, languageApplicationCode, notificationYesNo ) VALUES ('${settings.uuid}', '${settings.languageApplicationCode}', '${settings.notificationsYesNo}')`;
             // await connection.query(queryAddress);
 

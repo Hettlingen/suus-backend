@@ -11,6 +11,8 @@ import {ErrorServiceCodes, getErrorCode} from "../../../../utils/error/error-ser
 import {UserSettings} from "../../partner/model/user-settings";
 import {LanguageCode} from "../../../workplace/model/language-code";
 import {ShoppingCart} from "../../../shop/model/order/shopping-cart";
+import {Partner} from "../../partner/model/partner";
+import {Address} from "../../partner/model/address";
 
 export class AuthenticationService {
 
@@ -56,6 +58,16 @@ export class AuthenticationService {
         roleUser.uuid = uuidGenerator();
         roleUser.dateCreated = new Date();
         userAccount.roleUser = roleUser;
+
+        const partner = new Partner();
+        partner.uuid = uuidGenerator();
+        partner.nickname = 'Avatar';
+        partner.listRole.push(roleUser);
+        roleUser.partner = partner;
+
+        const address = new Address();
+        address.uuid = uuidGenerator();
+        roleUser.address = address;
 
         const settings = new UserSettings();
         settings.uuid = uuidGenerator();
