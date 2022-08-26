@@ -2,6 +2,7 @@ import {UserAccount} from "../../model/user-account";
 import {databaseConnectionPool} from "../../../../../index";
 import {RoleUser} from "../../../partner/model/roles/role-user";
 import {mapRoleUserFromDbToRoleUser} from "../../mapper/authentication-mapper";
+import {DateUtils} from "../../../../../utils/date-utils";
 
 export class AuthenticationDatabseService {
 
@@ -11,11 +12,14 @@ export class AuthenticationDatabseService {
     static async createUserAccount(userAccount: UserAccount): Promise<UserAccount> {
         console.info('AuthenticationDatabseService.createUserAccount] START');
 
+        const dateCreated = DateUtils.toSqlDatetime(new Date());
+        console.log('Date created: ', dateCreated);
+
         const connection = await databaseConnectionPool.getConnection()
         await connection.beginTransaction();
 
         try {
-            console.info('INSERT Role');
+            console.info('INSERT User-Account 5');
             const queryUserAccount = `INSERT INTO UserAccount(uuid, userName, password, email) VALUES ('${userAccount.uuid}', '${userAccount.userName}', '${userAccount.hashedPassword}', '${userAccount.email}')`;
             await connection.query(queryUserAccount);
 
@@ -24,36 +28,37 @@ export class AuthenticationDatabseService {
             const queryRole = `INSERT INTO Role(uuid, type) VALUES ('${roleUser.uuid}', '${roleUser.type}')`;
             await connection.query(queryRole);
 
+            console.info('INSERT RoleUser');
+            const queryRoleUser = `INSERT INTO RoleUser(uuidRole, uuidUserAccount) VALUES ('${roleUser.uuid}', '${userAccount.uuid}')`;
+            await connection.query(queryRoleUser);
+
+            // console.info('INSERT Partner');
+            // const person = roleUser.partner;
+            // const queryPartner = `INSERT INTO Partner(uuid, languageApplicationCode, notificationYesNo ) VALUES ('${settings.uuid}', '${settings.languageApplicationCode}', '${settings.notificationsYesNo}')`;
+            // await connection.query(queryPartner);
+
+            // console.info('INSERT Address');
+            // const address = roleUser.address;
+            // const queryAddress = `INSERT INTO Address(uuid, languageApplicationCode, notificationYesNo ) VALUES ('${settings.uuid}', '${settings.languageApplicationCode}', '${settings.notificationsYesNo}')`;
+            // await connection.query(queryAddress);
+
+            // console.info('INSERT Settings');
+            // const settings = userAccount.roleUser.userSettings;
+            // const querySettings = `INSERT INTO SettingsUser(uuid, languageApplicationCode, notificationYesNo ) VALUES ('${settings.uuid}', '${settings.languageApplicationCode}', '${settings.notificationsYesNo}')`;
+            // await connection.query(querySettings);
+
+            // console.info('INSERT ShoppingCart');
+            // const shoppingCart = userAccount.roleUser.shoppingCart;
+            // const queryShoppingCart = `INSERT INTO ShoppingCart(uuid, uuidRoleUser) VALUES ('${shoppingCart.uuid}', '${roleUser.uuid}')`;
+            // await connection.query(queryShoppingCart);
+
             await connection.commit();
         } catch (error) {
-            console.info('AuthenticationDatabseService.createUserAccount] ROLLBACK');
+            console.error('AuthenticationDatabseService.createUserAccount] ROLLBACK', error);
             await connection.rollback();
         }
 
         connection.release();
-
-        //     // INSERT RoleUser
-        //     console.info('INSERT RoleUser');
-        //     const queryRoleUser = `INSERT INTO RoleUser(uuidRole, uuidUserAccount) VALUES ('${roleUser.uuid}', '${userAccount.uuid}')`;
-        //     await query(queryRoleUser);
-        //
-        //     // INSERT Settings
-        //     console.info('INSERT Settings');
-        //     const settings = userAccount.roleUser.userSettings;
-        //     const querySettings = `INSERT INTO SettingsUser(uuid, languageApplicationCode, notificationYesNo ) VALUES ('${settings.uuid}', '${settings.languageApplicationCode}', '${settings.notificationsYesNo}')`;
-        //     await query(querySettings);
-        //
-        //     // INSERT ShoppingCart
-        //     console.info('INSERT ShoppingCart');
-        //     const shoppingCart = userAccount.roleUser.shoppingCart;
-        //     const queryShoppingCart = `INSERT INTO ShoppingCart(uuid, uuidRoleUser) VALUES ('${shoppingCart.uuid}', '${roleUser.uuid}')`;
-        //     await query(queryShoppingCart);
-        //
-        //     await commit();
-        // } catch ( error ) {
-        //     console.error('[AuthenticationDatabseService.createUserAccount] Rollback register user-account for: ', userAccount.userName, error);
-        //     await rollback();
-        // }
 
         // return this.readUserAccountByUuid(userAccount.uuid);
         return new UserAccount();
