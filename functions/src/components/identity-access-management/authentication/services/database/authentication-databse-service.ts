@@ -10,7 +10,7 @@ export class AuthenticationDatabseService {
      * See: https://codeburst.io/node-js-mysql-and-async-await-6fb25b01b628
      */
     static async createUserAccount(userAccount: UserAccount): Promise<UserAccount> {
-        console.info('AuthenticationDatabseService.createUserAccount] START');
+        console.info('[AuthenticationDatabseService.createUserAccount] START');
 
         const roleUser = userAccount.roleUser
         const partner = roleUser.partner;
@@ -64,8 +64,27 @@ export class AuthenticationDatabseService {
         return this.readUserAccountByUuid(userAccount.uuid);
     }
 
+    static async deleteUserAccount(uuidUserAccount: string): Promise<boolean> {
+        console.info('[AuthenticationDatabseService.deleteUserAccount] START');
+
+        const query = `DELETE UserAccount, RoleUser 
+                            FROM UserAccount 
+                            LEFT JOIN Role ON RoleUser.uuidRole=Role.uuid
+                            LEFT JOIN Partner ON Role.uuidPartner=Partner.uuid
+                            LEFT JOIN Address ON Role.uuidAddress=Address.uuid
+                            LEFT JOIN UserAccount ON RoleUser.uuidUserAccount=UserAccount.uuid
+                            WHERE UserAccount.uuid='${uuidUserAccount}';`;
+
+        try {
+            await databaseConnectionPool.query(query);
+            return true;
+        } catch(error) {
+            throw new Error('[AuthenticationDatabseService.deleteUserAccount] Error execute query to delete user-account: ' + error);
+        }
+    }
+
     static async readUserAccountByUuid(uuidUserAccount: string): Promise<UserAccount> {
-        if (!uuidUserAccount) throw new Error('[myfarmer] AuthenticationDatabseService.readUserAccountByUuid - Wrong parameters');
+        if (!uuidUserAccount) throw new Error('[AuthenticationDatabseService.readUserAccountByUuid] Wrong parameters');
 
         const query = `SELECT * FROM UserAccount WHERE uuid='${uuidUserAccount}'`;
 
@@ -130,8 +149,6 @@ export class AuthenticationDatabseService {
 
         try {
             const userFromDb = await databaseConnectionPool.query(query);
-
-            console.log('userFromDb: ' + JSON.stringify(userFromDb));
             if (userFromDb === null || userFromDb === undefined || userFromDb.length === 0) {
                 const error = new Error('[myfarmer] AuthenticationDatabseService.readUserByUuid - User doesnt exist on database');
                 console.log(error);

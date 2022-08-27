@@ -42,7 +42,7 @@ export class AuthenticationService {
         }
     };
 
-    public static async register(userAccount: UserAccount): Promise<UserAccount> {
+    public static async registerUser(userAccount: UserAccount): Promise<UserAccount> {
         console.info('START AuthenticationService.register for user: ' + userAccount.userName);
         if (await this.isUserAccountExisting(userAccount.userName)) {
             throw new ErrorService(
@@ -89,6 +89,20 @@ export class AuthenticationService {
             console.log('[AuthenticationService.register] Error register user: ' + error);
             throw new ErrorService(
                 '[AuthenticationService.register] Error register new user with user-name: ' + userAccount.userName,
+                getErrorCode(ErrorServiceCodes.USER_ACCOUNT_NOT_CREATED),
+                error);
+        }
+    }
+
+    public static async deregisterUser(uuidUserAccount: string): Promise<boolean> {
+        console.info('START AuthenticationService.deregister for user: ' + uuidUserAccount);
+
+        try {
+            return AuthenticationDatabseService.deleteUserAccount(uuidUserAccount);
+        } catch (error) {
+            console.log('[AuthenticationService.register] Error deregister user: ' + error);
+            throw new ErrorService(
+                '[AuthenticationService.register] Error deregister user with user-name: ' + uuidUserAccount,
                 getErrorCode(ErrorServiceCodes.USER_ACCOUNT_NOT_CREATED),
                 error);
         }

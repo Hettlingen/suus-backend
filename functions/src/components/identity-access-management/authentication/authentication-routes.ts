@@ -28,12 +28,21 @@ export class AuthenticationRoutes {
             });
         })
 
-        app.route('/user/register').post(async (request: Request, response: Response) => {
-            AuthenticationService.register(request.body)
+        app.route('/user').post(async (request: Request, response: Response) => {
+            AuthenticationService.registerUser(request.body)
                 .then(function(userAccount: UserAccount) {
                     response.status(ErrorHttpCodes.OK).send(userAccount);
                 }).catch(function(error: ErrorService){
                     response.status(ErrorHttpCodes.NOT_FOUND).send("Registration wasn't successful: " + error)
+            });
+        })
+
+        app.route('/user/:uuidUserAccount').delete(AuthenticationService.checkIfAuthenticated, (request: Request, response: Response) => {
+            AuthenticationService.deregisterUser(request.params.uuidUserAccount)
+                .then(() => {
+                    response.status(ErrorHttpCodes.OK).send();
+                }).catch(function(error: ErrorService){
+                response.status(ErrorHttpCodes.NOT_FOUND).send("Deregistration wasn't successful: " + error)
             });
         })
 
