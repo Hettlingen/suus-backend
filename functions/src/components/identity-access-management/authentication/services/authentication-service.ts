@@ -13,6 +13,7 @@ import {LanguageCode} from "../../../workplace/model/language-code";
 import {ShoppingCart} from "../../../shop/model/order/shopping-cart";
 import {Partner} from "../../partner/model/partner";
 import {Address} from "../../partner/model/address";
+import {CountryCode} from "../../partner/model/country-code";
 
 export class AuthenticationService {
 
@@ -67,11 +68,12 @@ export class AuthenticationService {
 
         const address = new Address();
         address.uuid = uuidGenerator();
+        address.countryCode = CountryCode.SWITZERLAND;
         roleUser.address = address;
 
         const settings = new UserSettings();
         settings.uuid = uuidGenerator();
-        settings.notificationsYesNo = true;
+        settings.notificationYesNo = true;
         settings.newsletterYesNo = true;
         // TODO get language code of header
         settings.languageApplicationCode = LanguageCode.GERMAN;

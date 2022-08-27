@@ -14,7 +14,9 @@ export class AuthenticationDatabseService {
 
         const roleUser = userAccount.roleUser
         const partner = roleUser.partner;
-        // const address = roleUser.address;
+        const address = roleUser.address;
+        const settings = userAccount.roleUser.userSettings;
+        const shoppingCart = userAccount.roleUser.shoppingCart;
 
         const dateCreated = DateUtils.toSqlDatetime(new Date());
         console.log('Date created: ', dateCreated);
@@ -23,46 +25,43 @@ export class AuthenticationDatabseService {
         await connection.beginTransaction();
 
         try {
-            console.info('INSERT User-Account 6');
+            console.info('INSERT User-Account 11');
             const queryUserAccount = `INSERT INTO UserAccount(uuid, userName, password, email) VALUES ('${userAccount.uuid}', '${userAccount.userName}', '${userAccount.hashedPassword}', '${userAccount.email}')`;
             await connection.query(queryUserAccount);
 
             console.info('INSERT Role');
-            const queryRole = `INSERT INTO Role(uuid, type, uuidPartner) VALUES ('${roleUser.uuid}', '${roleUser.type}', '${partner.uuid}')`;
+            const queryRole = `INSERT INTO Role(uuid, type, uuidPartner, uuidAddress) VALUES ('${roleUser.uuid}', '${roleUser.type}', '${partner.uuid}', '${address.uuid}')`;
             await connection.query(queryRole);
 
             console.info('INSERT RoleUser');
-            const queryRoleUser = `INSERT INTO RoleUser(uuidRole, uuidUserAccount) VALUES ('${roleUser.uuid}', '${userAccount.uuid}')`;
+            const queryRoleUser = `INSERT INTO RoleUser(uuidRole, uuidUserAccount, uuidUserSettings, uuidShoppingCart) VALUES ('${roleUser.uuid}', '${userAccount.uuid}', '${settings.uuid}', '${shoppingCart.uuid}')`;
             await connection.query(queryRoleUser);
 
             console.info('INSERT Partner');
             const queryPartner = `INSERT INTO Partner(uuid, nickname ) VALUES ('${partner.uuid}', '${partner.nickname}')`;
             await connection.query(queryPartner);
 
-            // console.info('INSERT Address');
-            // const queryAddress = `INSERT INTO Address(uuid, languageApplicationCode, notificationYesNo ) VALUES ('${settings.uuid}', '${settings.languageApplicationCode}', '${settings.notificationsYesNo}')`;
-            // await connection.query(queryAddress);
+            console.info('INSERT Address');
+            const queryAddress = `INSERT INTO Address(uuid, countryCode ) VALUES ('${address.uuid}', '${address.countryCode}')`;
+            await connection.query(queryAddress);
 
-            // console.info('INSERT Settings');
-            // const settings = userAccount.roleUser.userSettings;
-            // const querySettings = `INSERT INTO SettingsUser(uuid, languageApplicationCode, notificationYesNo ) VALUES ('${settings.uuid}', '${settings.languageApplicationCode}', '${settings.notificationsYesNo}')`;
-            // await connection.query(querySettings);
+            console.info('INSERT Settings');
+            const querySettings = `INSERT INTO SettingsUser(uuid, languageApplicationCode, notificationYesNo, newsletterYesNo ) VALUES ('${settings.uuid}', '${settings.languageApplicationCode}', '${Number(settings.notificationYesNo)}', '${Number(settings.newsletterYesNo)}')`;
+            await connection.query(querySettings);
 
-            // console.info('INSERT ShoppingCart');
-            // const shoppingCart = userAccount.roleUser.shoppingCart;
-            // const queryShoppingCart = `INSERT INTO ShoppingCart(uuid, uuidRoleUser) VALUES ('${shoppingCart.uuid}', '${roleUser.uuid}')`;
-            // await connection.query(queryShoppingCart);
+            console.info('INSERT ShoppingCart');
+            const queryShoppingCart = `INSERT INTO ShoppingCart(uuid, uuidRoleUser) VALUES ('${shoppingCart.uuid}', '${roleUser.uuid}')`;
+            await connection.query(queryShoppingCart);
 
             await connection.commit();
         } catch (error) {
             console.error('AuthenticationDatabseService.createUserAccount] ROLLBACK', error);
             await connection.rollback();
+        } finally {
+            connection.release();
         }
 
-        connection.release();
-
-        // return this.readUserAccountByUuid(userAccount.uuid);
-        return new UserAccount();
+        return this.readUserAccountByUuid(userAccount.uuid);
     }
 
     static async readUserAccountByUuid(uuidUserAccount: string): Promise<UserAccount> {
