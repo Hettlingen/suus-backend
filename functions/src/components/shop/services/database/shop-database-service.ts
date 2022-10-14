@@ -20,7 +20,7 @@ export class ShopDatabaseService {
 
     static async readShop(uuidShop: string, offset: number, limit: number): Promise<Shop> {
         console.log('START: ShopDatabaseService.readShop: ' + uuidShop);
-        if (!uuidShop) throw new Error('[myfarmer] ShopDatabaseService.readShop - Wrong parameters');
+        if (!uuidShop) throw new Error('[ShopDatabaseService.readShop] - Wrong parameters');
 
         const query = `SELECT Shop.uuid, Shop.name, Shop.description,
                               ShopItem.uuid uuidOfShopItem, 
@@ -53,7 +53,7 @@ export class ShopDatabaseService {
 
     static async readShopItem(uuidShopItem: string): Promise<ShopItem> {
         console.log('START: ShopDatabaseService.readShopItem: ' + uuidShopItem);
-        if (!uuidShopItem) throw new Error('[myfarmer] ShopDatabaseService.readShopItem - Wrong parameters');
+        if (!uuidShopItem) throw new Error('[ShopDatabaseService.readShopItem] - Wrong parameters');
 
         const query = `SELECT * FROM ShopItem WHERE ShopItem.uuid='${uuidShopItem}'`;
 

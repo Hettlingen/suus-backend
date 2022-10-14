@@ -22,11 +22,16 @@ export class ShopRoutes {
         // SHOP / SHOPITEM
         // --------------------------------------------------
         app.route('/shops/:uuidShop').get(async (request: Request, response: Response) => {
-            ShopService.getShop(request.params.uuidShop, Number(request.query.pageOnDatabase))
+            console.log('Parameter pageOnDatabase lautet: ' + request.query.pageOnDatabase);
+
+            const { uuidShop } = request.params;
+            const pageOnDatabase: string = <string>request.query.pageOnDatabase!;
+
+            ShopService.getShop(uuidShop, pageOnDatabase)
                 .then(function(shop: Shop) {
                     response.status(200).send(shop);
                 }).catch(function(error: any){
-                    response.status(404).send("Shop wasn't found: " + error)
+                response.status(404).send("Shop wasn't found: " + error)
             });
         })
 
