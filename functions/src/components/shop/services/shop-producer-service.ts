@@ -1,6 +1,6 @@
 import {RoleProducer} from "../../identity-access-management/partner/model/roles/role-producer";
 import {ShopAdministrationDatabaseService} from "./database/shop-administration-database-service";
-import {FileService} from "../../workplace/services/file-service";
+import {FileService} from "../../workplace/services/utils/file-service";
 import {RoleType} from "../../identity-access-management/partner/model/roles/role-type";
 
 export class ShopProducerService {

@@ -1,7 +1,7 @@
 import {DownloadResponse, Storage} from "@google-cloud/storage";
 import {MyFile} from "../../model/my-file";
-import {MimeType} from "./mime-type";
-import {FileExtension} from "./file-extension";
+import {MimeType} from "../../model/codes/mime-type";
+import {FileExtension} from "../../model/codes/file-extension";
 
 const path = require('path');
 // --dirname delivers the absolute path of the actual file location. Here of the file 'file-helper.ts'

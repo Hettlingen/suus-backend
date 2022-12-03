@@ -11,16 +11,14 @@ export class ShopService {
     private static MAX_ROWS_TO_READ:number = 1000;
 
     /**
-     * Read shop-items of the shop
+     * Read shop and the shop-items
      *
      * @param uuidShop
      * @param pageOnDatabase
      */
     static async getShop(uuidShop: string, pageOnDatabase: string): Promise<Shop> {
         console.log('START: ShopService.getShop: ' + uuidShop);
-        if (!uuidShop) throw new Error('[myfarmer] Shop-ID is required');
-
-        console.log('Query Parameter pageOnDatabase: ' + pageOnDatabase);
+        if (!uuidShop) throw new Error('[ShopService.getShop] Shop-ID is required');
 
         if (pageOnDatabase) {
             const page: number = Number(pageOnDatabase);
@@ -31,19 +29,19 @@ export class ShopService {
     }
 
     /**
-     * Read all shop-items of the shop
+     * Read shop with all shop-items
      *
      * @param uuidShop
      */
     private static async getShopWithoutPaging(uuidShop: string): Promise<Shop> {
-        console.log('START: ShopService.getShop: ' + uuidShop);
-        if (!uuidShop) throw new Error('[myfarmer] Shop-ID is required');
+        console.log('START: ShopService.getShopWithoutPaging: ' + uuidShop);
+        if (!uuidShop) throw new Error('[ShopService.getShopWithoutPaging] Shop-ID is required');
 
         try {
             return await ShopDatabaseService.readShop(uuidShop, 0, this.MAX_ROWS_TO_READ);
         } catch(error){
-            console.log('[myfarmer] ShopService.getShop - Error reading Shop: ' + error);
-            throw new Error('[myfarmer] ShopService.getShop - Error reading Shop');
+            console.log('[ShopService.getShopWithoutPaging] Error reading Shop: ' + error);
+            throw new Error('[ShopService.getShopWithoutPaging] Error reading Shop');
         }
     }
 
@@ -53,27 +51,27 @@ export class ShopService {
      * @param pageOnDatabase
      */
     private static async getShopWithPaging(uuidShop: string, pageOnDatabase: number): Promise<Shop> {
-        console.log('START: ShopService.getShop: ' + uuidShop);
-        if (!uuidShop) throw new Error('[myfarmer] Shop-ID is required');
+        console.log('START: ShopService.getShopWithPaging: ' + uuidShop);
+        if (!uuidShop) throw new Error('[ShopService.getShopWithPaging] Shop-ID is required');
 
         let offset = (pageOnDatabase - 1) * this.LIMIT_ROWS_TO_READ;
 
         try {
             return await ShopDatabaseService.readShop(uuidShop, offset, this.LIMIT_ROWS_TO_READ);
         } catch(error){
-            console.log('[myfarmer] ShopService.getShop - Error reading Shop: ' + error);
-            throw new Error('[myfarmer] ShopService.getShop - Error reading Shop');
+            console.log('[ShopService.getShopWithPaging] Error reading Shop: ' + error);
+            throw new Error('[ShopService.getShopWithPaging] Error reading Shop');
         }
     }
 
     static async getShopItem(uuidShopItem: string): Promise<ShopItem> {
         console.log('START: ShopService.getShopItem: ' + uuidShopItem);
-        if (!uuidShopItem) throw new Error('[myfarmer] Shopitem-ID is required');
+        if (!uuidShopItem) throw new Error('[ShopService.getShopItem] Shopitem-ID is required');
 
         try {
             return await ShopDatabaseService.readShopItem(uuidShopItem);
         } catch(error){
-            throw new Error('[myfarmer] ShopService.getShopItem - Error reading Shopitem');
+            throw new Error('[ShopService.getShopItem] Error reading Shopitem');
         }
     }
 
@@ -87,7 +85,7 @@ export class ShopService {
         try {
             return await ShopDatabaseService.createOrder(order);
         } catch(error){
-            throw new Error('ShopService.createOrders - Error create order of user: ' + order.uuidUserAccount);
+            throw new Error('[ShopService.createOrder] Error create order of user: ' + order.uuidUserAccount);
         }
     }
 
@@ -97,7 +95,7 @@ export class ShopService {
         try {
             return await ShopDatabaseService.readOrders(uuidUserAccount);
         } catch(error){
-            throw new Error('[myfarmer] ShopService.getOrders - Error reading Orders of user: ' + uuidUserAccount);
+            throw new Error('[ShopService.getOrders] Error reading Orders of user: ' + uuidUserAccount);
         }
     }
 
@@ -107,7 +105,7 @@ export class ShopService {
         try {
             return await ShopDatabaseService.readOrderByUuid(uuidOrder);
         } catch(error){
-            throw new Error('[myfarmer] ShopService.getOrder - Error reading order with uuid: ' + uuidOrder);
+            throw new Error('[ShopService.getOrder] Error reading order with uuid: ' + uuidOrder);
         }
     }
 
@@ -124,7 +122,7 @@ export class ShopService {
         try {
             return await ShopDatabaseService.readDeliveries(uuidUserAccount);
         } catch(error){
-            throw new Error('[myfarmer] ShopService.getDeliveries - Error reading deliveries of user: ' + uuidUserAccount);
+            throw new Error('[ShopService.getDeliveries] Error reading deliveries of user: ' + uuidUserAccount);
         }
     }
 
@@ -134,7 +132,7 @@ export class ShopService {
         try {
             return await ShopDatabaseService.readDelivery(uuidDelivery);
         } catch(error){
-            throw new Error('[myfarmer] ShopService.getDelivery - Error reading delivery with uuid: ' + uuidDelivery);
+            throw new Error('[ShopService.getDelivery] Error reading delivery with uuid: ' + uuidDelivery);
         }
     }
 }

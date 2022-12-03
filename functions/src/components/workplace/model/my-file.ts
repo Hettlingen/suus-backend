@@ -8,6 +8,7 @@ export class MyFile {
   public fileName!: string;
   public fileContentAsBase64!: string;
   public mimeType!: string;
+  public url!: string;
   public dateCreated!: Date;
   public dateUpdated!: Date;
 }

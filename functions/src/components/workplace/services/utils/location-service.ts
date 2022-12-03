@@ -1,4 +1,4 @@
-import {Address} from "../../identity-access-management/partner/model/address";
+import {Address} from "../../../identity-access-management/partner/model/address";
 
 export class LocationService {
 

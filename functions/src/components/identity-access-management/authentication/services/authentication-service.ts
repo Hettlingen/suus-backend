@@ -9,7 +9,7 @@ import * as functions from 'firebase-functions'
 import {ErrorService} from "../../../../utils/error/error-service";
 import {ErrorServiceCodes, getErrorCode} from "../../../../utils/error/error-service-codes";
 import {UserSettings} from "../../partner/model/user-settings";
-import {LanguageCode} from "../../../workplace/model/language-code";
+import {LanguageCode} from "../../../workplace/model/codes/language-code";
 import {ShoppingCart} from "../../../shop/model/order/shopping-cart";
 import {Partner} from "../../partner/model/partner";
 import {Address} from "../../partner/model/address";

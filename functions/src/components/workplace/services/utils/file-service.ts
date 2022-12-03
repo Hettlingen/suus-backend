@@ -1,7 +1,7 @@
-import {MyFile} from "../model/my-file";
-import {FileHelper} from "./utils/file-helper";
-import {RoleType} from "../../identity-access-management/partner/model/roles/role-type";
-import {Image} from "../../content-management-system/gallery/model/image";
+import {MyFile} from "../../model/my-file";
+import {FileHelper} from "./file-helper";
+import {RoleType} from "../../../identity-access-management/partner/model/roles/role-type";
+import {Image} from "../../../content-management-system/gallery/model/image";
 import * as fs from 'fs';
 
 export class FileService {
@@ -98,6 +98,20 @@ export class FileService {
     }
 
     public static async readFile(pathAndFileName: string) {
+        // read synchron
         return fs.readFileSync(pathAndFileName, 'utf8');
+
+        // read asynchron
+        // fs.readFile(pathAndFileName, 'utf8', function (err, data) {
+        //     if (err) throw err;
+        //     return JSON.parse(data);
+        // });
+    }
+
+    public static async readFileJson(pathAndFileName: string) {
+        fs.readFile(pathAndFileName, 'utf8', function (err, data) {
+            if (err) throw err;
+            return JSON.parse(data);
+        });
     }
 }
