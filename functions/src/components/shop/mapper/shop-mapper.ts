@@ -28,7 +28,6 @@ export const mapShopFromDbToShop = (shopFromDb: any) => {
         shopItem.category = row.categoryOfShopItem;
         shopItem.price = row.priceOfShopItem;
         shopItem.currencyPrice = row.currencyPriceOfShopItem;
-        shopItem.imageName = row.imageNameOfShopItem;
         shop.listShopItem.push(shopItem);
     }
 
@@ -43,7 +42,6 @@ export const mapShopItemFromDbToShopItem = (shopItemFromDb: any) => {
     shopItem.category = shopItemFromDb.categoryOfShopItem;
     shopItem.price = shopItemFromDb.price;
     shopItem.currencyPrice = shopItemFromDb.currencyPrice;
-    shopItem.imageName = shopItemFromDb.imageName;
     return shopItem;
 }
 
@@ -121,7 +119,6 @@ export const mapOfferItemFromDbToOfferItem = (offerItemFromDb: any) => {
     shopItem.category = offerItemFromDb.categoryOfShopItem;
     shopItem.price = offerItemFromDb.priceOfShopItem;
     shopItem.currencyPrice = offerItemFromDb.currencyPriceOfShopItem;
-    shopItem.imageName = offerItemFromDb.imageName;
     offerItem.shopItem= shopItem;
 
     return offerItem;

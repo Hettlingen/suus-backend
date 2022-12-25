@@ -6,7 +6,9 @@ export class ShopItem {
     public price!: number;
     public currencyPrice!: string;
     public quantity!: number;
-    public imageName!: string;
+    public uuidImageBanner!: string;
+    public uuidImageProduct!: string;
+    public uuidGallery!: string;
     public dateCreated!: Date;
     public dateUpdated!: Date;
     public datePublished!: Date;

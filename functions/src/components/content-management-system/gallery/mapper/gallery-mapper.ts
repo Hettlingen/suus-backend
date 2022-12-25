@@ -26,16 +26,3 @@ export const mapGalleryFromDbToGallery = (galleryFromDb: any) => {
 
     return gallery;
 }
-
-export const mapImageFromDbToImage = (imageFromDb: any) => {
-    const image = new Image();
-    image.uuid = imageFromDb.uuid;
-    image.title = imageFromDb.title;
-    image.description = imageFromDb.description;
-    image.bucketName = imageFromDb.bucketName;
-    image.bucketDirectory = imageFromDb.bucketDirectory;
-    image.fileName = imageFromDb.fileName;
-    // image.dateCreated = imageFromDb.dateCreated;
-    // image.dateUpdated = imageFromDb.dateUpdated;
-    return image;
-}

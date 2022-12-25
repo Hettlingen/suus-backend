@@ -1,6 +1,7 @@
 import {Consent} from "../../model/consent";
-import {DocumentSnapshot} from "firebase-functions/lib/providers/firestore";
 import {databaseFirestore} from "../../../../config/firebase";
+import {firestore} from "firebase-admin";
+import DocumentSnapshot = firestore.DocumentSnapshot;
 
 export class WorkplaceDatabaseService {
 

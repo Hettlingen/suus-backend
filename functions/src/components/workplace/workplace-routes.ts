@@ -1,12 +1,14 @@
 import {Request, Response} from "express";
 import {WorkplaceService} from "./services/workplace-service";
 import {Consent} from "./model/consent";
-import {GalleryService} from "../content-management-system/gallery/services/gallery-service";
+import {ImageService} from "./services/image-service";
+import {Image} from "../content-management-system/gallery/model/image";
 
 export class WorkplaceRoutes {
 
     public static routes(app: any): void {
 
+        // get terms of use of the digital services
         app.route('/workplace/terms-of-use/:uuidTermsOfUse').get(async (request: Request, response: Response) => {
             WorkplaceService.getTermsOfUse(request.params.uuidTermsOfUse)
                 .then(function(termsOfUse: Consent) {
@@ -16,13 +18,33 @@ export class WorkplaceRoutes {
             });
         })
 
-        app.route('/files').post(async (request: Request, response: Response) => {
-            // todo extract uuidGallery from request
-            GalleryService.saveImage('', request.body)
+        // save image on gcp bucket
+        app.route('/images').post(async (request: Request, response: Response) => {
+            ImageService.saveImage(request.body)
                 .then(function(result: boolean) {
                     response.status(200).send(result);
                 }).catch(function(error: any){
-                response.status(404).send("Files weren't saved successfully: " + error)
+                response.status(404).send("Image isn't saved successfully: " + error)
+            });
+        })
+
+        // get image on gcp bucket
+        app.route('/images/:uuidImage').post(async (request: Request, response: Response) => {
+            ImageService.getImage(request.params.uuidImage)
+                .then(function(image: Image) {
+                    response.status(200).send(image);
+                }).catch(function(error: any){
+                response.status(404).send("Image wasn't found: " + error)
+            });
+        })
+
+        // Delete image on gcp bucket
+        app.route('/images/:uuidImage').delete(async (request: Request, response: Response) => {
+            ImageService.deleteImage(request.params.uuidImage)
+                .then(function(result: boolean) {
+                    response.status(200).send(result);
+                }).catch(function(error: any){
+                response.status(404).send("Image wasn't deleted successfully: " + error)
             });
         })
     }

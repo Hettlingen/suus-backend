@@ -4,6 +4,7 @@ import {ShopItem} from "../model/shop-item";
 import {Order} from "../model/order/order";
 import {Delivery} from "../model/delivery/delivery";
 import { v4 as uuidGenerator } from 'uuid';
+import {Image} from "../../content-management-system/gallery/model/image";
 
 export class ShopService {
 
@@ -73,6 +74,22 @@ export class ShopService {
         } catch(error){
             throw new Error('[ShopService.getShopItem] Error reading Shopitem');
         }
+    }
+
+    static async getShopItemImages(uuidShopItem: string): Promise<Array<Image>> {
+        console.log('START: ShopService.getShopItemImages: ' + uuidShopItem);
+        if (!uuidShopItem) throw new Error('[ShopService.getShopItemImages] Shopitem-ID is required');
+
+        let images;
+        try {
+            images = await ShopDatabaseService.readShopItemImages(uuidShopItem);
+        } catch(error){
+            throw new Error('[ShopService.getShopItemImages] Error reading Shopitem');
+        }
+
+        // TODO read byte arrays of images in gcp buckets
+
+        return images;
     }
 
     /**************************************************/

@@ -1,17 +1,15 @@
 import {databaseConnectionPool} from "../../../../index";
 import {Shop} from "../../model/shop";
 import {
-    mapShopFromDbToShop,
-    mapShoppingCartFromDbToShoppingCart,
-    mapShopItemFromDbToShopItem,
-    mapOrdersFromDbToOrders,
     mapDeliveriesFromDbToDeliveries,
     mapDeliveryFromDbToDelivery,
-    mapOrderFromDbToOrder
+    mapOrderFromDbToOrder,
+    mapOrdersFromDbToOrders,
+    mapShopFromDbToShop,
+    mapShopItemFromDbToShopItem
 } from "../../mapper/shop-mapper";
 import {ShopItem} from "../../model/shop-item";
 import {Delivery} from "../../model/delivery/delivery";
-import {ShoppingCart} from "../../model/order/shopping-cart";
 import {Order} from "../../model/order/order";
 import {RoleProducer} from "../../../identity-access-management/partner/model/roles/role-producer";
 import {OrderState} from "../../model/order/order-state";
@@ -68,89 +66,6 @@ export class ShopDatabaseService {
         } catch(error) {
             throw new Error('[myfarmer] ShopDatabaseService.readShopItem - Error reading shop-item details from database: ' + error);
         }
-    }
-
-    /**************************************************/
-    /* START: SHOPPING CART                           */
-    /**************************************************/
-    static async createShoppingCart(shoppingCart: ShoppingCart): Promise<ShoppingCart> {
-        console.log('START: ShopDatabaseService.createShoppingCart');
-
-        const queryShppingCart = `INSERT INTO ShoppingCart(uuid, dateCreated) VALUES ('${shoppingCart.uuid}', '${shoppingCart.dateCreated}')`;
-
-        databaseConnectionPool.query(queryShppingCart, function (error: any, result: any) {
-            if (error) throw error;
-
-            let listOrderItems = shoppingCart.listOrderItem;
-            var queryOrderItems = `INSERT INTO OrderItem(uuid, dateCreated) VALUES ('${shoppingCart.uuid}', '${shoppingCart.dateCreated}')`;
-
-            databaseConnectionPool.query(queryOrderItems, [listOrderItems] , function (err: any, resultOrderItem: any) {
-                if (err) throw err;
-                console.log(result.affectedRows + " record inserted");
-            });
-        });
-
-        return new ShoppingCart();
-    }
-
-    static async saveShoppingCart(shoppingCart: ShoppingCart): Promise<ShoppingCart> {
-        console.log('START: ShopDatabaseService.saveShoppingCart');
-        const query = `UPDATE ShoppingCart SET 'uuid' = '${shoppingCart.uuid}'`;
-
-        try {
-            const uuidFromDb = await databaseConnectionPool.query(query);
-            if (!uuidFromDb) throw new Error('[ShopDatabaseService.saveShoppingCart] Error updating shopping-cart in database.');
-        } catch(error) {
-            throw new Error('[ShopDatabaseService.saveShoppingCart] Error updating shopping-cart in database: ' + error);
-        }
-
-        return this.readShoppingCartByUuid(shoppingCart.uuid);
-    }
-
-    static async readShoppingCartByUuid(uuidShoppingCart: string): Promise<ShoppingCart> {
-        console.log('START: ShopDatabaseService.readShoppingCartByUuid: ' + uuidShoppingCart);
-        if (!uuidShoppingCart) throw new Error('ShopDatabaseService.readShoppingCartByUuid - Wrong parameters');
-
-        const query = `SELECT ShoppingCart.uuid,
-                              ShoppingCart.uuidUserAccount,
-                              ShoppingCart.dateCreated,
-                              OrderItems.uuid uuidOfOrderItem,
-                              OrderItems.quantity quantityOfOrderItem,
-                              ShopItem.uuid uuidOfShopItem,
-                              ShopItem.name nameOfShopItem,
-                              ShopItem.description describtionOfShopItem,
-                              ShopItem.category categoryOfShopItem,
-                              ShopItem.price priceOfShopItem,
-                              ShopItem.currencyPrice currencyPriceOfShopItem,
-                              ShopItem.quantity quantityOfShopItem,
-                              ShopItem.imageName imageNameOfShopItem,
-                              ShopItem.dateCreated dateCreatedOfShopItem,
-                              ShopItem.dateUpdated dateUpdatedOfShopItem,
-                              ShopItem.datePublished datePublishedOfShopItem
-                            FROM ShoppingCart
-                            LEFT JOIN OrderItem
-                                ON OrderItem.uuidShoppingCart=ShoppingCart.uuid
-                            WHERE ShoppingCart.uuid='${uuidShoppingCart}';`;
-
-        try {
-            const shoppingCartFromDb = await databaseConnectionPool.query(query);
-
-            if (shoppingCartFromDb === null || shoppingCartFromDb === undefined) {
-                throw new Error('ShopDatabaseService.readShoppingCartByUuid - Shopping cart doesnt exist on database');
-            }
-
-            return mapShoppingCartFromDbToShoppingCart(shoppingCartFromDb[0]);
-        } catch(error) {
-            throw new Error('ShopDatabaseService.readDelivery - Error reading delivery from database: ' + error);
-        }
-    }
-            
-    static async readShoppingCartByUuidUserAccount(uuidUserAccount: string): Promise<ShoppingCart> {
-        return new ShoppingCart();
-    }
-
-    static async deleteShoppingCart(uuidUserAccount: string): Promise<boolean> {
-        return true;
     }
 
     /**************************************************/

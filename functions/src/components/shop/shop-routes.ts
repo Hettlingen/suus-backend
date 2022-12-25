@@ -12,14 +12,12 @@ import {RoleCustomer} from "../identity-access-management/partner/model/roles/ro
 import {ShopCustomerService} from "./services/shop-customer-service";
 import {ShopProducerService} from "./services/shop-producer-service";
 import {ShopDelivererService} from "./services/shop-deliverer-service";
-import {ShoppingCart} from "./model/order/shopping-cart";
-import {ShoppingCartService} from "./services/shopping-cart-service";
 
 export class ShopRoutes {
     public static routes(app: any): void {
 
         // --------------------------------------------------
-        // SHOP / SHOPITEM
+        // SHOP / SHOPITEMS
         // --------------------------------------------------
         app.route('/shops/:uuidShop').get(async (request: Request, response: Response) => {
             console.log('Parameter pageOnDatabase lautet: ' + request.query.pageOnDatabase);
@@ -41,70 +39,6 @@ export class ShopRoutes {
                     response.status(200).send(shopItem);
                 }).catch(function(error: any){
                 response.status(404).send("Shopitem wasn't found: " + error)
-            });
-        })
-
-        // --------------------------------------------------
-        // SHOPPING CART
-        // --------------------------------------------------
-
-        // create shopping-cart
-        app.route('/users/:uuidUserAccount/shopping-cart').post(async (request: Request, response: Response) => {
-            ShoppingCartService.createShoppingCart(request.params.uuidUserAccount)
-                .then(function(shoppingCart: ShoppingCart) {
-                    response.status(200).send(shoppingCart);
-                }).catch(function(error: any){
-                response.status(404).send("Shopping-cart wasn't created: " + error)
-            });
-        })
-
-        // update shopping-cart
-        app.route('/users/:uuidUserAccount/shopping-cart').patch(async (request: Request, response: Response) => {
-            ShoppingCartService.saveShoppingCart(request.params.uuidUserAccount, request.body)
-                .then(function(shoppingCart: ShoppingCart) {
-                    response.status(200).send(shoppingCart);
-                }).catch(function(error: any){
-                response.status(404).send("Shopping-cart wasn't updated: " + error)
-            });
-        })
-
-        // get shopping-cart
-        app.route('/users/:uuidUserAccount/shopping-cart').get(async (request: Request, response: Response) => {
-            ShoppingCartService.getShoppingCart(request.params.uuidUserAccount)
-                .then(function(shoppingCart: ShoppingCart) {
-                    response.status(200).send(shoppingCart);
-                }).catch(function(error: any){
-                response.status(404).send("Shopping-cart wasn't found: " + error)
-            });
-        })
-
-        // Delete a shopping-cart
-        app.route('/users/:uuidUserAccount/shopping-cart').delete(async (request: Request, response: Response) => {
-            ShoppingCartService.deleteShoppingCart(request.params.uuidUserAccount)
-                .then(function (successful) {
-                    response.status(200).send(successful);
-                }).catch(function (error) {
-                response.status(404).send("Shopping-cart wasn't deleted successful: " + error);
-            });
-        });
-
-        // add order-item to shopping-cart
-        app.route('/users/:uuidUserAccount/shopping-cart/order-item').post(async (request: Request, response: Response) => {
-            ShoppingCartService.addOrderItemToShoppingCart(request.params.uuidUserAccount, request.body)
-                .then(function(shoppingCart: ShoppingCart) {
-                    response.status(200).send(shoppingCart);
-                }).catch(function(error: any){
-                response.status(404).send("Shopping-cart wasn't updated: " + error)
-            });
-        })
-
-        // remove order-item from shopping-cart
-        app.route('/users/:uuidUserAccount/shopping-cart/order-item').delete(async (request: Request, response: Response) => {
-            ShoppingCartService.removeOrderItemFromShoppingCart(request.params.uuidUserAccount, request.body)
-                .then(function(shoppingCart: ShoppingCart) {
-                    response.status(200).send(shoppingCart);
-                }).catch(function(error: any){
-                response.status(404).send("Shopping-cart wasn't updated: " + error)
             });
         })
 
