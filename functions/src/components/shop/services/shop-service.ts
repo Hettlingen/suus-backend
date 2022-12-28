@@ -3,8 +3,12 @@ import {ShopDatabaseService} from "./database/shop-database-service";
 import {ShopItem} from "../model/shop-item";
 import {Order} from "../model/order/order";
 import {Delivery} from "../model/delivery/delivery";
-import { v4 as uuidGenerator } from 'uuid';
-import {Image} from "../../content-management-system/gallery/model/image";
+import {v4 as uuidGenerator} from 'uuid';
+import {GalleryService} from "../../content-management-system/gallery/services/gallery-service";
+import {ShopItemDatabase} from "./database/model/shop-item-database";
+import {mapShopDatabaseToShop, mapShopItemDatabaseToShopItem} from "../mapper/shop-mapper";
+import {ImageService} from "../../workplace/services/image-service";
+import {ShopDatabase} from "./database/model/shop-database";
 
 export class ShopService {
 
@@ -38,12 +42,15 @@ export class ShopService {
         console.log('START: ShopService.getShopWithoutPaging: ' + uuidShop);
         if (!uuidShop) throw new Error('[ShopService.getShopWithoutPaging] Shop-ID is required');
 
+        let shopDatabase: ShopDatabase;
         try {
-            return await ShopDatabaseService.readShop(uuidShop, 0, this.MAX_ROWS_TO_READ);
+            shopDatabase = await ShopDatabaseService.readShop(uuidShop, 0, this.MAX_ROWS_TO_READ);
         } catch(error){
             console.log('[ShopService.getShopWithoutPaging] Error reading Shop: ' + error);
             throw new Error('[ShopService.getShopWithoutPaging] Error reading Shop');
         }
+
+        return mapShopDatabaseToShop(shopDatabase);
     }
 
     /**
@@ -57,39 +64,52 @@ export class ShopService {
 
         let offset = (pageOnDatabase - 1) * this.LIMIT_ROWS_TO_READ;
 
+        let shopDatabase: ShopDatabase;
         try {
-            return await ShopDatabaseService.readShop(uuidShop, offset, this.LIMIT_ROWS_TO_READ);
+            shopDatabase =  await ShopDatabaseService.readShop(uuidShop, offset, this.LIMIT_ROWS_TO_READ);
         } catch(error){
             console.log('[ShopService.getShopWithPaging] Error reading Shop: ' + error);
             throw new Error('[ShopService.getShopWithPaging] Error reading Shop');
         }
+
+        return mapShopDatabaseToShop(shopDatabase);
     }
 
     static async getShopItem(uuidShopItem: string): Promise<ShopItem> {
         console.log('START: ShopService.getShopItem: ' + uuidShopItem);
         if (!uuidShopItem) throw new Error('[ShopService.getShopItem] Shopitem-ID is required');
 
+        let shopItem: ShopItem;
+        let shopItemDatabase: ShopItemDatabase;
         try {
-            return await ShopDatabaseService.readShopItem(uuidShopItem);
+            shopItemDatabase = await ShopDatabaseService.readShopItem(uuidShopItem);
         } catch(error){
             throw new Error('[ShopService.getShopItem] Error reading Shopitem');
         }
-    }
+        shopItem = mapShopItemDatabaseToShopItem(shopItemDatabase);
 
-    static async getShopItemImages(uuidShopItem: string): Promise<Array<Image>> {
-        console.log('START: ShopService.getShopItemImages: ' + uuidShopItem);
-        if (!uuidShopItem) throw new Error('[ShopService.getShopItemImages] Shopitem-ID is required');
+        GalleryService.getGallery(shopItemDatabase.uuidGallery)
+            .then(function (gallery) {
+                shopItem.gallery = gallery;
+            }).catch(function (error) {
+                console.error('Read of gallery went wrong');
+        });
 
-        let images;
-        try {
-            images = await ShopDatabaseService.readShopItemImages(uuidShopItem);
-        } catch(error){
-            throw new Error('[ShopService.getShopItemImages] Error reading Shopitem');
-        }
+        ImageService.getImage(shopItemDatabase.uuidImageBanner)
+            .then(function (image) {
+                shopItem.imageBanner = image;
+            }).catch(function (error) {
+            console.error('Read of image banner went wrong');
+        });
 
-        // TODO read byte arrays of images in gcp buckets
+        ImageService.getImage(shopItemDatabase.uuidImageBanner)
+            .then(function (image) {
+                shopItem.imageProduct = image;
+            }).catch(function (error) {
+            console.error('Read of image product went wrong');
+        });
 
-        return images;
+        return shopItem;
     }
 
     /**************************************************/

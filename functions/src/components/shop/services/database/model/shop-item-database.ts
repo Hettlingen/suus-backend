@@ -1,7 +1,4 @@
-import {Gallery} from "../../content-management-system/gallery/model/gallery";
-import {Image} from "../../content-management-system/gallery/model/image";
-
-export class ShopItem {
+export class ShopItemDatabase {
     public uuid!: string;
     public name!: string;
     public description!: string;
@@ -12,9 +9,7 @@ export class ShopItem {
     public quantity!: number;
     public uuidImageBanner!: string;
     public uuidImageProduct!: string;
-    public imageBanner!: Image;
-    public imageProduct!: Image;
-    public gallery!: Gallery;
+    public uuidGallery!: string;
     public imageName!: string;
     public dateCreated!: Date;
     public dateUpdated!: Date;

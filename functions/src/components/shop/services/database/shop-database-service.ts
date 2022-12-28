@@ -1,22 +1,21 @@
 import {databaseConnectionPool} from "../../../../index";
-import {Shop} from "../../model/shop";
 import {
     mapDeliveriesFromDbToDeliveries,
     mapDeliveryFromDbToDelivery,
     mapOrderFromDbToOrder,
-    mapOrdersFromDbToOrders,
-    mapShopFromDbToShop,
-    mapShopItemFromDbToShopItem
+    mapOrdersFromDbToOrders
 } from "../../mapper/shop-mapper";
-import {ShopItem} from "../../model/shop-item";
 import {Delivery} from "../../model/delivery/delivery";
 import {Order} from "../../model/order/order";
 import {RoleProducer} from "../../../identity-access-management/partner/model/roles/role-producer";
 import {OrderState} from "../../model/order/order-state";
+import {ShopItemDatabase} from "./model/shop-item-database";
+import {mapShopFromDbToShopDatabase, mapShopItemFromDbToShopItemDatabase} from "./mapper/shop-mapper-database";
+import {ShopDatabase} from "./model/shop-database";
 
 export class ShopDatabaseService {
 
-    static async readShop(uuidShop: string, offset: number, limit: number): Promise<Shop> {
+    static async readShop(uuidShop: string, offset: number, limit: number): Promise<ShopDatabase> {
         console.log('START: ShopDatabaseService.readShop: ' + uuidShop);
         if (!uuidShop) throw new Error('[ShopDatabaseService.readShop] - Wrong parameters');
 
@@ -24,9 +23,13 @@ export class ShopDatabaseService {
                               ShopItem.uuid uuidOfShopItem, 
                               ShopItem.name nameOfShopItem, 
                               ShopItem.description descriptionOfShopItem,
+                              ShopItem.slogan sloganOfShopItem,
                               ShopItem.category categoryOfShopItem,
                               ShopItem.price priceOfShopItem,
                               ShopItem.currencyPrice currencyPriceOfShopItem,
+                              ShopItem.uuidImageBanner uuidImageBannerOfShopItem,
+                              ShopItem.uuidImageProduct uuidImageProductOfShopItem,
+                              ShopItem.uuidGallery uuidGalleryOfShopItem,
                               ShopItem.imageName imageNameOfShopItem
                             FROM Shop
                             LEFT JOIN ShopItem 
@@ -42,14 +45,14 @@ export class ShopDatabaseService {
                 throw new Error('[ShopDatabaseService.readShop] Shop doesnt exist on database');
             }
 
-            return mapShopFromDbToShop(shopFromDb);;
+            return mapShopFromDbToShopDatabase(shopFromDb);
         } catch(error) {
             console.error('[ShopDatabaseService.readShop] Error reading shop items from database: %1', error);
             throw new Error('[ShopDatabaseService.readShop] Error reading shop items from database: ' + error);
         }
     }
 
-    static async readShopItem(uuidShopItem: string): Promise<ShopItem> {
+    static async readShopItem(uuidShopItem: string): Promise<ShopItemDatabase> {
         console.log('START: ShopDatabaseService.readShopItem: ' + uuidShopItem);
         if (!uuidShopItem) throw new Error('[ShopDatabaseService.readShopItem] - Wrong parameters');
 
@@ -62,7 +65,7 @@ export class ShopDatabaseService {
                 throw new Error('[myfarmer] ShopDatabaseService.readShopItem - Shopitem doesnt exist on database');
             }
 
-            return mapShopItemFromDbToShopItem(shopItemFromDb[0]);
+            return mapShopItemFromDbToShopItemDatabase(shopItemFromDb[0]);
         } catch(error) {
             throw new Error('[myfarmer] ShopDatabaseService.readShopItem - Error reading shop-item details from database: ' + error);
         }
@@ -109,7 +112,7 @@ export class ShopDatabaseService {
                               Order.number,
                               Order.state,
                               Order.dateDelivery,
-                              Invoice. uuid uuidOfInvoice,
+                              Invoice.uuid uuidOfInvoice,
                               Invoice.type typeOfInvoice,
                               Invoice.state stateOfInvoice,
                               Invoice.priceTotal priceTotalOfInvoice,

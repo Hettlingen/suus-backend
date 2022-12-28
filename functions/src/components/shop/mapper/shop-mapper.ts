@@ -12,36 +12,42 @@ import {Delivery} from "../model/delivery/delivery";
 import {getDeliveryState} from "../model/delivery/delivery-state";
 import {ShoppingCart} from "../model/order/shopping-cart";
 import {OrderItem} from "../model/order/order-item";
+import {ShopItemDatabase} from "../services/database/model/shop-item-database";
+import {ShopDatabase} from "../services/database/model/shop-database";
 
-export const mapShopFromDbToShop = (shopFromDb: any) => {
+export const mapShopDatabaseToShop = (shopDatabase: ShopDatabase) => {
     const shop = new Shop();
 
-    shop.uuid = shopFromDb[0].uuid;
-    shop.name = shopFromDb[0].name;
-    shop.description = shopFromDb[0].description;
+    shop.uuid = shopDatabase.uuid;
+    shop.name = shopDatabase.name;
+    shop.description = shopDatabase.description;
 
-    for (const row of shopFromDb) {
+    for (const shopItemDatabase of shopDatabase.listShopItem) {
         const shopItem = new ShopItem();
-        shopItem.uuid = row.uuidOfShopItem;
-        shopItem.name = row.nameOfShopItem;
-        shopItem.description = row.descriptionOfShopItem;
-        shopItem.category = row.categoryOfShopItem;
-        shopItem.price = row.priceOfShopItem;
-        shopItem.currencyPrice = row.currencyPriceOfShopItem;
+        shopItem.uuid = shopItemDatabase.uuid;
+        shopItem.name = shopItemDatabase.name;
+        shopItem.description = shopItemDatabase.description;
+        shopItem.slogan = shopItemDatabase.slogan;
+        shopItem.category = shopItemDatabase.category;
+        shopItem.price = shopItemDatabase.price;
+        shopItem.currencyPrice = shopItemDatabase.currencyPrice;
         shop.listShopItem.push(shopItem);
     }
 
     return shop;
 }
 
-export const mapShopItemFromDbToShopItem = (shopItemFromDb: any) => {
+export const mapShopItemDatabaseToShopItem = (shopItemDatabase: ShopItemDatabase) => {
+    console.log('Shopitem from DB lautet: ' + shopItemDatabase);
+
     const shopItem = new ShopItem();
-    shopItem.uuid = shopItemFromDb.uuid;
-    shopItem.name = shopItemFromDb.name;
-    shopItem.description = shopItemFromDb.description;
-    shopItem.category = shopItemFromDb.categoryOfShopItem;
-    shopItem.price = shopItemFromDb.price;
-    shopItem.currencyPrice = shopItemFromDb.currencyPrice;
+    shopItem.uuid = shopItemDatabase.uuid;
+    shopItem.name = shopItemDatabase.name;
+    shopItem.description = shopItemDatabase.description;
+    shopItem.slogan = shopItemDatabase.slogan;
+    shopItem.category = shopItemDatabase.category;
+    shopItem.price = shopItemDatabase.price;
+    shopItem.currencyPrice = shopItemDatabase.currencyPrice;
     return shopItem;
 }
 
