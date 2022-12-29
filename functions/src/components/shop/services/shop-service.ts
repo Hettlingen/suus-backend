@@ -88,27 +88,34 @@ export class ShopService {
         }
         shopItem = mapShopItemDatabaseToShopItem(shopItemDatabase);
 
-        GalleryService.getGallery(shopItemDatabase.uuidGallery)
-            .then(function (gallery) {
-                shopItem.gallery = gallery;
-            }).catch(function (error) {
+        if (shopItemDatabase.uuidGallery) {
+            GalleryService.getGallery(shopItemDatabase.uuidGallery)
+                .then(function (gallery) {
+                    shopItem.gallery = gallery;
+                }).catch(function (error) {
                 console.error('Read of gallery went wrong');
-        });
+            });
+        }
 
-        ImageService.getImage(shopItemDatabase.uuidImageBanner)
-            .then(function (image) {
-                shopItem.imageBanner = image;
-            }).catch(function (error) {
-            console.error('Read of image banner went wrong');
-        });
+        if (shopItemDatabase.uuidImageBanner) {
+            ImageService.getImage(shopItemDatabase.uuidImageBanner)
+                .then(function (image) {
+                    shopItem.imageBanner = image;
+                }).catch(function (error) {
+                console.error('Read of image banner went wrong');
+            });
+        }
 
-        ImageService.getImage(shopItemDatabase.uuidImageBanner)
-            .then(function (image) {
-                shopItem.imageProduct = image;
-            }).catch(function (error) {
-            console.error('Read of image product went wrong');
-        });
+        if (shopItemDatabase.uuidImageProduct) {
+            ImageService.getImage(shopItemDatabase.uuidImageProduct)
+                .then(function (image) {
+                    shopItem.imageProduct = image;
+                }).catch(function (error) {
+                console.error('Read of image product went wrong');
+            });
+        }
 
+        console.log('Shopitem with images lautet: ' + JSON.stringify(shopItem));
         return shopItem;
     }
 

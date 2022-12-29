@@ -43,7 +43,8 @@
     },
     "pubsub": {
       "port": 8085
-    }
+    },
+    "singleProjectMode": true
   },
   "storage": {
     "rules": "firebase-storage-security-rules"

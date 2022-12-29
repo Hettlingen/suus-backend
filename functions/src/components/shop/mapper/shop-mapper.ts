@@ -38,7 +38,7 @@ export const mapShopDatabaseToShop = (shopDatabase: ShopDatabase) => {
 }
 
 export const mapShopItemDatabaseToShopItem = (shopItemDatabase: ShopItemDatabase) => {
-    console.log('Shopitem from DB lautet: ' + shopItemDatabase);
+    console.log('Shopitem from DB lautet: ' + JSON.stringify(shopItemDatabase));
 
     const shopItem = new ShopItem();
     shopItem.uuid = shopItemDatabase.uuid;
