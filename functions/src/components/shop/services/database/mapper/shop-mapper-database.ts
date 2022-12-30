@@ -14,6 +14,8 @@ export const mapShopFromDbToShopDatabase = (shopFromDb: any) => {
         shopItemDatabase.name = row.nameOfShopItem;
         shopItemDatabase.description = row.descriptionOfShopItem;
         shopItemDatabase.slogan = row.sloganOfShopItem;
+        shopItemDatabase.brand = row.brandOfShopItem;
+        shopItemDatabase.unit = row.unitOfShopItem;
         shopItemDatabase.category = row.categoryOfShopItem;
         shopItemDatabase.price = row.priceOfShopItem;
         shopItemDatabase.currencyPrice = row.currencyPriceOfShopItem;
@@ -27,19 +29,18 @@ export const mapShopFromDbToShopDatabase = (shopFromDb: any) => {
 }
 
 export const mapShopItemFromDbToShopItemDatabase = (shopItemFromDb: any) => {
-
-    console.log('Shopitem from DB lautet: ' + shopItemFromDb);
-
     const shopItem = new ShopItemDatabase();
     shopItem.uuid = shopItemFromDb.uuid;
     shopItem.name = shopItemFromDb.name;
     shopItem.description = shopItemFromDb.description;
-    shopItem.slogan = shopItemFromDb.sloganOfShopItem;
-    shopItem.category = shopItemFromDb.categoryOfShopItem;
+    shopItem.slogan = shopItemFromDb.slogan;
+    shopItem.brand = shopItemFromDb.brand;
+    shopItem.unit = shopItemFromDb.unit;
+    shopItem.category = shopItemFromDb.category;
     shopItem.price = shopItemFromDb.price;
     shopItem.currencyPrice = shopItemFromDb.currencyPrice;
-    shopItem.uuidImageBanner = shopItemFromDb.uuidImageBannerOfShopItem;
-    shopItem.uuidImageProduct = shopItemFromDb.uuidImageProductOfShopItem;
-    shopItem.uuidGallery = shopItemFromDb.uuidGalleryOfShopItem;
+    shopItem.uuidImageBanner = shopItemFromDb.uuidImageBanner;
+    shopItem.uuidImageProduct = shopItemFromDb.uuidImageProduct;
+    shopItem.uuidGallery = shopItemFromDb.uuidGallery;
     return shopItem;
 }

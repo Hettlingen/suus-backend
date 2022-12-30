@@ -11,17 +11,33 @@ export class ImageService {
             image.uuid = uuidGenerator();
             image.fileName = FileHelper.createFileName(image);
             // save image to the Google cloud storage
-            return await FileService.saveImage(image);
+            return await FileService.saveImageByteStreamToBucket(image);
         } catch (error) {
             // todo in case of an error we have to delete the image in the gcp-bucket
-            throw new Error('[GalleryService.saveImage] Error save Image with uuid '
+            throw new Error('[ImageService.saveImage] Error save Image with uuid '
                 + image.uuid + ', error: '
                 + error);
         }
     }
 
-    static async getImage(uuidImage: string): Promise<Image> {
-        console.log('START: GalleryService.getImage: ' + uuidImage);
+    static async getImageWithoutByteStream(uuidImage: string): Promise<Image> {
+        console.log('START: ImageService.getImageWithoutByteStream: ' + uuidImage);
+        if (!uuidImage) throw new Error('Image-ID is required');
+
+        try {
+            const image = await ImageDatabseService.readImage(uuidImage);
+            return image;
+        } catch (error) {
+            throw new Error('[ImageService.getImageWithoutByteStream] Error reading Image with uuid '
+                + uuidImage + ', error: '
+                + error);
+        }
+
+        throw new Error('[ImageService.getImage] Error reading Image with uuid ' + uuidImage);
+    }
+
+    static async getImageWithByteStream(uuidImage: string): Promise<Image> {
+        console.log('START: ImageService.getImageWithByteStream: ' + uuidImage);
         if (!uuidImage) throw new Error('Image-ID is required');
 
         try {
@@ -29,22 +45,22 @@ export class ImageService {
             image.fileContentAsBase64 = await FileService.readImageAsBase64(image);
             return image;
         } catch (error) {
-            throw new Error('[GalleryService.getImage] Error reading Image with uuid '
+            throw new Error('[ImageService.getImageWithByteStream] Error reading Image with uuid '
                 + uuidImage + ', error: '
                 + error);
         }
 
-        throw new Error('[GalleryService.getImage] Error reading Image with uuid ' + uuidImage);
+        throw new Error('[ImageService.getImageWithByteStream] Error reading Image with uuid ' + uuidImage);
     }
 
     public static async deleteImage(uuidImage: string): Promise<boolean> {
         try {
             const image = await ImageDatabseService.readImage(uuidImage);
             // delete image from the google cloud storage
-            await FileService.deleteImage(image);
+            await FileService.deleteImageFromBucket(image);
             return await ImageDatabseService.deleteImage(uuidImage);
         } catch (error) {
-            throw new Error('[GalleryService.deleteImage] Error deleting Image with uuid '
+            throw new Error('[ImageService.deleteImage] Error deleting Image with uuid '
                 + uuidImage + ', error: '
                 + error);
         }

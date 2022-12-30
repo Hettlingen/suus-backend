@@ -93,25 +93,25 @@ export class ShopService {
                 .then(function (gallery) {
                     shopItem.gallery = gallery;
                 }).catch(function (error) {
-                console.error('Read of gallery went wrong');
+                console.error('Reading gallery went wrong: ' + error);
             });
         }
 
         if (shopItemDatabase.uuidImageBanner) {
-            ImageService.getImage(shopItemDatabase.uuidImageBanner)
+            ImageService.getImageWithoutByteStream(shopItemDatabase.uuidImageBanner)
                 .then(function (image) {
                     shopItem.imageBanner = image;
                 }).catch(function (error) {
-                console.error('Read of image banner went wrong');
+                console.error('Reading image banner went wrong: ' + error);
             });
         }
 
         if (shopItemDatabase.uuidImageProduct) {
-            ImageService.getImage(shopItemDatabase.uuidImageProduct)
+            ImageService.getImageWithoutByteStream(shopItemDatabase.uuidImageProduct)
                 .then(function (image) {
                     shopItem.imageProduct = image;
                 }).catch(function (error) {
-                console.error('Read of image product went wrong');
+                console.error('Reading image product went wrong: ' + error);
             });
         }
 

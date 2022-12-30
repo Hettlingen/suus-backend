@@ -30,7 +30,7 @@ export class WorkplaceRoutes {
 
         // get image on gcp bucket
         app.route('/images/:uuidImage').post(async (request: Request, response: Response) => {
-            ImageService.getImage(request.params.uuidImage)
+            ImageService.getImageWithByteStream(request.params.uuidImage)
                 .then(function(image: Image) {
                     response.status(200).send(image);
                 }).catch(function(error: any){

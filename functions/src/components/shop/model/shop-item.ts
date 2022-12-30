@@ -7,6 +7,8 @@ export class ShopItem {
     public description!: string;
     public slogan!: string;
     public category!: number;
+    public brand!: string;
+    public unit!: string;
     public price!: number;
     public currencyPrice!: string;
     public quantity!: number;

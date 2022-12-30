@@ -25,6 +25,8 @@ export class ShopDatabaseService {
                               ShopItem.description descriptionOfShopItem,
                               ShopItem.slogan sloganOfShopItem,
                               ShopItem.category categoryOfShopItem,
+                              ShopItem.brand brandOfShopItem,
+                              ShopItem.unit unitOfShopItem,
                               ShopItem.price priceOfShopItem,
                               ShopItem.currencyPrice currencyPriceOfShopItem,
                               ShopItem.uuidImageBanner uuidImageBannerOfShopItem,

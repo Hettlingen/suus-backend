@@ -46,6 +46,8 @@ export const mapShopItemDatabaseToShopItem = (shopItemDatabase: ShopItemDatabase
     shopItem.description = shopItemDatabase.description;
     shopItem.slogan = shopItemDatabase.slogan;
     shopItem.category = shopItemDatabase.category;
+    shopItem.brand = shopItemDatabase.brand;
+    shopItem.unit = shopItemDatabase.unit
     shopItem.price = shopItemDatabase.price;
     shopItem.currencyPrice = shopItemDatabase.currencyPrice;
     return shopItem;

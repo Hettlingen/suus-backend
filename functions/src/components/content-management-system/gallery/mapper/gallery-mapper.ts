@@ -19,6 +19,7 @@ export const mapGalleryFromDbToGallery = (galleryFromDb: any) => {
         image.bucketName = row.bucketNameOfImage;
         image.bucketDirectory = row.bucketDirectoryOfImage;
         image.fileName = row.fileNameOfImage;
+        image.url = row.urlImageOfImage;
         // image.dateCreated = row.dateCreatedOfImage;
         // image.dateUpdated = row.dateUpdatedOfImage;
         gallery.listImages.push(image);

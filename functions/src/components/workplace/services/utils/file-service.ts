@@ -6,7 +6,7 @@ import * as fs from 'fs';
 
 export class FileService {
 
-    public static async saveFile(myFile: MyFile): Promise<boolean> {
+    public static async saveFileToBucket(myFile: MyFile): Promise<boolean> {
         const myBucket = FileHelper.getStorage().bucket(myFile.bucketName);
         const imageBuffer = FileHelper.decodeBase64ToBinary(myFile.fileContentAsBase64);
 
@@ -27,7 +27,7 @@ export class FileService {
         return true;
     }
 
-    public static async saveImage(image: Image): Promise<boolean> {
+    public static async saveImageByteStreamToBucket(image: Image): Promise<boolean> {
         const myBucket = FileHelper.getStorage().bucket(image.bucketName);
         const imageBuffer = FileHelper.decodeBase64ToBinary(image.fileContentAsBase64);
 
@@ -48,7 +48,7 @@ export class FileService {
         return true;
     }
 
-    public static async deleteImage(image: Image): Promise<boolean> {
+    public static async deleteImageFromBucket(image: Image): Promise<boolean> {
         const myBucket = FileHelper.getStorage().bucket(image.bucketName);
 
         try {

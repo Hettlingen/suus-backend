@@ -27,6 +27,7 @@ export const mapImageFromDbToImage = (imageFromDb: any) => {
     image.bucketName = imageFromDb.bucketName;
     image.bucketDirectory = imageFromDb.bucketDirectory;
     image.fileName = imageFromDb.fileName;
+    image.url = imageFromDb.urlImage;
     // image.dateCreated = imageFromDb.dateCreated;
     // image.dateUpdated = imageFromDb.dateUpdated;
     return image;

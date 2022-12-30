@@ -20,7 +20,8 @@ export class GalleryDatabseService {
                               Image.description descriptionOfImage,
                               Image.bucketName bucketNameOfImage,
                               Image.bucketDirectory bucketDirectoryOfImage,
-                              Image.fileName fileNameOfImage
+                              Image.fileName fileNameOfImage,
+                              Image.urlImage urlImageOfImage
                             FROM Gallery 
                             LEFT JOIN Image 
                                 ON Gallery.uuid=Image.uuidGallery
@@ -28,6 +29,8 @@ export class GalleryDatabseService {
 
         try {
             const galleryFromDb = await databaseConnectionPool.query(query);
+
+            console.log('Gallery from DB: ' + JSON.stringify(galleryFromDb));
 
             if (galleryFromDb === null || galleryFromDb === undefined) {
                 throw new Error('[myfarmer] GalleryDatabseService.readGallery - Gallery doesnt exist on database');

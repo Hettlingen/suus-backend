@@ -3,6 +3,8 @@ export class ShopItemDatabase {
     public name!: string;
     public description!: string;
     public slogan!: string;
+    public brand!: string;
+    public unit!: string;
     public category!: number;
     public price!: number;
     public currencyPrice!: string;

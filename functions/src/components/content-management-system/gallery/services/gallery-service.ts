@@ -5,6 +5,7 @@ import { v4 as uuidGenerator } from 'uuid';
 import {FileHelper} from "../../../workplace/services/utils/file-helper";
 import {FileService} from "../../../workplace/services/utils/file-service";
 import {ImageDatabseService} from "../../../workplace/services/database/image-databse-service";
+import {ImageService} from "../../../workplace/services/image-service";
 
 export class GalleryService {
 
@@ -15,7 +16,7 @@ export class GalleryService {
         try {
             return await GalleryDatabseService.readGallery(uuidGallery);
         } catch(error){
-            throw new Error('[myfarmer] GalleryService.getGallery - Error reading Gallery' + error);
+            throw new Error('[GalleryService.getGallery] Error reading Gallery' + error);
         }
     }
 
@@ -24,16 +25,12 @@ export class GalleryService {
         if (!uuidImage) throw new Error('Image-ID is required');
 
         try {
-            const image = await ImageDatabseService.readImage(uuidImage);
-            image.fileContentAsBase64 = await FileService.readImageAsBase64(image);
-            return image;
+            return await ImageService.getImageWithByteStream(uuidImage);
         } catch (error) {
-            throw new Error('[myfarmer] GalleryService.getImage - Error reading Image with uuid '
+            throw new Error('[GalleryService.getImage] Error reading Image with uuid '
                 + uuidImage + ', error: '
                 + error);
         }
-
-        throw new Error('[myfarmer] GalleryService.getImage - Error reading Image with uuid ' + uuidImage);
     }
 
     public static async saveImage(uuidGallery: string, image: Image): Promise<boolean> {
@@ -43,11 +40,11 @@ export class GalleryService {
             image.fileName = FileHelper.createFileName(image);
 
             // save image to the google cloud storage
-            await FileService.saveImage(image);
+            await FileService.saveImageByteStreamToBucket(image);
             return await ImageDatabseService.saveImage(image);
         } catch (error) {
-            // todo in case of an error we have to delete the image in the gcp-bucket
-            throw new Error('[myfarmer] GalleryService.saveImage - Error save Image with uuid '
+            // TODO in case of an error we have to delete the image in the gcp-bucket
+            throw new Error('[GalleryService.saveImage] Error save Image with uuid '
                 + image.uuid + ', error: '
                 + error);
         }
@@ -57,10 +54,10 @@ export class GalleryService {
         try {
             const image = await ImageDatabseService.readImage(uuidImage);
             // delete image from the google cloud storage
-            await FileService.deleteImage(image);
+            await FileService.deleteImageFromBucket(image);
             return await ImageDatabseService.deleteImage(uuidImage);
         } catch (error) {
-            throw new Error('[myfarmer] GalleryService.deleteImage - Error deleting Image with uuid '
+            throw new Error('[GalleryService.deleteImage] Error deleting Image with uuid '
                 + uuidImage + ', error: '
                 + error);
         }
