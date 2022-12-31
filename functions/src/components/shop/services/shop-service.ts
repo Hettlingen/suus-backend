@@ -87,15 +87,9 @@ export class ShopService {
             throw new Error('[ShopService.getShopItem] Error reading Shopitem');
         }
         shopItem = mapShopItemDatabaseToShopItem(shopItemDatabase);
-        await this.getGalleryAndImages(shopItemDatabase, shopItem);
 
-        console.log('Shopitem with images lautet: ' + JSON.stringify(shopItem));
-        return shopItem;
-    }
-
-    private static async getGalleryAndImages(shopItemDatabase: ShopItemDatabase, shopItem: ShopItem) {
         if (shopItemDatabase.uuidGallery) {
-            GalleryService.getGallery(shopItemDatabase.uuidGallery)
+            await GalleryService.getGallery(shopItemDatabase.uuidGallery)
                 .then(function (gallery) {
                     console.log('ShopService.getShopItem lese Gallerie: ' + JSON.stringify(gallery));
                     shopItem.gallery = gallery;
@@ -105,7 +99,7 @@ export class ShopService {
         }
 
         if (shopItemDatabase.uuidImageBanner) {
-            ImageService.getImageWithoutByteStream(shopItemDatabase.uuidImageBanner)
+            await ImageService.getImageWithoutByteStream(shopItemDatabase.uuidImageBanner)
                 .then(function (image) {
                     console.log('ShopService.getShopItem lese Banner Image: ' + JSON.stringify(image));
                     shopItem.imageBanner = image;
@@ -115,7 +109,7 @@ export class ShopService {
         }
 
         if (shopItemDatabase.uuidImageProduct) {
-            ImageService.getImageWithoutByteStream(shopItemDatabase.uuidImageProduct)
+            await ImageService.getImageWithoutByteStream(shopItemDatabase.uuidImageProduct)
                 .then(function (image) {
                     console.log('ShopService.getShopItem lese Product Image: ' + JSON.stringify(image));
                     shopItem.imageProduct = image;
@@ -123,6 +117,9 @@ export class ShopService {
                 console.error('Reading image product went wrong: ' + error);
             });
         }
+
+        console.log('Shopitem with images lautet: ' + JSON.stringify(shopItem));
+        return shopItem;
     }
 
     /**************************************************/
