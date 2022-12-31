@@ -87,7 +87,13 @@ export class ShopService {
             throw new Error('[ShopService.getShopItem] Error reading Shopitem');
         }
         shopItem = mapShopItemDatabaseToShopItem(shopItemDatabase);
+        await this.getGalleryAndImages(shopItemDatabase, shopItem);
 
+        console.log('Shopitem with images lautet: ' + JSON.stringify(shopItem));
+        return shopItem;
+    }
+
+    private static async getGalleryAndImages(shopItemDatabase: ShopItemDatabase, shopItem: ShopItem) {
         if (shopItemDatabase.uuidGallery) {
             GalleryService.getGallery(shopItemDatabase.uuidGallery)
                 .then(function (gallery) {
@@ -114,9 +120,6 @@ export class ShopService {
                 console.error('Reading image product went wrong: ' + error);
             });
         }
-
-        console.log('Shopitem with images lautet: ' + JSON.stringify(shopItem));
-        return shopItem;
     }
 
     /**************************************************/
