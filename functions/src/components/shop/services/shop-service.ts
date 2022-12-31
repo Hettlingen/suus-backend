@@ -97,6 +97,7 @@ export class ShopService {
         if (shopItemDatabase.uuidGallery) {
             GalleryService.getGallery(shopItemDatabase.uuidGallery)
                 .then(function (gallery) {
+                    console.log('ShopService.getShopItem lese Gallerie: ' + JSON.stringify(gallery));
                     shopItem.gallery = gallery;
                 }).catch(function (error) {
                 console.error('Reading gallery went wrong: ' + error);
@@ -106,6 +107,7 @@ export class ShopService {
         if (shopItemDatabase.uuidImageBanner) {
             ImageService.getImageWithoutByteStream(shopItemDatabase.uuidImageBanner)
                 .then(function (image) {
+                    console.log('ShopService.getShopItem lese Banner Image: ' + JSON.stringify(image));
                     shopItem.imageBanner = image;
                 }).catch(function (error) {
                 console.error('Reading image banner went wrong: ' + error);
@@ -115,6 +117,7 @@ export class ShopService {
         if (shopItemDatabase.uuidImageProduct) {
             ImageService.getImageWithoutByteStream(shopItemDatabase.uuidImageProduct)
                 .then(function (image) {
+                    console.log('ShopService.getShopItem lese Product Image: ' + JSON.stringify(image));
                     shopItem.imageProduct = image;
                 }).catch(function (error) {
                 console.error('Reading image product went wrong: ' + error);

@@ -1,5 +1,6 @@
 import {Gallery} from "../../content-management-system/gallery/model/gallery";
 import {Image} from "../../content-management-system/gallery/model/image";
+import {Amount} from "./accounting/amount";
 
 export class ShopItem {
     public uuid!: string;
@@ -9,8 +10,7 @@ export class ShopItem {
     public category!: number;
     public brand!: string;
     public unit!: string;
-    public price!: number;
-    public currencyPrice!: string;
+    public price!: Amount;
     public quantity!: number;
     public uuidImageBanner!: string;
     public uuidImageProduct!: string;

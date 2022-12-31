@@ -29,8 +29,7 @@ export const mapShopDatabaseToShop = (shopDatabase: ShopDatabase) => {
         shopItem.description = shopItemDatabase.description;
         shopItem.slogan = shopItemDatabase.slogan;
         shopItem.category = shopItemDatabase.category;
-        shopItem.price = shopItemDatabase.price;
-        shopItem.currencyPrice = shopItemDatabase.currencyPrice;
+        shopItem.price = new Amount(shopItemDatabase.price, shopItemDatabase.currencyPrice);
         shop.listShopItem.push(shopItem);
     }
 
@@ -48,8 +47,7 @@ export const mapShopItemDatabaseToShopItem = (shopItemDatabase: ShopItemDatabase
     shopItem.category = shopItemDatabase.category;
     shopItem.brand = shopItemDatabase.brand;
     shopItem.unit = shopItemDatabase.unit
-    shopItem.price = shopItemDatabase.price;
-    shopItem.currencyPrice = shopItemDatabase.currencyPrice;
+    shopItem.price = new Amount(shopItemDatabase.price, shopItemDatabase.currencyPrice);
     return shopItem;
 }
 
@@ -125,8 +123,7 @@ export const mapOfferItemFromDbToOfferItem = (offerItemFromDb: any) => {
     shopItem.name = offerItemFromDb.nameOfShopItem;
     shopItem.description = offerItemFromDb.descriptionOfShopItem;
     shopItem.category = offerItemFromDb.categoryOfShopItem;
-    shopItem.price = offerItemFromDb.priceOfShopItem;
-    shopItem.currencyPrice = offerItemFromDb.currencyPriceOfShopItem;
+    shopItem.price = new Amount(offerItemFromDb.priceOfShopItem, offerItemFromDb.currencyPriceOfShopItem);
     offerItem.shopItem= shopItem;
 
     return offerItem;

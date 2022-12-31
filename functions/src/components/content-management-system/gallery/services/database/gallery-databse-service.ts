@@ -30,8 +30,6 @@ export class GalleryDatabseService {
         try {
             const galleryFromDb = await databaseConnectionPool.query(query);
 
-            console.log('Gallery from DB: ' + JSON.stringify(galleryFromDb));
-
             if (galleryFromDb === null || galleryFromDb === undefined) {
                 throw new Error('[myfarmer] GalleryDatabseService.readGallery - Gallery doesnt exist on database');
             }
