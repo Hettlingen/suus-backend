@@ -7,7 +7,7 @@ admin.initializeApp({
         projectId: functions.config().project.id,
         clientEmail: functions.config().client.email
     }),
-    databaseURL: 'https://[your_project_id].firebaseio.com'
+    databaseURL: 'https://scoop-backend-3000.firebaseio.com'
 })
 
 // if (window.location.hostname === 'localhost') {

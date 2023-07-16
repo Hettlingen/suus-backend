@@ -176,8 +176,8 @@ export class AuthenticationService {
 
         jwt.verify(token, PUBLIC_KEY, { algorithms: ['RS256']}, (err, payload) => {
             if (err) {
-                console.error('[AuthenticationService.checkIfAuthenticated] Couldnt verify the authorization header');
-                response.status(401).json({ message: '[AuthenticationService.checkIfAuthenticated] Couldnt verify the authorization header' });
+                console.error('[AuthenticationService.checkIfAuthenticated] Could not verify the authorization header');
+                response.status(401).json({ message: '[AuthenticationService.checkIfAuthenticated] Could not verify the authorization header' });
             }
 
             // if the JWT is valid, allow them to go to the intended endpoint
@@ -193,8 +193,8 @@ export class AuthenticationService {
         const match = await bcrypt.compare(passwordInput, passwordUserAccount);
 
         if (!match) {
-            console.log('[AuthenticationService] Bad Username or Password');
-            throw new Error('[AuthenticationService] Bad Username or Password');
+            console.log('[AuthenticationService.verifyPassword] Bad Username or Password');
+            throw new Error('[AuthenticationService.verifyPassword] Bad Username or Password');
         }
 
         const jwtBearerToken = jwt.sign({}, PRIVATE_KEY, {

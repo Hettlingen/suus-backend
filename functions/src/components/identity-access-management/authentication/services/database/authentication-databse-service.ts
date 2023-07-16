@@ -92,12 +92,12 @@ export class AuthenticationDatabseService {
             const userAccountFromDb = await databaseConnectionPool.query(query);
             return userAccountFromDb[0];
         } catch(error) {
-            throw new Error('[myfarmer] AuthenticationDatabseService.readUserAccountByUuid - Error reading user-account from database: ' + error);
+            throw new Error('[AuthenticationDatabseService.readUserAccountByUuid] Error reading user-account from database: ' + error);
         }
     }
 
     static async readUserAccountByUserName(userName: string): Promise<UserAccount> {
-        if (!userName) throw new Error('[myfarmer] AuthenticationDatabseService.readUserAccountByUserName - Wrong parameters');
+        if (!userName) throw new Error('[AuthenticationDatabseService.readUserAccountByUserName] Wrong parameters');
 
         const query = `SELECT * FROM UserAccount WHERE userName='${userName}'`;
 
@@ -105,7 +105,7 @@ export class AuthenticationDatabseService {
             const userAccountFromDb = await databaseConnectionPool.query(query);
             return userAccountFromDb[0];
         } catch(error) {
-            throw new Error('[myfarmer] AuthenticationDatabseService.readUserAccountByUserName - Error reading user-account from database: ' + error);
+            throw new Error('[AuthenticationDatabseService.readUserAccountByUserName] Error reading user-account from database: ' + error);
         }
     }
 
@@ -115,7 +115,7 @@ export class AuthenticationDatabseService {
 
     static async readUserByUuid(uuidRoleUser: string): Promise<RoleUser> {
         console.log('START: AuthenticationDatabseService.readUserByUuid: ' + uuidRoleUser);
-        if (!uuidRoleUser) throw new Error('[myfarmer] AuthenticationDatabseService.readUserByUuid - Wrong parameters');
+        if (!uuidRoleUser) throw new Error('[AuthenticationDatabseService.readUserByUuid] Wrong parameters');
 
         const query = `SELECT RoleUser.uuidRole,
                               RoleUser.uuidAvatar,

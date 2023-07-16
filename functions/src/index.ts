@@ -20,7 +20,7 @@ main.use(bodyParser.json());
 export const webApi = functions.https.onRequest(main);
 
 // Initialize CORS ------------------------------------------------
-const allowedOrigins = ['http://localhost:4200', 'https://www.myfarmer.ch', 'https://www.suus.ch'];
+const allowedOrigins = ['http://localhost:4200', 'http://localhost:5173/', 'https://www.myfarmer.ch', 'https://www.suus.ch'];
 const allowedMethodes = ['GET','POST','DELETE','UPDATE','PUT','PATCH', 'OPTIONS'];
 const options: cors.CorsOptions = {
     origin: allowedOrigins,
