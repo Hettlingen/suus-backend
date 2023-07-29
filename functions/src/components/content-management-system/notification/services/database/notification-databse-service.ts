@@ -1,3 +1,7 @@
+import {databaseConnectionPool} from "../../../../../index";
+import {Notification} from "../../model/notification";
+import {mapNotificationsFromDbToNotifications} from "../../mapper/notification-mapper";
+
 export class NotificationDatabseService {
 
     static async activateNotifications(uuidRoleUser: string): Promise<boolean> {
@@ -10,5 +14,39 @@ export class NotificationDatabseService {
         console.log('START: NewsletterDatabseService.readNewsletter: ' + JSON.stringify(uuidRoleUser));
         if (!uuidRoleUser) throw new Error('[myfarmer] NotificationDatabseService.deactivateNotifications - Wrong parameters');
         return true;
+    }
+
+    static async readNotifications(uuidUserAccount: string): Promise<Array<Notification>> {
+        console.log('[NotificationDatabseService.readNotifications] START: ' + uuidUserAccount);
+        if (!uuidUserAccount) throw new Error('[NotificationDatabseService.readNotifications] Wrong parameters');
+
+        const query = `SELECT Notification.uuid,
+                              Notification.title,
+                              Notification.message,
+                              Person.uuid uuidOfPersonAuthor,
+                              Person.firstName firstNameOfPersonAuthor,
+                              Person.lastName lastNameOfPersonAuthor,
+                              Person.uuid uuidOfPersonRecipient,
+                              Person.firstName firstNaemOfPersonRecipient,
+                              Person.lastName lastNameOfPersonRecipient,
+                            FROM Notification
+                            LEFT JOIN Person
+                                ON Notification.uuidAuthor=Person.uuid
+                            LEFT JOIN Person
+                                      ON Notification.uuidRecipient=Person.uuid
+                            WHERE Notification.uuidUserAccount='${uuidUserAccount}';`;
+
+        try {
+            const notificationsFromDb = await databaseConnectionPool.query(query);
+
+            if (notificationsFromDb === null || notificationsFromDb === undefined) {
+                throw new Error('[NotificationDatabseService.readNotifications] Notifications dont exist on database');
+            }
+
+            return mapNotificationsFromDbToNotifications(notificationsFromDb);
+        } catch(error) {
+            console.log('[NotificationDatabseService.readNotifications] Error reading notifications from database: ' + error);
+            throw new Error('[NotificationDatabseService.readNotifications] Error reading notifications from database: ' + error);
+        }
     }
 }

@@ -1,5 +1,7 @@
 import {Request, Response} from "express";
 import {NotificationService} from "./services/notification-service";
+import {AuthenticationService} from "../../identity-access-management/authentication/services/authentication-service";
+import {Notification} from "../notification/model/notification";
 
 export class NotificationRoutes {
     public static routes(app: any): void {
@@ -24,5 +26,17 @@ export class NotificationRoutes {
                 response.status(404).send("Notifications weren't deactivated successfully: " + error);
             });
         });
+
+        // --------------------------------------------------
+        // NOTIFICATIONS
+        // --------------------------------------------------
+        app.route('/notifications/:uuidUserAccount').get(AuthenticationService.checkIfAuthenticated, async (request: Request, response: Response) => {
+            NotificationService.getNotifications(request.params.uuidUserAccount)
+                .then(function(notifications: Array<Notification>) {
+                    response.status(200).send(notifications);
+                }).catch(function(error: any){
+                response.status(404).send("Notifications weren't found: " + error)
+            });
+        })
     }
 }
