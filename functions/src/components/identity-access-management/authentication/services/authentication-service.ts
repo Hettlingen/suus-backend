@@ -153,7 +153,7 @@ export class AuthenticationService {
     }
 
     public static checkIfAuthenticated(request: any, response: any, next: any) {
-        console.info('START AuthenticationService.checkIfAuthenticated');
+        console.info('[AuthenticationService.checkIfAuthenticated] START');
         const PUBLIC_KEY = functions.config().jwt.publickey;
 
         let token = '';
@@ -162,7 +162,7 @@ export class AuthenticationService {
 
         if (bearerToken === null || bearerToken === undefined) {
             console.log('[AuthenticationService.checkIfAuthenticated] Missing authorization header');
-            return request.status(401).json({ message: '[myfarmer] Missing authorization header' });
+            return request.status(401).json({ message: 'Missing authorization header' });
         }
 
         if (bearerToken.startsWith('Bearer')) {

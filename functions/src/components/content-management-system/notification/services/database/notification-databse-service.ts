@@ -23,17 +23,14 @@ export class NotificationDatabseService {
         const query = `SELECT Notification.uuid,
                               Notification.title,
                               Notification.message,
-                              Person.uuid uuidOfPersonAuthor,
-                              Person.firstName firstNameOfPersonAuthor,
-                              Person.lastName lastNameOfPersonAuthor,
-                              Person.uuid uuidOfPersonRecipient,
-                              Person.firstName firstNaemOfPersonRecipient,
-                              Person.lastName lastNameOfPersonRecipient,
+                              Partner.uuid uuidOfPersonRecipient,
+                              Partner.firstName firstNaemOfPersonRecipient,
+                              Partner.lastName lastNameOfPersonRecipient
                             FROM Notification
-                            LEFT JOIN Person
-                                ON Notification.uuidAuthor=Person.uuid
-                            LEFT JOIN Person
-                                      ON Notification.uuidRecipient=Person.uuid
+                            LEFT JOIN UserAccount
+                                 ON Notification.uuidUserAccount=UserAccount.uuid
+                            LEFT JOIN Partner
+                                 ON UserAccount.uuidPartner=Partner.uuid
                             WHERE Notification.uuidUserAccount='${uuidUserAccount}';`;
 
         try {

@@ -5,12 +5,12 @@ import * as WebPush from 'web-push';
 export class NotificationService {
 
     static async getNotifications(uuidUserAccount: string): Promise<Array<Notification>> {
-        console.log('START: ShopService.getNotifications: ' + JSON.stringify(uuidUserAccount));
+        console.log('START: NotificationService.getNotifications: ' + JSON.stringify(uuidUserAccount));
 
         try {
             return await NotificationDatabseService.readNotifications(uuidUserAccount);
         } catch(error){
-            throw new Error('[ShopService.getNotifications] Error reading notifications of user: ' + uuidUserAccount);
+            throw new Error('[NotificationService.getNotifications] Error reading notifications of user: ' + uuidUserAccount);
         }
     }
     static async activateNotifications(uuidRoleUser: string, notificationSubscription: WebPush.PushSubscription): Promise<boolean> {
